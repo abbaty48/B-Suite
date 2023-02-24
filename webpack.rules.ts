@@ -28,4 +28,39 @@ export const rules: Required<ModuleOptions>['rules'] = [
       },
     },
   },
+  {
+    test: /\.(woff2|eot|ttf)$/,
+    loader: 'url-loader',
+    options: {
+      name: '[path][name].[ext]',
+    },
+  },
+  {
+    test: /\.(png|jpe?g|gif)(\?.*)?$/,
+    use: {
+      loader: 'url-loader',
+      options: {
+        limit: 20 * 1024, // 20Kb
+        outputPath: '/',
+        publicPath: '/src/assets/imgs',
+        name: '[path][name].[ext]',
+        esModule: false,
+      },
+    },
+  },
+  {
+    test: /\.(ico|icns)$/,
+    loader: 'file-loader',
+    options: {
+      name: '[path][name].[ext]',
+    },
+  },
+  {
+    test: /\.svg$/,
+    use: ['@svgr/webpack'],
+  },
+  {
+    test: /\.(scss|css)$/,
+    use: ['style-loader', 'css-loader'],
+  },
 ];

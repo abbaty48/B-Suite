@@ -87,3 +87,5 @@ typings/
 
 # Electron-Forge
 out/
+backup1.txt
+backup2.txt
