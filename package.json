@@ -1,8 +1,8 @@
 {
-  "name": "b-suite",
-  "productName": "b-suite",
+  "name": "B-Suite",
+  "productName": "B-Suite",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "B-Suite (stand for Business-Suite) is an application for the most business application, such as, POS (Point Of Sale), IMS (Inventory Management System), CRM (Customer Relationship Management), RMS (Retail Management System), EM (Employee Management), A (Accounting)",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -11,7 +11,23 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
-  "keywords": [],
+  "keywords": [
+    "RMS",
+    "Electron",
+    "Electron-forge",
+    "Retail Management System",
+    "B-Suite",
+    "CRM",
+    "Customer Relationship Management",
+    "POS",
+    "Point Of Sale Management",
+    "IVM",
+    "Iventory Management System",
+    "Business Application",
+    "EM",
+    "Employee Management",
+    "Accounting"
+  ],
   "author": {
     "name": "Abbatyya",
     "email": "abbaty48@gmail.com"
