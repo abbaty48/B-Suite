@@ -1,8 +1,8 @@
 {
-  "name": "b-suite",
-  "productName": "b-suite",
+  "name": "B-Suite",
+  "productName": "B-Suite",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "B-Suite (stand for Business-Suite) is an application for the most business application, such as, POS (Point Of Sale), IMS (Inventory Management System), CRM (Customer Relationship Management), RMS (Retail Management System), EM (Employee Management), A (Accounting)",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -11,7 +11,23 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
-  "keywords": [],
+  "keywords": [
+    "RMS",
+    "Electron",
+    "Electron-forge",
+    "Retail Management System",
+    "B-Suite",
+    "CRM",
+    "Customer Relationship Management",
+    "POS",
+    "Point Of Sale Management",
+    "IVM",
+    "Iventory Management System",
+    "Business Application",
+    "EM",
+    "Employee Management",
+    "Accounting"
+  ],
   "author": {
     "name": "Abbatyya",
     "email": "abbaty48@gmail.com"
@@ -24,7 +40,6 @@
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
     "@electron-forge/plugin-webpack": "^6.0.5",
-    "@types/bcrypt": "^5.0.0",
     "@types/config": "^3.3.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
@@ -45,9 +60,11 @@
     "tailwindcss": "^3.2.7",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
+    "bcrypt": "^5.1.0",
     "typescript": "~4.5.4"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@apollo/client": "^3.7.9",
     "@svgr/webpack": "^6.5.1",
     "@types/react": "^18.0.28",
@@ -56,7 +73,6 @@
     "apollo-server-core": "^3.11.1",
     "apollo-server-express": "^3.11.1",
     "autoprefixer": "^10.4.13",
-    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "concurrent": "^0.3.2",
     "config": "^3.3.9",

@@ -11,19 +11,25 @@ import { rendererConfig } from './webpack.renderer.config';
 const config: ForgeConfig = {
   packagerConfig: {},
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerZIP({}, ['darwin']),
+    new MakerRpm({}),
+    new MakerDeb({}),
+  ],
   plugins: [
     new WebpackPlugin({
+      devContentSecurityPolicy: `default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src app: * 'self' 'unsafe-inline' blob: data: gap:; connect-src app: * self 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;`,
       mainConfig,
       renderer: {
         config: rendererConfig,
         entryPoints: [
           {
-            html: './src/index.html',
-            js: './src/renderer.ts',
+            html: './app-ui/index.html',
+            js: './app-ui/index.tsx',
             name: 'main_window',
             preload: {
-              js: './src/preload.ts',
+              js: './app-main/preload.ts',
             },
           },
         ],

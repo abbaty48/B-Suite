@@ -13,8 +13,37 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "paths": {
-      "*": ["node_modules/*"]
+      // GLOBAL
+      "@": ["./*"],
+      "*": ["node_modules/*"],
+      // MAIN APP
+      "@main/*": ["app-main/*"],
+      "@main-ipcs/*": ["app-main/ipcs/*"],
+      "@main/libs/*": ["app-main/libs/*"],
+      // UI
+      "@ui/*": ["app-ui/*"],
+      "@ui-pages/*": ["app-ui/pages/*"],
+      "@ui-hooks/*": ["app-ui/hooks/*"],
+      "@ui-assets/*": ["app-ui/assets/*"],
+      "@ui-commons/*": ["app-ui/commons/*"],
+      "@ui-recoil/*": [
+        "app-ui/recoils/*",
+        "app-ui/recoils/atoms/*",
+        "app-ui/recoils/selectors/*"
+      ],
+      "@ui-svgs/*": ["app-ui/assets/svgs/*"],
+      "@ui-images/*": ["app-ui/assets/images/*"],
+      "@ui-styles/*": ["app-ui/assets/styles/*"],
+      "@ui-themes/*": ["app-ui/assets/themes/*"],
+      "@ui-components/*": ["app-ui/components/*"],
+      // SERVER
+      "@server/*": ["app-server/*"],
+      "@server-models/*": ["app-server/models/*"],
+      "@server-commons/*": ["app-server/commons/*"],
+      "@server-databases/*": ["app-server/databases/*"],
+      "@server-resolvers/*": ["app-server/resolvers/*"],
+      "@server-datasources/*": ["app-server/datasources/*"],
     }
   },
-  "include": ["src/**/*"]
+  "include": ["app-ui/**/*", "app-server/**/*", "app-main/**/*"]
 }

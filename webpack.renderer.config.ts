@@ -1,12 +1,7 @@
-import type { Configuration } from 'webpack';
-
 import { rules } from './webpack.rules';
 import { plugins } from './webpack.plugins';
-
-rules.push({
-  test: /\.css$/,
-  use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
-});
+import type { Configuration } from 'webpack';
+import { TsconfigPathsPlugin } from 'tsconfig-paths-webpack-plugin';
 
 export const rendererConfig: Configuration = {
   module: {
@@ -14,6 +9,7 @@ export const rendererConfig: Configuration = {
   },
   plugins,
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    plugins: [new TsconfigPathsPlugin({ baseUrl: './' })],
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.svg'],
   },
 };
