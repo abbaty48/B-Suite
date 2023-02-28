@@ -1,0 +1,23 @@
+{
+  "isDev": true,
+  "env": "development",
+  "server": {
+    "name": "B-Suite server",
+    "host": "localhost",
+    "domain": "http://localhost:3001/graphql",
+    "port": 3001
+  },
+  "jwt": {
+    "public": "",
+    "private": ""
+  },
+  "databases": {
+    "mongodb": {
+      "schemaUri": "mongodb://127.0.0.1:27017/Bsuite",
+      "options": {
+        "autoIndex": true,
+        "maxPoolSize": 10
+      }
+    }
+  }
+}
