@@ -14,3 +14,6 @@ export const extractToken = (authorization: string): string => {
   const _ = authorization.split(' '); // split the authorization
   return _[1]; // get the token string from the authorization string
 };
+
+export const genRandom = (radix: number = 36) =>
+  Math.floor(Math.random() * Date.now()).toString(radix);

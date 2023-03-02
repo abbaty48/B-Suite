@@ -1,7 +1,7 @@
 export enum StaffRole {
-  Admin,
-  Manager,
-  Salesman,
-  Warehouse,
-  Accountant,
+  Admin = 'Admin',
+  Saller = 'Saller',
+  Manager = 'Manager',
+  Warehouse = 'Warehouse',
+  Accountant = 'Accountant',
 }

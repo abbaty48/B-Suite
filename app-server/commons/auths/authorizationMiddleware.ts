@@ -3,25 +3,25 @@ import { RolePrevileges } from '@server-databases/mongodb/enums/RolePrevilage';
 import { staffVerifyToken } from '@server-commons/auths/staffJWTAuthenticationMiddleware';
 
 interface IStaffPrevilege {
-  admin: RolePrevileges[];
-  manager: RolePrevileges[];
-  saleman: RolePrevileges[];
-  warehouse: RolePrevileges[];
-  accountant: RolePrevileges[];
+  Admin: RolePrevileges[];
+  Manager: RolePrevileges[];
+  Saller: RolePrevileges[];
+  Warehouse: RolePrevileges[];
+  Accountant: RolePrevileges[];
   [index: string]: RolePrevileges[];
 }
 
 const staffRoleAuthorization = async (
   req: any,
   res: any,
-  context: any,
+  privateKey: any,
   previlege: RolePrevileges
 ): Promise<IStaff> => {
   try {
-    const authenticatedStaff = await staffVerifyToken(req, res, context);
+    const authenticatedStaff = await staffVerifyToken(req, res, privateKey);
 
     const staffPrevileges: IStaffPrevilege = {
-      accountant: [
+      Accountant: [
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
         RolePrevileges.READ_CATEGORY,
@@ -53,7 +53,7 @@ const staffRoleAuthorization = async (
         RolePrevileges.UPDATE_STAFF,
         RolePrevileges.DELETE_STAFF,
       ],
-      manager: [
+      Manager: [
         // CATEGORY
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
@@ -87,7 +87,7 @@ const staffRoleAuthorization = async (
         RolePrevileges.UPDATE_STAFF,
         RolePrevileges.DELETE_STAFF,
       ],
-      warehouse: [
+      Warehouse: [
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
         RolePrevileges.READ_CATEGORY,
@@ -104,7 +104,7 @@ const staffRoleAuthorization = async (
         RolePrevileges.UPDATE_WAREHOUSE,
         RolePrevileges.DELETE_WAREHOUSE,
       ],
-      saleman: [
+      Saller: [
         RolePrevileges.READ_PRODUCT,
         RolePrevileges.ALL_SALE_OPERATIONS,
         RolePrevileges.ADD_SALE,
@@ -117,7 +117,7 @@ const staffRoleAuthorization = async (
         RolePrevileges.UPDATE_CUSTOMER,
         RolePrevileges.DELETE_CUSTOMER,
       ],
-      admin: [
+      Admin: [
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
         RolePrevileges.READ_CATEGORY,

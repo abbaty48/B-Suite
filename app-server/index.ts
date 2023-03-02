@@ -10,11 +10,11 @@ import { ApolloServer } from 'apollo-server-express';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { resolvers } from '@server-resolvers/index.resolvers';
 import express, { NextFunction, Request, Response } from 'express';
-
 import {
   ApolloServerPluginDrainHttpServer,
   ApolloServerPluginLandingPageLocalDefault,
 } from 'apollo-server-core';
+import { GraphQLError } from 'graphql';
 
 export const pubsub = new PubSub();
 
