@@ -26,6 +26,71 @@ const typeDef = gql(`
       warehouseID: ID
    }
 
+   input searchProductInput {
+      productID: ID
+      name: String
+      quantity: Int
+      expirationDate: String
+      warehouseID: ID
+      expired: Boolean
+      inStock: Boolean
+      categoryID: ID 
+      retailPrice: Float
+      wholesalePrice: Float
+   }
+
+   input addProductInput {
+      name: String!
+      quantity: Int!
+      expirationDate: String
+      warehouseID: ID
+      categoryID: ID!
+      retailPrice: Float!
+      wholesalePrice: Float!
+      images: [String!]
+      description: String
+   }
+
+   input editProductInput {
+      productID: ID!
+      name: String
+      quantity: Int
+      expirationDate: String
+      warehouseID: ID
+      categoryID: ID
+      retailPrice: Float
+      wholesalePrice: Float
+      images: [String!]
+      description: String
+   }
+
+   input addStaffInput {
+      firstName: String!,
+      lastName: String!,
+      otherName: String,
+      passport: String,
+      email: String,
+      role: StaffRole!, 
+      address: String, 
+      phoneNumber: String,
+      password: String!, 
+      warehouseID: ID
+   }
+
+   input editStaffInput {
+      staffID: ID!, 
+      firstName: String, 
+      lastName: String, 
+      otherName: String,
+      passport: String, 
+      email: String, 
+      role: StaffRole, 
+      address: String, 
+      phoneNumber: String,
+      password: String, 
+      warehouseID: ID
+   }
+
    input categoryInput {
       name: String
    }
@@ -82,7 +147,44 @@ const typeDef = gql(`
       error: String
       deleted: Boolean!
    }
-
+   ## TYPE
+   type Product {
+      productID: ID!
+      name: String!
+      images: [String]
+      inStock: Boolean!
+      expired: Boolean
+      quantity: Int!
+      category: Category!
+      expirationDate: String
+      wholesalePrice: Float!
+      retailPrice: Float!
+      description: String
+      warehouse: Warehouse
+   }
+   type ProductPayload {
+      error: String
+      product: Product
+   }
+   type ProductsPayload {
+         error: String
+         products: [Product!]!
+         filters: Filters
+   }
+   type AddProductPayload {
+      error: String
+      added: Boolean
+      newAdded: Product 
+   }
+   type EditProductPayload {
+      error: String
+      edited: Boolean!
+      newEdited: Product
+   }
+   type DeleteProductPayload {
+      error: String
+      deleted: Boolean!
+   }
    ## CATEGORY
    type Category {
       name: String!
@@ -107,7 +209,7 @@ const typeDef = gql(`
       name: String
       address: String!
       staffs: [Staff!]!
-      #products: [Product!]!
+      products: [Product!]!
    }
    ### WAREHOUSE PAYLOADS
    type AddWarehousePayload {
@@ -129,30 +231,34 @@ const typeDef = gql(`
    }
    ## 
    type Query {
+      ##STAFF
       staff(searchFilter: searchStaffInput!): StaffPayload
       staffs(searchFilter: searchStaffInput, filters: filterInput) : StaffsPayload
+      ##PRODUCT
+      product(searchFilter: searchProductInput): ProductPayload
+      products(searchFilter: searchProductInput, filters: filterInput): ProductsPayload
+      ##CATEGORY
       categories: [Category!]!
+      ##WAREHOUSE
       warehouses: [Warehouse!]!
    }
    type Mutation {
       ###STAFF
-      addStaff(firstName: String!,lastName: String!,
-         otherName: String,passport: String,email: String,
-         role: StaffRole!, address: String, phoneNumber: String,
-         password: String!, warehouseID: ID): AddStaffPayload
-      editStaff(staffID: ID!, firstName: String, lastName: String, otherName: String,
-         passport: String, email: String, role: StaffRole, address: String, phoneNumber: String,
-         password: String, warehouseID: ID): EditStaffPayload
+      addStaff(inputs: addStaffInput!): AddStaffPayload
+      editStaff(inputs: editStaffInput!): EditStaffPayload
       deleteStaff(staffID: ID!): DeleteStaffPayload
+      ###PRODUCT
+      addProduct(addProductInput: addProductInput!): AddProductPayload
+      editProduct(editProductInput: editProductInput!): EditProductPayload
+      deleteProduct(productID: ID!, warehouseID: ID): DeleteProductPayload
       ###CATEGORY
       addCategory(category: String!): AddCategoryPayload
       editCategory(oldCategory: String!, newCategory: String!): EditCategoryPayload
       deleteCategory(category: String!): DeleteCategoryPayload
       ###WAREHOUSE
-      addWarehouse(warehouseID: ID!, name: String, address: String!, staffs: [Staff], products: [Product]): AddWarehousePayload
-      editWarehouse(warehouseID: ID!, name: String, address: String, staffs: [Staff!], products: [Product!]): EditWarehousePayload
+      addWarehouse(name: String, address: String!, staffs: [addStaffInput!], products: [addProductInput!]): AddWarehousePayload
+      editWarehouse(warehouseID: ID!, name: String, address: String, staffs: [editStaffInput!], products: [addProductInput!]): EditWarehousePayload
       deleteWarehouse(warehouseID: ID!): DeleteWarehousePayload
-
    }
 `);
 

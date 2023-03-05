@@ -8,9 +8,11 @@ import {
   IStaffPayload,
   IStaffsPayload,
 } from '@server-databases/mongodb/interfaces/IStaff';
+import { ProductResolver } from '@server-resolvers/product.resolver';
 
 export const resolvers = {
   Query: {
+    // STAFF
     staff: async (
       _: any,
       { searchFilter }: any,
@@ -25,9 +27,19 @@ export const resolvers = {
     ): Promise<IStaffsPayload> => {
       return await StaffResolver.staffs(searchFilter, filters, context);
     },
+    // PRODUCT
+    product: async (_: any, { searchFilter }: any, context: IResolverContext) =>
+      await ProductResolver.product(searchFilter, context),
+    products: async (
+      _: any,
+      { searchFilter, filters }: any,
+      context: IResolverContext
+    ) => await ProductResolver.products(searchFilter, filters, context),
+    // CATEGORY
     categories: async (_: any): Promise<ICategory[]> => {
       return await CategoryResolver.categories();
     },
+    // WAREHOUSE
     warehouses: async (
       _: any,
       args: any,
@@ -51,6 +63,22 @@ export const resolvers = {
     ) => {
       return await StaffResolver.deleteStaff(staffID, context);
     },
+    // PRODUCT
+    addProduct: async (
+      _: any,
+      { addProductInput }: any,
+      context: IResolverContext
+    ) => await ProductResolver.addProduct(addProductInput, context),
+    editProduct: async (
+      _: any,
+      { editProductInput }: any,
+      context: IResolverContext
+    ) => await ProductResolver.editProduct(editProductInput, context),
+    deleteProduct: async (
+      _: any,
+      { productID, warehouseID }: any,
+      context: IResolverContext
+    ) => await ProductResolver.deleteProduct(productID, warehouseID, context),
     // CATEGORY
     addCategory: async (_: any, { category }: any) => {
       return await CategoryResolver.addCategory(category);
@@ -61,7 +89,6 @@ export const resolvers = {
     deleteCategory: async (_: any, { category }: any) => {
       return await CategoryResolver.deleteCategory(category);
     },
-    /*
     // WAREHOUSE
     addWarehouse: async (
       _: any,
@@ -80,14 +107,22 @@ export const resolvers = {
     },
     editWarehouse: async (
       _: any,
-      { warehouseID, address, staffs, products }: any,
+      { warehouseID, name, address, staffs, products }: any,
       { request, response, config }: IResolverContext
     ) => {
-      return await WarehouseResolver.editWarehouse(warehouseID, {
-        request,
-        response,
-        config,
-      });
+      return await WarehouseResolver.editWarehouse(
+        {
+          warehouseID,
+          address,
+          staffs,
+          products,
+        },
+        {
+          request,
+          response,
+          config,
+        }
+      );
     },
     deleteWarehouse: async (
       _: any,
@@ -100,6 +135,5 @@ export const resolvers = {
         config,
       });
     },
-    */
   },
 };

@@ -1,9 +1,9 @@
-import { Model, Schema, model, models } from 'mongoose';
+import { Types, Model, Schema, model, models } from 'mongoose';
 import { IWarehouse } from '@server-databases/mongodb/interfaces/IWarehouse';
 
 const WarehouseSchema = new Schema<IWarehouse>(
   {
-    warehouseID: { type: 'string', _id: true, required: true },
+    warehouseID: { type: Types.ObjectId, _id: true, required: true },
     name: { type: 'string', required: false },
     address: { type: 'string', required: true },
     staffs: { type: [{ staffID: 'string' }], default: [] },

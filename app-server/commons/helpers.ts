@@ -4,7 +4,7 @@ export const escapeRegExp = (s: string) =>
   s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 
 export const stringToID = (s: string) =>
-  ObjectId.isValid(s) ? new ObjectId(s) : null;
+  ObjectId.isValid(s) ? new ObjectId(s) : new ObjectId();
 
 export const decodeRSAKey = (s: string): string => {
   return Buffer.from(s, 'base64').toString('ascii');

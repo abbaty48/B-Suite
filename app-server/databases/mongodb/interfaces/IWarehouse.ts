@@ -1,4 +1,4 @@
-import { Types, Document } from 'mongoose';
+import { Types, Document, ObjectId } from 'mongoose';
 import { IStaff } from '@server-databases/mongodb/interfaces/IStaff';
 import { IProduct } from '@server-databases/mongodb/interfaces/IProduct';
 
@@ -18,7 +18,7 @@ export interface IWarehouseDeletePayload {
   deleted: boolean;
 }
 export interface IWarehouse extends Document {
-  warehouseID: string;
+  warehouseID: ObjectId;
   name: string;
   address: string;
   staffs: Types.DocumentArray<IStaff>;

@@ -155,7 +155,9 @@ const staffRoleAuthorization = async (
     }
 
     throw new Error(
-      'UnAuthorized Operation, you are not authorized to perform this operation.'
+      `[UNAUTHORIZED]: you are not authorized to "${RolePrevileges[
+        previlege
+      ].replace('_', ' ')}".`
     );
   } catch (error: any) {
     throw new Error(error.message);

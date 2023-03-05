@@ -16,7 +16,6 @@ import {
   IStaffAddPayload,
   IStaffEditPayload,
   IStaffDeletePayload,
-  IStaff,
   IStaffSearchFilter,
 } from '@server-databases/mongodb/interfaces/IStaff';
 import { Filter, IFilters } from '@server-databases/mongodb/interfaces/IFilter';
@@ -45,9 +44,11 @@ export const StaffResolver = {
         const staff = await staffModel.findOne(
           {
             $or: [
-              { staffID: { $regex: escapeRegExp(staffID), $options: 'su' } },
-              { firstName: { $eq: escapeRegExp(firstName), $options: 'si' } },
-              { lastName: { $eq: escapeRegExp(lastName), $options: 'si' } },
+              { staffID: { $regex: escapeRegExp(staffID), $options: 'si' } },
+              {
+                firstName: { $regex: escapeRegExp(firstName), $options: 'si' },
+              },
+              { lastName: { $regex: escapeRegExp(lastName), $options: 'si' } },
               warehouseID
                 ? {
                     warehouse: {
@@ -58,7 +59,7 @@ export const StaffResolver = {
             ],
           },
           {},
-          { populate: 'user' }
+          { populate: 'warehouse' }
         );
         resolve({
           error: null,
