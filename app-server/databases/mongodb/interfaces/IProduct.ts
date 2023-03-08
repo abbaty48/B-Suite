@@ -48,4 +48,5 @@ export interface IProduct extends Document {
   retailPrice: number;
   description?: string;
   warehouse?: IWarehouse;
+  _doc: IProduct;
 }

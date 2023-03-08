@@ -1,6 +1,9 @@
+import { SaleResolver } from '@server-resolvers/sale.resolver';
 import { StaffResolver } from '@server-resolvers/staff.resolver';
+import { ProductResolver } from '@server-resolvers/product.resolver';
 import { CategoryResolver } from '@server-resolvers/category.resolver';
 import { WarehouseResolver } from '@server-resolvers/warehouse.resolver';
+
 import { ICategory } from '@server-databases/mongodb/interfaces/ICategory';
 import { IWarehouse } from '@server-databases/mongodb/interfaces/IWarehouse';
 import { IResolverContext } from '@server-commons/models/interfaces/IResolverContext';
@@ -8,7 +11,6 @@ import {
   IStaffPayload,
   IStaffsPayload,
 } from '@server-databases/mongodb/interfaces/IStaff';
-import { ProductResolver } from '@server-resolvers/product.resolver';
 
 export const resolvers = {
   Query: {
@@ -47,6 +49,14 @@ export const resolvers = {
     ): Promise<IWarehouse[]> => {
       return await WarehouseResolver.warehouses(context);
     },
+    // SALE
+    sale: async (_: any, { searchFilter }: any, context: IResolverContext) =>
+      await SaleResolver.sale(searchFilter, context),
+    sales: async (
+      _: any,
+      { searchFilter, filters }: any,
+      context: IResolverContext
+    ) => await SaleResolver.sales(searchFilter, filters, context),
   },
   Mutation: {
     // STAFF
@@ -135,5 +145,18 @@ export const resolvers = {
         config,
       });
     },
+    // SALE
+    addSale: async (_: any, { addSaleInput }: any, context: IResolverContext) =>
+      SaleResolver.addSale(addSaleInput, context),
+    editSale: async (
+      _: any,
+      { editSaleInput }: any,
+      context: IResolverContext
+    ) => SaleResolver.editSale(editSaleInput, context),
+    deleteSale: async (
+      _: any,
+      { saleID, warehouseID }: any,
+      context: IResolverContext
+    ) => SaleResolver.deleteSale(saleID, warehouseID, context),
   },
 };
