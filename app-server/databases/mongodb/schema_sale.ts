@@ -1,19 +1,13 @@
 import mongoose, { Model, Schema, model, models } from 'mongoose';
 import { ISale } from '@server-databases/mongodb/interfaces/ISale';
-import { ICustomer } from '@server-databases/mongodb/interfaces/ICustomer';
 
 const SaleSchema = new Schema<ISale>(
   {
-    saleID: { type: 'string', _id: true, required: true },
+    saleID: { type: 'string', required: true },
     staffID: { type: 'string', required: true },
     customerID: {
       type: 'string',
       required: true,
-      validate: {
-        validator: (value: ICustomer) =>
-          customerModel.exists({ customerID: value.customerID }),
-        msg: `[VALIDATION ERROR]: The provided customer does not exist in the customer table.`,
-      },
     },
     productIDs: {
       type: ['string'],

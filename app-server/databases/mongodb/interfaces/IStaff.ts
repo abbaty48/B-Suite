@@ -54,6 +54,7 @@ export interface IStaff extends Document {
   address?: string;
   password: string;
   token: string;
+  customerID: string;
   warehouse: IWarehouse;
   _doc: IStaff;
 }
