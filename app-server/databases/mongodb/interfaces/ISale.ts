@@ -5,6 +5,7 @@ import { ICustomer } from '@server-databases/mongodb/interfaces/ICustomer';
 import { IWarehouse } from '@server-databases/mongodb/interfaces/IWarehouse';
 
 export interface ISaleProduct extends IProduct {
+  kind: string;
   quantity: number;
   subTotal: number;
 }
@@ -60,23 +61,22 @@ export interface ISaleDeletePayload {
  */
 export interface ISale extends Document {
   saleID: string;
+  staffID: string;
+  customerID: string;
+  warehouseID: Types.ObjectId;
   date: string;
   time: string;
+  paid: number;
   discount: number;
+  totalPrice: number;
+  totalQuantity: number;
   profit: {
     percentage: number;
     status: string; // Gain/Lost
   };
-  products: Types.DocumentArray<ISaleProduct>;
-  paid: number;
-  balance: number;
-  totalPrice: number;
   staff: IStaff;
   customer: ICustomer;
   warehouse: IWarehouse;
-  staffID: string;
-  customerID: string;
-  productIDs: string[];
-  warehouseID: Types.ObjectId;
+  products: Types.DocumentArray<ISaleProduct>;
   _doc: ISale;
 }

@@ -5,10 +5,10 @@ import { categoryModel } from '@server-databases/mongodb/schema_category';
 import { ICategory } from '@server-databases/mongodb/interfaces/ICategory';
 import { IWarehouse } from '@server-databases/mongodb/interfaces/IWarehouse';
 
-const productSchema = new Schema<IProduct>(
+export const productSchema = new Schema<IProduct>(
   {
     productID: { type: 'string', _id: true, required: true, index: true },
-    name: { type: 'string', required: true, unique: true, index: true },
+    name: { type: 'string', required: true, index: true },
     inStock: {
       index: true,
       type: 'boolean',
@@ -52,22 +52,45 @@ const productSchema = new Schema<IProduct>(
       validate: {
         validator: (value: IWarehouse) =>
           categoryModel.exists({ _id: stringToID(value.id) }),
-        msg: `[VALIDATION ERROR]: The provided warehouse does not exist in the wareehouse table, please add the warehouse data first and try again.`,
+        msg: `[VALIDATION ERROR]: The provided warehouse does not exist in the warehouse table, please add the warehouse data first and try again.`,
       },
     },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    collection: 'products',
+    timestamps: {
+      createdAt: true,
+      updatedAt: true,
+      currentTime: () => new Date().getTime(),
+    },
   }
 );
 
-productSchema.pre('findOneAndUpdate', function (this) {
-  const _update = JSON.parse(JSON.stringify(this.getUpdate()));
-  if (_update.quantity !== undefined) {
-    this.set({ inStock: _update.quantity > 0 });
-  }
+productSchema.pre('save', function (this) {
+  updateInStock(this, 'SAVE');
 });
+
+productSchema.pre('findOneAndUpdate', function (this) {
+  updateInStock(this, 'FIND_ONE_AND_UPDATE');
+});
+
+const updateInStock = (_this: any, action: 'SAVE' | 'FIND_ONE_AND_UPDATE') => {
+  let _update;
+  //
+  switch (action) {
+    case 'FIND_ONE_AND_UPDATE':
+      _update = _this.getUpdate().$set;
+      break;
+    case 'SAVE':
+      _update = _this.getChanges().$set;
+      break;
+  }
+  if (_update.quantity !== undefined) {
+    _this.set({ inStock: _update.quantity > 0 });
+  }
+};
 
 export const productModel =
   (models.product as Model<IProduct>) ||

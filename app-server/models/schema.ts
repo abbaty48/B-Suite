@@ -2,7 +2,6 @@ import { gql } from 'apollo-server-express';
 
 const typeDef = gql(
   `
-
    #######  ENUMS  #######
    enum StaffRole {
       Admin
@@ -122,11 +121,10 @@ const typeDef = gql(
       paid: Float,
       discount: Float,
       balance: Float
-      profit: addSaleProfitInput
-      totalPrice: Float,
-      customerID: ID!
+      customerID: ID
       warehouseID: ID,
       productMetas: [saleProductMetaInput!]!
+      addCustomer: addCustomerInput
    }
 
    input editSaleInput {
@@ -136,8 +134,6 @@ const typeDef = gql(
       paid: Float,
       balance: Float
       discount: Float,
-      profit: addSaleProfitInput
-      totalPrice: Float,
       customerID: ID!
       warehouseID: ID,
       productMetas: [saleProductMetaInput!]
@@ -282,21 +278,38 @@ const typeDef = gql(
    ## SALE
    type Sale {
       saleID: ID!
+      staffID: ID!
+      customerID: ID!
+      warehouseID: ID
       date: String!
       time: String!
+      kind: String!
       discount: Float
       profit: SaleProfit
       paid: Float!
       balance: Float!
       totalPrice: Float!
+      totalQuantity: Int!
       staff: Staff!
-      staffID: ID!
-      products: [Product!]!
-      productIDs: [String]
-      customer: Customer!,
-      customerID: ID!
+      customer: Customer!
       warehouse: Warehouse
-      warehouseID: ID
+      products: [SaleProduct!]!
+   }
+   type SaleProduct {
+      productID: ID!
+      name: String!
+      images: [String]
+      inStock: Boolean!
+      expired: Boolean
+      quantity: Int!
+      kind: String!
+      subTotal: Float!
+      category: Category!
+      expirationDate: String
+      wholesalePrice: Float!
+      retailPrice: Float!
+      description: String
+      warehouse: Warehouse
    }
    type SaleProfit {
       percentage: Float!

@@ -14,6 +14,10 @@ import {
   ISaleDeletePayload,
 } from '@server-databases/mongodb/interfaces/ISale';
 import { IResolverContext } from '@server-commons/models/interfaces/IResolverContext';
+import { categoryModel } from '../databases/mongodb/schema_category';
+import { customerModel } from '../databases/mongodb/schema_customer';
+import { ICustomer } from '../databases/mongodb/interfaces/ICustomer';
+import { IProduct } from '../databases/mongodb/interfaces/IProduct';
 
 export const SaleResolver = {
   sale: async (
@@ -201,8 +205,10 @@ export const SaleResolver = {
           config.get('jwt.private'),
           RolePrevileges.ADD_SALE
         );
-        //
+
+        // SALEID
         const saleID = `SALE${genRandom(10)}`;
+        /** PRODUCTS */
         const products = addSaleInput.productMetas.reduce(
           async (
             accumulator: any[],
@@ -230,28 +236,54 @@ export const SaleResolver = {
             added: false,
             newAdded: null,
             error:
-              "[ERROR ADDING PRODUCT]: The product(`s) you're about to sell does not exist in the products records.",
+              "[ERROR ADDING PRODUCT]: The product(`s) you're about to sell does not exist in the products stock records.",
+          });
+        }
+        /** CUSTOMER */
+        let _customer: ICustomer = null;
+        if (addSaleInput.customerID) {
+          // get the customer
+          _customer = await customerModel.findOne({
+            customerID: addSaleInput.customerID,
+          });
+          _customer.saleIDs.push(saleID);
+        } else if (addSaleInput.addCustomer) {
+          // create the new customer
+          const customerID = `CIN${genRandom().slice(0, 5).toUpperCase()}`;
+          _customer = new customerModel<ICustomer>({
+            ...addSaleInput.addCustomer,
+            customerID,
+            saleIDs: [saleID],
+          }); // end new customerModel
+        } else {
+          return resolve({
+            added: false,
+            newAdded: null,
+            error: `[ERROR ADDING SALE]: A customer must exist to make a sale, either provide a customerID or add a new customer.`,
           });
         }
 
+        /** CREATE THE SALEMODEL */
         saleModel.create(
           {
             ...addSaleInput,
             saleID,
+            products: await products,
             staffID: authStaff.staffID,
-            productIDs: (await products).map(
-              (product: any) => product.productID
-            ),
+            customerID: _customer.customerID,
           },
           async (error: CallbackError, _newAdded: ISale) => {
             if (error) {
               return resolve({
                 added: false,
                 newAdded: null,
-                error: `[ERROR ADDING PRODUCT]: ${error.message}`,
+                error: `[ERROR SAVING SELL RECORD]: ${error.message}`,
               });
             }
-
+            // SAVE the Customer
+            _customer.balance = addSaleInput.balance;
+            await _customer.save();
+            // CREATE A NEW SALE OBJECT
             const newAdded = Object.assign(
               await _newAdded.populate('staff customer'),
               {
