@@ -1,5 +1,6 @@
 import { SaleResolver } from '@server-resolvers/sale.resolver';
 import { StaffResolver } from '@server-resolvers/staff.resolver';
+import { SupplyResolver } from '@server-resolvers/supply.resolver';
 import { ProductResolver } from '@server-resolvers/product.resolver';
 import { CustomerResolver } from '@server-resolvers/customer.resolver';
 import { CategoryResolver } from '@server-resolvers/category.resolver';
@@ -69,6 +70,14 @@ export const resolvers = {
       { searchFilter, filters }: any,
       context: IResolverContext
     ) => await CustomerResolver.customers(searchFilter, filters, context),
+    // PURCHASE
+    supply: async (_: any, { searchFilter }: any, context: IResolverContext) =>
+      await SupplyResolver.supply(searchFilter, context),
+    supplies: async (
+      _: any,
+      { searchFilter, filters }: any,
+      context: IResolverContext
+    ) => await SupplyResolver.supplies(searchFilter, filters, context),
   },
   Mutation: {
     // STAFF
@@ -187,5 +196,27 @@ export const resolvers = {
       context: IResolverContext
     ) =>
       await CustomerResolver.deleteCustomers(customerID, warehouseID, context),
+    // PURCHASE
+    makeSupply: async (
+      _: any,
+      { addSupplyInput, warehouseID }: any,
+      context: IResolverContext
+    ) => await SupplyResolver.makeSupply(addSupplyInput, context, warehouseID),
+    editSupply: async (
+      _: any,
+      { supplyID, editSupplyInput, warehouseID }: any,
+      context: IResolverContext
+    ) =>
+      await SupplyResolver.editSupply(
+        supplyID,
+        editSupplyInput,
+        context,
+        warehouseID
+      ),
+    deleteSupply: async (
+      _: any,
+      { supplyID, warehouseID }: any,
+      context: IResolverContext
+    ) => await SupplyResolver.deleteSupply(supplyID, context, warehouseID),
   },
 };

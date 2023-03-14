@@ -22,36 +22,48 @@ const staffRoleAuthorization = async (
 
     const staffPrevileges: IStaffPrevilege = {
       Accountant: [
+        // CATEGORY
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
         RolePrevileges.READ_CATEGORY,
         RolePrevileges.UPDATE_CATEGORY,
         RolePrevileges.DELETE_CATEGORY,
+        // PRODUCT
         RolePrevileges.ALL_PRODUCT_OPERATIONS,
         RolePrevileges.ADD_PRODUCT,
         RolePrevileges.READ_PRODUCT,
         RolePrevileges.UPDATE_PRODUCT,
         RolePrevileges.DELETE_PRODUCT,
+        // SALE
         RolePrevileges.ALL_SALE_OPERATIONS,
         RolePrevileges.ADD_SALE,
         RolePrevileges.READ_SALE,
         RolePrevileges.UPDATE_SALE,
         RolePrevileges.DELETE_SALE,
+        // WAREHOUSE
         RolePrevileges.ALL_WAREHOUSE_OPERATIONS,
         RolePrevileges.ADD_WAREHOUSE,
         RolePrevileges.READ_WAREHOUSE,
         RolePrevileges.UPDATE_WAREHOUSE,
         RolePrevileges.DELETE_WAREHOUSE,
+        // CUSTOMER
         RolePrevileges.ALL_CUSTOMER_OPERATIONS,
         RolePrevileges.ADD_CUSTOMER,
         RolePrevileges.READ_CUSTOMER,
         RolePrevileges.UPDATE_CUSTOMER,
         RolePrevileges.DELETE_CUSTOMER,
+        // STAFF
         RolePrevileges.ALL_STAFF_OPERATIONS,
         RolePrevileges.ADD_STAFF,
         RolePrevileges.READ_STAFF,
         RolePrevileges.UPDATE_STAFF,
         RolePrevileges.DELETE_STAFF,
+        // SUPPLY
+        RolePrevileges.ALL_SUPPLY_OPERATIONS,
+        RolePrevileges.ADD_SUPPLY,
+        RolePrevileges.READ_SUPPLY,
+        RolePrevileges.UPDATE_SUPPLY,
+        RolePrevileges.DELETE_SUPPLY,
       ],
       Manager: [
         // CATEGORY
@@ -86,18 +98,27 @@ const staffRoleAuthorization = async (
         RolePrevileges.READ_STAFF,
         RolePrevileges.UPDATE_STAFF,
         RolePrevileges.DELETE_STAFF,
+        // SUPPLY
+        RolePrevileges.ALL_SUPPLY_OPERATIONS,
+        RolePrevileges.ADD_SUPPLY,
+        RolePrevileges.READ_SUPPLY,
+        RolePrevileges.UPDATE_SUPPLY,
+        RolePrevileges.DELETE_SUPPLY,
       ],
       Warehouse: [
+        // CATEGORY
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
         RolePrevileges.READ_CATEGORY,
         RolePrevileges.UPDATE_CATEGORY,
         RolePrevileges.DELETE_CATEGORY,
+        // PRODUCT
         RolePrevileges.ALL_PRODUCT_OPERATIONS,
         RolePrevileges.ADD_PRODUCT,
         RolePrevileges.READ_PRODUCT,
         RolePrevileges.UPDATE_PRODUCT,
         RolePrevileges.DELETE_PRODUCT,
+        // WAREHOUSE
         RolePrevileges.ALL_WAREHOUSE_OPERATIONS,
         RolePrevileges.ADD_WAREHOUSE,
         RolePrevileges.READ_WAREHOUSE,
@@ -105,12 +126,15 @@ const staffRoleAuthorization = async (
         RolePrevileges.DELETE_WAREHOUSE,
       ],
       Saller: [
+        // PRODUCT
         RolePrevileges.READ_PRODUCT,
+        // SALE
         RolePrevileges.ALL_SALE_OPERATIONS,
         RolePrevileges.ADD_SALE,
         RolePrevileges.READ_SALE,
         RolePrevileges.UPDATE_SALE,
         RolePrevileges.DELETE_SALE,
+        // CUSTOMER
         RolePrevileges.ALL_CUSTOMER_OPERATIONS,
         RolePrevileges.ADD_CUSTOMER,
         RolePrevileges.READ_CUSTOMER,
@@ -118,11 +142,13 @@ const staffRoleAuthorization = async (
         RolePrevileges.DELETE_CUSTOMER,
       ],
       Admin: [
+        // CATEGORY
         RolePrevileges.ALL_CATEGORY_OPERATIONS,
         RolePrevileges.ADD_CATEGORY,
         RolePrevileges.READ_CATEGORY,
         RolePrevileges.UPDATE_CATEGORY,
         RolePrevileges.DELETE_CATEGORY,
+        // PRODUCT
         RolePrevileges.ALL_PRODUCT_OPERATIONS,
         RolePrevileges.ADD_PRODUCT,
         RolePrevileges.READ_PRODUCT,
@@ -132,21 +158,30 @@ const staffRoleAuthorization = async (
         RolePrevileges.READ_SALE,
         RolePrevileges.UPDATE_SALE,
         RolePrevileges.DELETE_SALE,
+        // WAREHOUSE
         RolePrevileges.ALL_WAREHOUSE_OPERATIONS,
         RolePrevileges.ADD_WAREHOUSE,
         RolePrevileges.READ_WAREHOUSE,
         RolePrevileges.UPDATE_WAREHOUSE,
         RolePrevileges.DELETE_WAREHOUSE,
+        // CUSTOMER
         RolePrevileges.ALL_CUSTOMER_OPERATIONS,
         RolePrevileges.ADD_CUSTOMER,
         RolePrevileges.READ_CUSTOMER,
         RolePrevileges.UPDATE_CUSTOMER,
         RolePrevileges.DELETE_CUSTOMER,
+        // STAFF
         RolePrevileges.ALL_STAFF_OPERATIONS,
         RolePrevileges.ADD_STAFF,
         RolePrevileges.READ_STAFF,
         RolePrevileges.UPDATE_STAFF,
         RolePrevileges.DELETE_STAFF,
+        // SUPPLY
+        RolePrevileges.ALL_SUPPLY_OPERATIONS,
+        RolePrevileges.ADD_SUPPLY,
+        RolePrevileges.READ_SUPPLY,
+        RolePrevileges.UPDATE_SUPPLY,
+        RolePrevileges.DELETE_SUPPLY,
       ],
     };
 

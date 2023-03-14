@@ -11,6 +11,12 @@ const typeDef = gql(
       Accountant
    }
 
+   type timestamps {
+      createdAt: String!
+      updatedAt: String!
+      currentTime: Int
+   }
+
    ####### INPUTS #######
 
    input filterInput {
@@ -347,7 +353,7 @@ const typeDef = gql(
       address: String,
       phoneNumber: String,
       beneficiary: Boolean,
-      purchases: [Sale!]!,
+      supplys: [Sale!]!,
       warehouse: Warehouse,
       metas: CustomerMetaData
    }
@@ -424,7 +430,60 @@ const typeDef = gql(
       saleIDs: [ID!],
       metas: customerMetasInput
    }
-  
+   ## PURCHASE
+   type Supply {
+      supplyID: ID!,
+      staffID: ID!,
+      staff: Staff,
+      productIDs: [ID!],
+      products: [Product!]!,
+      totalQuantity: Int!,
+      totalPrice: Float!,
+      date: String,
+   }
+   type AddSupplyPayload {
+      error: String,
+      added: Boolean!,
+      newAdded: Supply,
+   }
+   type EditSupplyPayload {
+      error: String,
+      edited: Boolean!,
+      newEdited: Supply,
+   }
+   type DeleteSupplyPayload {
+      error: String,
+      deleted: Boolean!,
+   }
+   type SupplyPayload {
+      error: String,
+      supply: Supply,
+   }
+   type SupplysPayload {
+      error: String,
+      supplies: [Supply!],
+   }
+   input addSupplyInput {
+      productID: ID!,
+      quantity: Int!,
+      retailPrice: Float!,
+      wholesalePrice: Float!,
+   }
+   input editSupplyInput {
+      productID: ID!,
+      quantity: Int,
+      retailPrice: Float,
+      wholesalePrice: Float,
+      warehouseID: ID
+   }
+   input searchSupplyInput {
+      supplyID: ID,
+      date: String,
+      time: String,
+      staffID: ID,
+      warehouseID : ID
+   }
+
    ## 
    type Query {
       ##STAFF
@@ -443,6 +502,9 @@ const typeDef = gql(
       ##CUSTOMER
       customer(searchFilter: searchCustomerInput!): CustomerPayload
       customers(searchFilter: searchCustomerInput, filters: filterInput): CustomersPayload
+      ##PURCHASE
+      supply(searchFilter: searchSupplyInput!): SupplyPayload
+      supplies(searchFilter: searchSupplyInput, filters: filterInput): SupplysPayload
    }
    type Mutation {
       ###STAFF
@@ -469,6 +531,10 @@ const typeDef = gql(
       addCustomer(addCustomerInput: addCustomerInput!) : AddCustomerPayload
       editCustomer(editCustomerInput: editCustomerInput!) : EditCustomerPayload
       deleteCustomer(customerID: ID!, warehouseID: ID) : DeleteCustomerPayload
+      ###PURCHASE
+      makeSupply(addSupplyInput: [addSupplyInput!]!, warehouseID: ID) : AddSupplyPayload
+      editSupply(supplyID: ID!, editSupplyInput: [editSupplyInput!]!, warehouseID: ID) : EditSupplyPayload
+      deleteSupply(supplyID: ID!, warehouseID: ID) : DeleteSupplyPayload
    }
 `
 );
