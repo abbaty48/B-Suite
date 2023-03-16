@@ -80,3 +80,5 @@ export interface ISale extends Document {
   products: Types.DocumentArray<ISaleProduct>;
   _doc: ISale;
 }
+
+export { IStaff };

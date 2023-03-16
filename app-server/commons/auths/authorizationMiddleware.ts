@@ -104,6 +104,11 @@ const staffRoleAuthorization = async (
         RolePrevileges.READ_SUPPLY,
         RolePrevileges.UPDATE_SUPPLY,
         RolePrevileges.DELETE_SUPPLY,
+        // ENTERPRISE
+        RolePrevileges.ADD_ENTERPRISE,
+        RolePrevileges.UPDATE_ENTERPRISE,
+        // INITIALIZED_SYSTEM
+        RolePrevileges.INITIALIZED_SYSTEM,
       ],
       Warehouse: [
         // CATEGORY
@@ -182,6 +187,11 @@ const staffRoleAuthorization = async (
         RolePrevileges.READ_SUPPLY,
         RolePrevileges.UPDATE_SUPPLY,
         RolePrevileges.DELETE_SUPPLY,
+        // ENTERPRISE
+        RolePrevileges.ADD_ENTERPRISE,
+        RolePrevileges.UPDATE_ENTERPRISE,
+        // INITIALIZED_SYSTEM
+        RolePrevileges.INITIALIZED_SYSTEM,
       ],
     };
 

@@ -484,6 +484,128 @@ const typeDef = gql(
       warehouseID : ID
    }
 
+   ## STORE
+   type StorePayload {
+      error: String
+      result: Int!
+   }
+
+   type Store {
+      totalSales: StorePayload,
+      totalStaffs: StorePayload,
+      totalProducts: StorePayload,
+      totalCustomers: StorePayload,
+      totalWarehouses: StorePayload,
+      totalExpiredProducts: StorePayload,
+      enterPrise: enterPrisePayload,
+      _sysInitialized: Boolean!
+      _enterpriseInitialized: Boolean!
+   }
+
+   ## ENTERPRISE
+
+   type EnterpriseSocialAccounts {
+      facebook: String,
+      twitter: String,
+      youtube: String,
+      instagram: String
+   }
+   type EnterpriseOwner {
+      name: String!,
+      email: String,
+      about: String,
+      picture: String,
+      phoneNumber: String,
+      website: String,
+      socialAccounts: EnterpriseSocialAccounts
+   }
+   type Enterprise {
+      name: String!,
+      slogan: String,
+      title: String,
+      address: String,
+      about: String,
+      contacts: [String!]!,
+      website: String,
+      email: String,
+      staffs: [Staff!]!,
+      products: [Product!]!,
+      customers: [Customer!]!,
+      warehouses: [Warehouse!]!,
+      owners: [EnterpriseOwner!]!,
+      socialAccounts: EnterpriseSocialAccounts
+   }
+
+   input addSocialAccountInput {
+      facebook: String,
+      twitter: String,
+      youtube: String,
+      instagram: String
+   }
+
+   input addOwnerInput {
+      name: String!,
+      email: String!,
+      about: String,
+      picture: String,
+      phoneNumber: String!,
+      website: String,
+      socialAccounts: addSocialAccountInput
+   }
+   input editOwnerInput {
+      name: String,
+      email: String,
+      about: String,
+      picture: String,
+      phoneNumber: String,
+      website: String,
+      socialAccounts: addSocialAccountInput
+   }
+
+   input addEnterpriseInput {
+      name: String!,
+      slogan: String,
+      title: String,
+      address: String!,
+      about: String,
+      contacts: [String!]!,
+      website: String,
+      email: String,
+      owners: [addOwnerInput!]!,
+      socialAccounts: addSocialAccountInput
+   }
+
+   input editEnterpriseInput {
+      name: String,
+      title: String,
+      slogan: String,
+      about: String,
+      email: String,
+      address: String,
+      website: String,
+      contacts: [String!],
+      owners: [editOwnerInput!],
+      socialAccounts: addSocialAccountInput
+   }
+   type enterPrisePayload {
+      error: String,
+      result: Enterprise
+   }
+   type addEnterprisePayload {
+      error: String,
+      added: Boolean!,
+      newAdded: Enterprise
+   }
+   type editEnterprisePayload {
+      error: String,
+      edited: Boolean!,
+      newEdited: Enterprise
+   }
+   type initPayload {
+      error: String,
+      _initialized: Boolean!
+   }
+
    ## 
    type Query {
       ##STAFF
@@ -505,6 +627,8 @@ const typeDef = gql(
       ##PURCHASE
       supply(searchFilter: searchSupplyInput!): SupplyPayload
       supplies(searchFilter: searchSupplyInput, filters: filterInput): SupplysPayload
+      ##STORE
+      store: Store!
    }
    type Mutation {
       ###STAFF
@@ -535,6 +659,10 @@ const typeDef = gql(
       makeSupply(addSupplyInput: [addSupplyInput!]!, warehouseID: ID) : AddSupplyPayload
       editSupply(supplyID: ID!, editSupplyInput: [editSupplyInput!]!, warehouseID: ID) : EditSupplyPayload
       deleteSupply(supplyID: ID!, warehouseID: ID) : DeleteSupplyPayload
+      ###ENTERPRISE
+      addEnterprise(addEnterpriseInput: addEnterpriseInput!): addEnterprisePayload
+      editEnterprise(editEnterpriseInput: editEnterpriseInput!): editEnterprisePayload
+      _initializeSys(_init: Boolean!): initPayload!
    }
 `
 );

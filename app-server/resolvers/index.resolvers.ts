@@ -1,4 +1,5 @@
 import { SaleResolver } from '@server-resolvers/sale.resolver';
+import { StoreResolver } from '@server-resolvers/store.resolver';
 import { StaffResolver } from '@server-resolvers/staff.resolver';
 import { SupplyResolver } from '@server-resolvers/supply.resolver';
 import { ProductResolver } from '@server-resolvers/product.resolver';
@@ -16,7 +17,7 @@ import {
 
 export const resolvers = {
   Query: {
-    // STAFF
+    //#region STAFF
     staff: async (
       _: any,
       { searchFilter }: any,
@@ -31,7 +32,9 @@ export const resolvers = {
     ): Promise<IStaffsPayload> => {
       return await StaffResolver.staffs(searchFilter, filters, context);
     },
-    // PRODUCT
+    //#endregion STAFFS
+
+    //#region PRODUCT
     product: async (_: any, { searchFilter }: any, context: IResolverContext) =>
       await ProductResolver.product(searchFilter, context),
     products: async (
@@ -39,11 +42,15 @@ export const resolvers = {
       { searchFilter, filters }: any,
       context: IResolverContext
     ) => await ProductResolver.products(searchFilter, filters, context),
-    // CATEGORY
+    //#endregion PRODUCT
+
+    //#region CATEGORY
     categories: async (_: any): Promise<ICategory[]> => {
       return await CategoryResolver.categories();
     },
-    // WAREHOUSE
+    //#endregion CATEGORY
+
+    //#region WAREHOUSE
     warehouses: async (
       _: any,
       args: any,
@@ -51,7 +58,9 @@ export const resolvers = {
     ): Promise<IWarehouse[]> => {
       return await WarehouseResolver.warehouses(context);
     },
-    // SALE
+    //#endregion WARHOUSE
+
+    //#region SALE
     sale: async (_: any, { searchFilter }: any, context: IResolverContext) =>
       await SaleResolver.sale(searchFilter, context),
     sales: async (
@@ -59,7 +68,9 @@ export const resolvers = {
       { searchFilter, filters }: any,
       context: IResolverContext
     ) => await SaleResolver.sales(searchFilter, filters, context),
-    // CUSTOMER
+    //#endregion SALE
+
+    //#region CUSTOMER
     customer: async (
       _: any,
       { searchFilter }: any,
@@ -70,7 +81,9 @@ export const resolvers = {
       { searchFilter, filters }: any,
       context: IResolverContext
     ) => await CustomerResolver.customers(searchFilter, filters, context),
-    // PURCHASE
+    //#endregion CUSTOMER
+
+    //#region PURCHASE
     supply: async (_: any, { searchFilter }: any, context: IResolverContext) =>
       await SupplyResolver.supply(searchFilter, context),
     supplies: async (
@@ -78,9 +91,13 @@ export const resolvers = {
       { searchFilter, filters }: any,
       context: IResolverContext
     ) => await SupplyResolver.supplies(searchFilter, filters, context),
+    //#endregion PURCHASE
+    // STORE
+    store: async (_: any, _args: any, context: IResolverContext) =>
+      await StoreResolver.store(context),
   },
   Mutation: {
-    // STAFF
+    //#region STAFF
     addStaff: async (_: any, inputs: any, context: IResolverContext) => {
       return await StaffResolver.addStaff(inputs, context);
     },
@@ -94,7 +111,9 @@ export const resolvers = {
     ) => {
       return await StaffResolver.deleteStaff(staffID, context);
     },
-    // PRODUCT
+    //#endregion
+
+    //#region PRODUCT
     addProduct: async (
       _: any,
       { addProductInput }: any,
@@ -110,7 +129,9 @@ export const resolvers = {
       { productID, warehouseID }: any,
       context: IResolverContext
     ) => await ProductResolver.deleteProduct(productID, warehouseID, context),
-    // CATEGORY
+    //#endregion
+
+    //#region CATEGORY
     addCategory: async (_: any, { category }: any) => {
       return await CategoryResolver.addCategory(category);
     },
@@ -120,7 +141,9 @@ export const resolvers = {
     deleteCategory: async (_: any, { category }: any) => {
       return await CategoryResolver.deleteCategory(category);
     },
-    // WAREHOUSE
+    //#endregion
+
+    //#region WAREHOUSE
     addWarehouse: async (
       _: any,
       { warehouseID, address, staffs, products }: any,
@@ -166,7 +189,9 @@ export const resolvers = {
         config,
       });
     },
-    // SALE
+    //#endregion
+
+    //#region SALE
     addSale: async (_: any, { addSaleInput }: any, context: IResolverContext) =>
       SaleResolver.addSale(addSaleInput, context),
     editSale: async (
@@ -179,7 +204,9 @@ export const resolvers = {
       { saleID, warehouseID }: any,
       context: IResolverContext
     ) => SaleResolver.deleteSale(saleID, warehouseID, context),
-    // CUSTOMER
+    //#endregion
+
+    //#region CUSTOMER
     addCustomer: async (
       _: any,
       { addCustomerInput }: any,
@@ -196,7 +223,9 @@ export const resolvers = {
       context: IResolverContext
     ) =>
       await CustomerResolver.deleteCustomers(customerID, warehouseID, context),
-    // PURCHASE
+    //#endregion
+
+    //#region SUPPLY
     makeSupply: async (
       _: any,
       { addSupplyInput, warehouseID }: any,
@@ -218,5 +247,21 @@ export const resolvers = {
       { supplyID, warehouseID }: any,
       context: IResolverContext
     ) => await SupplyResolver.deleteSupply(supplyID, context, warehouseID),
+    //#endregion
+
+    //#region STORE
+    addEnterprise: async (
+      _: any,
+      { addEnterpriseInput }: any,
+      context: IResolverContext
+    ) => StoreResolver.addEnterprise(addEnterpriseInput, context),
+    editEnterprise: async (
+      _: any,
+      { editEnterpriseInput }: any,
+      context: IResolverContext
+    ) => StoreResolver.editEnterprise(editEnterpriseInput, context),
+    _initializeSys: async (_: any, { _init }: any, context: IResolverContext) =>
+      StoreResolver._initializeSys(_init, context),
+    //#endregion
   },
 };
