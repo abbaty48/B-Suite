@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { StaffRole } from '@server-databases/mongodb/enums/Role';
+import { IFeature } from '@server-databases/mongodb/interfaces/IFeature';
 import { IWarehouse } from '@server-databases/mongodb/interfaces/IWarehouse';
 
 export interface IStaffPayload {
@@ -10,9 +11,10 @@ export interface IStaffPayload {
 export interface IStaffsPayload {
   error: string | null;
   staffs: IStaff[];
-  filters?: {
+  pagins?: {
     sort: string;
-    total: number;
+    totalDocuments: number;
+    totalPaginated: number;
     nextPageIndex: number;
     currentPageIndex: number;
   };
@@ -49,12 +51,13 @@ export interface IStaff extends Document {
   otherName?: string;
   phoneNumber?: string;
   email?: string;
-  passport?: string;
+  picture?: IFeature;
   role: StaffRole;
   address?: string;
   password: string;
   token: string;
   customerID: string;
+  warehouseID: string;
   warehouse: IWarehouse;
   _doc: IStaff;
 }

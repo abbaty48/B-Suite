@@ -1,6 +1,15 @@
-import { Types, Document, ObjectId } from 'mongoose';
+import { Document } from 'mongoose';
 import { IStaff } from '@server-databases/mongodb/interfaces/IStaff';
 import { IProduct } from '@server-databases/mongodb/interfaces/IProduct';
+
+export interface IWarehousePayload {
+  error: string | null;
+  warehouse: IWarehouse | null;
+}
+export interface IWarehousesPayload {
+  error: string | null;
+  warehouses: IWarehouse[];
+}
 
 export interface IWarehouseAddPayload {
   error: string | null;
@@ -11,6 +20,7 @@ export interface IWarehouseAddPayload {
 export interface IWarehouseEditPayload {
   error: string | null;
   edited: boolean;
+  newEdited: IWarehouse;
 }
 
 export interface IWarehouseDeletePayload {
@@ -18,9 +28,11 @@ export interface IWarehouseDeletePayload {
   deleted: boolean;
 }
 export interface IWarehouse extends Document {
-  warehouseID: ObjectId;
+  warehouseID: string;
   name: string;
   address: string;
-  staffs: Types.DocumentArray<IStaff>;
-  products: Types.DocumentArray<IProduct>;
+  staffIDs: string[];
+  productIDs: string[];
+  staffs: IStaff[];
+  products: IProduct[];
 }

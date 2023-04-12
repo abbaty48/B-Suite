@@ -5,7 +5,7 @@ import {
   ICustomerEditPayload,
   ICustomerDeletePayload,
 } from '@server-databases/mongodb/interfaces/ICustomer';
-import { Filter } from '@server-databases/mongodb/interfaces/IFilter';
+import { IPagin, Pagin } from '@/src/databases/mongodb/interfaces/IPagin';
 import { IResolverContext } from '@server-commons/models/interfaces/IResolverContext';
 
 import { escapeRegExp, genRandom } from '@server-commons/helpers';
@@ -98,7 +98,7 @@ export const CustomerResolver = {
   },
   customers: async (
     searchFilter: any,
-    filter: any,
+    pagin: IPagin,
     { request, response, config }: IResolverContext
   ) => {
     return new Promise<ICustomersPayload>(async (resolve) => {
@@ -112,87 +112,86 @@ export const CustomerResolver = {
         const { name, email, customerID, address, dateOfBirth, beneficiaries } =
           searchFilter ?? {};
         // PAGINATE THE CUSTOMER
-        const sort = filter?.sort ?? Filter.sort,
-          limit = filter?.limit ?? Filter.limit,
-          pageIndex = filter?.pageIndex ?? Filter.pageIndex;
-        const customers = await customerModel
-          .find(
-            {
-              $or: [
-                customerID
-                  ? {
-                      customerID: {
-                        $eq: customerID,
-                      },
-                    }
-                  : {},
-                name
-                  ? {
-                      name: {
-                        $regex: escapeRegExp(name),
-                        $options: 'si',
-                      },
-                    }
-                  : {},
-                email
-                  ? {
-                      email: {
-                        $regex: escapeRegExp(email),
-                        $options: 'si',
-                      },
-                    }
-                  : {},
-                address
-                  ? {
-                      address: {
-                        $regex: escapeRegExp(address),
-                        $options: 'si',
-                      },
-                    }
-                  : {},
-                dateOfBirth
-                  ? {
-                      'metas.dateOfBirth': {
-                        $regex: escapeRegExp(dateOfBirth),
-                        $options: 'si',
-                      },
-                    }
-                  : {},
-                beneficiaries !== undefined
-                  ? {
-                      beneficiary: beneficiaries,
-                    }
-                  : {},
-              ],
+        const sort = pagin?.sort ?? Pagin.sort,
+          limit = pagin?.limit ?? Pagin.limit,
+          pageIndex = pagin?.pageIndex ?? Pagin.pageIndex;
+        const customers = await customerModel.find(
+          {
+            $or: [
+              customerID
+                ? {
+                    customerID: {
+                      $eq: customerID,
+                    },
+                  }
+                : {},
+              name
+                ? {
+                    name: {
+                      $regex: escapeRegExp(name),
+                      $options: 'si',
+                    },
+                  }
+                : {},
+              email
+                ? {
+                    email: {
+                      $regex: escapeRegExp(email),
+                      $options: 'si',
+                    },
+                  }
+                : {},
+              address
+                ? {
+                    address: {
+                      $regex: escapeRegExp(address),
+                      $options: 'si',
+                    },
+                  }
+                : {},
+              dateOfBirth
+                ? {
+                    'metas.dateOfBirth': {
+                      $regex: escapeRegExp(dateOfBirth),
+                      $options: 'si',
+                    },
+                  }
+                : {},
+              beneficiaries !== undefined
+                ? {
+                    beneficiary: beneficiaries,
+                  }
+                : {},
+            ],
+          },
+          {},
+          {
+            sort: { name: sort },
+            skip: limit * pageIndex,
+            limit,
+            populate: {
+              path: 'warehouse purchases',
+              populate: 'staff products',
             },
-            {},
-            {
-              populate: {
-                path: 'warehouse purchases',
-                populate: 'staff products',
-              },
-            }
-          )
-          .sort({ name: sort })
-          .skip(limit * pageIndex)
-          .limit(limit);
+          } // end options
+        ); // end find
         //
         resolve({
           error: null,
           customers,
-          filters: {
+          pagins: {
             sort,
-            totalFilter: customers.length,
-            nextPageIndex: pageIndex + 1,
             currentPageIndex: pageIndex,
+            nextPageIndex: pageIndex + 1,
+            totalPaginated: customers.length,
             totalDocuments: await customerModel.count(),
           },
-        });
+        }); // end resolve
       } catch (error) {
         resolve({
           error: `[INTERNAL ERROR]: ${error.message}`,
           customers: null,
-          filters: null,
+          pagins: null,
         }); // end resolve
       } // end catch
     }); // end Promise

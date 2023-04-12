@@ -8,7 +8,6 @@ import { CategoryResolver } from '@server-resolvers/category.resolver';
 import { WarehouseResolver } from '@server-resolvers/warehouse.resolver';
 
 import { ICategory } from '@server-databases/mongodb/interfaces/ICategory';
-import { IWarehouse } from '@server-databases/mongodb/interfaces/IWarehouse';
 import { IResolverContext } from '@server-commons/models/interfaces/IResolverContext';
 import {
   IStaffPayload,
@@ -27,10 +26,10 @@ export const resolvers = {
     },
     staffs: async (
       _: any,
-      { searchFilter, filters }: any,
+      { searchFilter, pagin }: any,
       context: IResolverContext
     ): Promise<IStaffsPayload> => {
-      return await StaffResolver.staffs(searchFilter, filters, context);
+      return await StaffResolver.staffs(searchFilter, pagin, context);
     },
     //#endregion STAFFS
 
@@ -39,9 +38,9 @@ export const resolvers = {
       await ProductResolver.product(searchFilter, context),
     products: async (
       _: any,
-      { searchFilter, filters }: any,
+      { searchFilter, pagin }: any,
       context: IResolverContext
-    ) => await ProductResolver.products(searchFilter, filters, context),
+    ) => await ProductResolver.products(searchFilter, pagin, context),
     //#endregion PRODUCT
 
     //#region CATEGORY
@@ -51,13 +50,16 @@ export const resolvers = {
     //#endregion CATEGORY
 
     //#region WAREHOUSE
+    warehouse: async (
+      _: any,
+      { searchFilter }: any,
+      context: IResolverContext
+    ) => await WarehouseResolver.warehouse(searchFilter, context),
     warehouses: async (
       _: any,
-      args: any,
+      { searchFilter, pagin }: any,
       context: IResolverContext
-    ): Promise<IWarehouse[]> => {
-      return await WarehouseResolver.warehouses(context);
-    },
+    ) => await WarehouseResolver.warehouses(searchFilter, pagin, context),
     //#endregion WARHOUSE
 
     //#region SALE
@@ -65,9 +67,9 @@ export const resolvers = {
       await SaleResolver.sale(searchFilter, context),
     sales: async (
       _: any,
-      { searchFilter, filters }: any,
+      { searchFilter, pagin }: any,
       context: IResolverContext
-    ) => await SaleResolver.sales(searchFilter, filters, context),
+    ) => await SaleResolver.sales(searchFilter, pagin, context),
     //#endregion SALE
 
     //#region CUSTOMER
@@ -78,19 +80,19 @@ export const resolvers = {
     ) => await CustomerResolver.customer(searchFilter, context),
     customers: async (
       _: any,
-      { searchFilter, filters }: any,
+      { searchFilter, pagin }: any,
       context: IResolverContext
-    ) => await CustomerResolver.customers(searchFilter, filters, context),
+    ) => await CustomerResolver.customers(searchFilter, pagin, context),
     //#endregion CUSTOMER
 
-    //#region PURCHASE
+    //#region SUPPLY
     supply: async (_: any, { searchFilter }: any, context: IResolverContext) =>
       await SupplyResolver.supply(searchFilter, context),
     supplies: async (
       _: any,
-      { searchFilter, filters }: any,
+      { searchFilter, pagin }: any,
       context: IResolverContext
-    ) => await SupplyResolver.supplies(searchFilter, filters, context),
+    ) => await SupplyResolver.supplies(searchFilter, pagin, context),
     //#endregion PURCHASE
     // STORE
     store: async (_: any, _args: any, context: IResolverContext) =>
@@ -98,11 +100,19 @@ export const resolvers = {
   },
   Mutation: {
     //#region STAFF
-    addStaff: async (_: any, inputs: any, context: IResolverContext) => {
-      return await StaffResolver.addStaff(inputs, context);
+    addStaff: async (
+      _: any,
+      { addStaffInput }: any,
+      context: IResolverContext
+    ) => {
+      return await StaffResolver.addStaff(addStaffInput, context);
     },
-    editStaff: async (_: any, inputs: any, context: IResolverContext) => {
-      return await StaffResolver.editStaff(inputs, context);
+    editStaff: async (
+      _: any,
+      { editStaffInput }: any,
+      context: IResolverContext
+    ) => {
+      return await StaffResolver.editStaff(editStaffInput, context);
     },
     deleteStaff: async (
       _: any,
@@ -132,51 +142,51 @@ export const resolvers = {
     //#endregion
 
     //#region CATEGORY
-    addCategory: async (_: any, { category }: any) => {
-      return await CategoryResolver.addCategory(category);
+    addCategory: async (
+      _: any,
+      { addCategoryInput }: any,
+      context: IResolverContext
+    ) => {
+      return await CategoryResolver.addCategory(addCategoryInput, context);
     },
-    editCategory: async (_: any, { oldCategory, newCategory }: any) => {
-      return await CategoryResolver.editCategory(oldCategory, newCategory);
+    editCategory: async (
+      _: any,
+      { editCategoryInput }: any,
+      context: IResolverContext
+    ) => {
+      return await CategoryResolver.editCategory(editCategoryInput, context);
     },
-    deleteCategory: async (_: any, { category }: any) => {
-      return await CategoryResolver.deleteCategory(category);
+    deleteCategory: async (
+      _: any,
+      { category }: any,
+      context: IResolverContext
+    ) => {
+      return await CategoryResolver.deleteCategory(category, context);
     },
     //#endregion
 
     //#region WAREHOUSE
     addWarehouse: async (
       _: any,
-      { warehouseID, address, staffs, products }: any,
+      { addWarehouseInput }: any,
       { request, response, config }: IResolverContext
     ) => {
-      return await WarehouseResolver.addWarehouse(
-        {
-          warehouseID,
-          address,
-          staffs,
-          products,
-        },
-        { request, response, config }
-      );
+      return await WarehouseResolver.addWarehouse(addWarehouseInput, {
+        request,
+        response,
+        config,
+      });
     },
     editWarehouse: async (
       _: any,
-      { warehouseID, name, address, staffs, products }: any,
+      { editWarehouseInput }: any,
       { request, response, config }: IResolverContext
     ) => {
-      return await WarehouseResolver.editWarehouse(
-        {
-          warehouseID,
-          address,
-          staffs,
-          products,
-        },
-        {
-          request,
-          response,
-          config,
-        }
-      );
+      return await WarehouseResolver.editWarehouse(editWarehouseInput, {
+        request,
+        response,
+        config,
+      });
     },
     deleteWarehouse: async (
       _: any,

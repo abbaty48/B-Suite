@@ -49,4 +49,5 @@ CustomerSchema.virtual('purchases', {
 });
 
 export const customerModel =
-  (models.customer as Model<ICustomer>) || model('customer', CustomerSchema);
+  (models.customer as Model<ICustomer>) ||
+  model<ICustomer>('customer', CustomerSchema);

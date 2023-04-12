@@ -14,6 +14,13 @@ export interface ISupplyPayload {
 export interface ISupplysPayload {
   error: string | null;
   supplies: ISupply[] | null;
+  pagins?: {
+    sort: string;
+    totalDocuments: number;
+    totalPaginated: number;
+    nextPageIndex: number;
+    currentPageIndex: number;
+  };
 }
 
 export interface ISupplyAddPayload {

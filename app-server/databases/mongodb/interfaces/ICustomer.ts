@@ -8,12 +8,12 @@ export interface ICustomerPayload {
 export interface ICustomersPayload {
   error: string | null;
   customers: ICustomer[];
-  filters: {
-    currentPageIndex: number;
-    nextPageIndex: number;
-    totalDocuments: number;
-    totalFilter: number;
+  pagins: {
     sort: string;
+    totalPaginated: number;
+    totalDocuments: number;
+    nextPageIndex: number;
+    currentPageIndex: number;
   };
 }
 export interface ICustomerAddPayload {

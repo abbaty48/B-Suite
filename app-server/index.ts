@@ -1,6 +1,7 @@
 import cors from 'cors';
 import morgan from 'morgan';
 import config from 'config';
+import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import typeDefs from '@server-models/schema';
@@ -8,13 +9,14 @@ import { PubSub } from 'graphql-subscriptions';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { ApolloServer } from 'apollo-server-express';
 import { makeExecutableSchema } from '@graphql-tools/schema';
+import { mongodbService } from '@server-datasources/mongodb';
 import { resolvers } from '@server-resolvers/index.resolvers';
-import express, { NextFunction, Request, Response } from 'express';
+import { errorMiddlwares } from '@server-commons/middlewares/error';
+import { assetMiddlwares } from '@server-commons/middlewares/assets';
 import {
   ApolloServerPluginDrainHttpServer,
   ApolloServerPluginLandingPageLocalDefault,
 } from 'apollo-server-core';
-import { GraphQLError } from 'graphql';
 
 export const pubsub = new PubSub();
 
@@ -66,23 +68,24 @@ async function Main() {
   // Hand in the schema we just created and have the
   // WebSocketServer start listening.
   const serverCleanup = useServer({ schema }, wsServer);
+  // IMAGE REQUEST
+  // serve static image assets
 
   app.use('*', async (request, response, next) => {
     // set the res and req to context object for all resovers to leverage
     _apolloServer.requestOptions.context = { request, response, config };
     next(); // makes the middleware move next
   });
-  // ERROR HANDLER
-  app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    if (res.headersSent) {
-      return next(err);
-    }
-    const { status } = err;
-    console.log('Error in server: ', status, err.message);
-    res.status(status).json(err);
-  });
+
+  // ASSET MIDDLEWARES
+  assetMiddlwares(app, __dirname);
+  // ERROR HANDLE
+  errorMiddlwares(app, __dirname);
+
   // start the mongodb server
   try {
+    // start mongodb Server
+    mongodbService();
     // start the apollo server
     await _apolloServer.start();
     // apply express app as middleware to the apollo server

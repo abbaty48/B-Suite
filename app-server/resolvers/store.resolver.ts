@@ -155,8 +155,8 @@ export const StoreResolver = {
               });
             } catch (error) {
               resolve({
-                error,
                 result: null,
+                error: `[EXCEPTION]: ${error.message}`,
               }); // end resolve
             } // end catch
           } // end promise
@@ -207,7 +207,7 @@ export const StoreResolver = {
           });
         } catch (error) {
           resolve({
-            error,
+            error: `[EXCEPTION]: ${error.message}`,
             added: false,
             newAdded: null,
           });
@@ -254,9 +254,9 @@ export const StoreResolver = {
         }); // end resolve
       } catch (error) {
         resolve({
-          error,
           edited: false,
           newEdited: null,
+          error: `[EXCEPTION]: ${error.message}`,
         }); // end resolve
       } // end catch
     }); // end promise
@@ -286,8 +286,8 @@ export const StoreResolver = {
         });
       } catch (error) {
         resolve({
-          error,
           _initialized: false,
+          error: `[EXCEPTION]: ${error.message}`,
         }); // end resolve
       } // end catch
     }); // end Promise

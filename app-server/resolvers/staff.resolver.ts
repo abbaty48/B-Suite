@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import JWT from 'jsonwebtoken';
-import { mongodbService } from '@server-datasources/mongodb';
+import { CallbackError } from 'mongoose';
 import { StaffRole } from '@server-databases/mongodb/enums/Role';
 import { staffModel } from '@server-databases/mongodb/schema_staff';
 import staffRoleAuthorization from '@server-commons/auths/authorizationMiddleware';
@@ -17,12 +17,17 @@ import {
   IStaffEditPayload,
   IStaffDeletePayload,
   IStaffSearchFilter,
+  IStaff,
 } from '@server-databases/mongodb/interfaces/IStaff';
-import { Filter, IFilters } from '@server-databases/mongodb/interfaces/IFilter';
+import { IPagin, Pagin } from '@/src/databases/mongodb/interfaces/IPagin';
 import { RolePrevileges } from '@server-databases/mongodb/enums/RolePrevilage';
 import { IResolverContext } from '@server-commons/models/interfaces/IResolverContext';
-
-mongodbService();
+import {
+  checkFileExistant,
+  deleteDirUploader,
+  deleteFileUploader,
+  serverFileUploader,
+} from '@server-commons/file';
 
 export const StaffResolver = {
   staff: async (
@@ -75,7 +80,7 @@ export const StaffResolver = {
   },
   staffs: async (
     searchFilter: IStaffSearchFilter,
-    filter: IFilters,
+    pagin: IPagin,
     { request, response, config }: IResolverContext
   ) => {
     return new Promise<IStaffsPayload>(async (resolve) => {
@@ -91,14 +96,20 @@ export const StaffResolver = {
         const { staffID, firstName, lastName, warehouseID } =
           searchFilter ?? {};
         // PAGINATE THE STAFFS
-        const sort = filter.sort ?? Filter.sort,
-          limit = filter.limit ?? Filter.limit,
-          pageIndex = filter.pageIndex ?? Filter.pageIndex;
-        const paginatedStaffs = await staffModel
-          .find({
+        const sort = pagin?.sort ?? Pagin.sort,
+          limit = pagin?.limit ?? Pagin.limit,
+          pageIndex = pagin?.pageIndex ?? Pagin.pageIndex;
+        //
+        const staffs = await staffModel.find(
+          {
             $or: [
               staffID
-                ? { staffID: { $regex: escapeRegExp(staffID), $options: 'si' } }
+                ? {
+                    staffID: {
+                      $regex: escapeRegExp(staffID),
+                      $options: 'si',
+                    },
+                  }
                 : {},
               firstName
                 ? {
@@ -124,20 +135,25 @@ export const StaffResolver = {
                   }
                 : {},
             ],
-          })
-          .sort({ firstName: sort })
-          .skip(limit * pageIndex)
-          .limit(limit);
+          },
+          {},
+          {
+            sort: { firstName: sort },
+            skip: limit * pageIndex,
+            limit,
+            populate: 'warehouse',
+          }
+        );
         // POPULATE THE STAFF WITH WAREHOUSE
-        const staffs = await staffModel.populate(paginatedStaffs, 'user');
         resolve({
           error: null,
           staffs,
-          filters: {
+          pagins: {
             sort,
-            total: paginatedStaffs.length,
             nextPageIndex: pageIndex + 1,
             currentPageIndex: pageIndex,
+            totalPaginated: staffs.length,
+            totalDocuments: await staffModel.count(),
           },
         });
       } catch (error) {
@@ -149,7 +165,7 @@ export const StaffResolver = {
     });
   },
   addStaff: async (
-    inputs: any,
+    addStaffInput: any,
     { request, response, config }: IResolverContext
   ) => {
     return new Promise<IStaffAddPayload>(async (resolve) => {
@@ -162,20 +178,24 @@ export const StaffResolver = {
           RolePrevileges.ADD_STAFF
         );
 
-        const { firstName, lastName, email, password, role } = inputs;
+        const { firstName, lastName, email, password, role, featureURI } =
+          addStaffInput;
 
         // CHECK USER VALIDATION
         if (role === StaffRole.Manager || role === StaffRole.Admin) {
           // check for already manager
           if (
             await staffModel.exists({
-              $or: [{ role: StaffRole.Manager }, { role: StaffRole.Admin }],
+              $or: [
+                role == StaffRole.Manager ? { role: StaffRole.Manager } : {},
+                role == StaffRole.Admin ? { role: StaffRole.Admin } : {},
+              ],
             })
           ) {
             return resolve({
               added: false,
               newAdded: null,
-              error: `A staff with a "${role}" role already exist, only one manager/admin is allowed, please provide a different role.`,
+              error: `[VALIDATION ERROR]: A staff with a "${role}" role already exist, only one manager/admin is allowed, please provide a different role.`,
             });
           }
         }
@@ -199,28 +219,47 @@ export const StaffResolver = {
           { algorithm: 'HS512' }
         );
 
-        const newStaff = await staffModel.create({
-          ...inputs,
-          staffID,
-          token,
-          password: passwordHash,
-        });
-        resolve({
-          error: null,
-          added: true,
-          newAdded: newStaff,
-        });
+        await staffModel.create(
+          {
+            ...addStaffInput,
+            staffID,
+            token,
+            password: passwordHash,
+          },
+          async (error: CallbackError, newStaff: IStaff) => {
+            // IF ADD A PICTURE
+            if (featureURI) {
+              // UPLOAD THE PICTURE
+              const _feature = await serverFileUploader(
+                featureURI,
+                `./public/uploads/features/staffs/${newStaff.staffID}`,
+                config.get('server.domain'),
+                `${newStaff.staffID}`
+              );
+              if (_feature) {
+                newStaff.picture = _feature;
+                await newStaff.save({ validateBeforeSave: false });
+              }
+            } // end if featureURI
+            //
+            resolve({
+              error: null,
+              added: true,
+              newAdded: newStaff,
+            });
+          }
+        );
       } catch (error) {
         resolve({
-          error: error.message,
           added: false,
           newAdded: null,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     }); // end Promise
   }, // end addStaff
   editStaff: async (
-    inputs: any,
+    editStaffInput: any,
     { request, response, config }: IResolverContext
   ) => {
     return new Promise<IStaffEditPayload>(async (resolve) => {
@@ -234,12 +273,12 @@ export const StaffResolver = {
         );
         // TARGET STAFF
         const { staffID, firstName, lastName, email, role } =
-          await staffModel.findOne({ staffID: inputs.staffID });
+          await staffModel.findOne({ staffID: editStaffInput.staffID });
         // CHECK USER VALIDATION
-        if (inputs.role) {
+        if (editStaffInput.role) {
           if (
-            inputs.role === StaffRole.Manager ||
-            inputs.role === StaffRole.Admin
+            editStaffInput.role === StaffRole.Manager ||
+            editStaffInput.role === StaffRole.Admin
           ) {
             // check for already manager
             if (
@@ -250,17 +289,17 @@ export const StaffResolver = {
               return resolve({
                 edited: false,
                 newEdited: null,
-                error: `A staff with a "${inputs.role}" role already exist, only one manager/admin is allowed, please provide a different role.`,
+                error: `[VALIDATION ERROR]: A staff with a "${editStaffInput.role}" role already exist, only one manager/admin is allowed, please provide a different role.`,
               });
             }
           }
         } // end if input.role
         // IF TO UPDATE THE PASSWORD
         let passwordHash, token: string;
-        if (inputs.password) {
+        if (editStaffInput.password) {
           //   BCRYPT STAFF PASSWORD
           passwordHash = await bcrypt.hash(
-            inputs.password,
+            editStaffInput.password,
             await bcrypt.genSalt()
           );
 
@@ -279,8 +318,8 @@ export const StaffResolver = {
 
           // UPDATE WITH PASSWORD
           const newEdited = await staffModel.findOneAndUpdate(
-            { staffID: inputs.staffID },
-            { ...inputs, password: passwordHash, token }
+            { staffID: editStaffInput.staffID },
+            { ...editStaffInput, password: passwordHash, token }
           );
 
           return resolve({
@@ -288,23 +327,74 @@ export const StaffResolver = {
             error: null,
             newEdited,
           });
-        } // end inputs.password
+        } // end editStaffInput.password
         // EDIT STAFF
-        const newEdited = await staffModel.findOneAndUpdate(
-          { staffID: inputs.staffID },
-          { ...inputs }
-        );
-        // RESOLVE
-        resolve({
-          edited: true,
-          error: null,
-          newEdited,
-        });
+        staffModel.findOneAndUpdate(
+          { staffID: editStaffInput.staffID },
+          { ...editStaffInput },
+          { runValidators: true, new: true, populate: 'warehouse' },
+          async (error: CallbackError, newEdited: IStaff) => {
+            //
+            if (editStaffInput.editFeature) {
+              const { action, addFeatureURI, removeFeatureByName } =
+                editStaffInput.editFeature;
+              if (action == 'ADD') {
+                // CHECK IF PICTURE ALREADY EXIST, REJECT, OTHERWISE ADD
+                if (
+                  newEdited.picture &&
+                  (await checkFileExistant(`.${newEdited.picture?.filePath}`))
+                ) {
+                  return resolve({
+                    edited: true,
+                    error: null,
+                    newEdited,
+                  }); // end resolve;
+                } else {
+                  addFeatureURI.forEach(async (uri: string) => {
+                    try {
+                      // upload each each
+                      const _feature = await serverFileUploader(
+                        // IMAGEPATH
+                        uri,
+                        // UPLOAD PATH
+                        `./public/uploads/features/staffs/${newEdited.staffID}`,
+                        // SERVER URL
+                        config.get('server.domain'),
+                        // DESTINATED FILE NAME
+                        `${newEdited.staffID}`
+                      );
+                      if (_feature) {
+                        newEdited.picture = _feature;
+                        await newEdited.save({ validateBeforeSave: false });
+                      }
+                    } catch (error) {}
+                  }); // end forEach
+                } // end
+              } else if (action == 'REMOVE') {
+                if (
+                  deleteFileUploader(
+                    `./public/uploads/features/staffs/${editStaffInput.staffID}`
+                  )
+                ) {
+                  // delete the file the product feature array
+                  newEdited.picture = undefined;
+                  await newEdited.save({ validateBeforeSave: false });
+                }
+              } // end if EDIT
+            } // end editFeature
+            // RESOLVE
+            resolve({
+              edited: true,
+              error: null,
+              newEdited,
+            }); // end resolve
+          } // end callback
+        ); // end fineOneAndUpdate
       } catch (error) {
         resolve({
           edited: false,
           newEdited: null,
-          error: error.message,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     }); // end
@@ -333,12 +423,14 @@ export const StaffResolver = {
               return resolve({
                 deleted: false,
                 error:
-                  'UNAUTHORIZED ACTION, only a admin/manager could delete an admin/manager account.',
+                  '[UNAUTHORIZED ACTION]: Only a admin/manager could delete an admin/manager account.',
               });
           } // end switch
         } // end if role
         // DELETE THE TARGET
         await staffModel.findOneAndRemove({ staffID });
+        // DELETE STAFF PICTURE
+        await deleteDirUploader(`./public/uploads/features/staffs/${staffID}`);
         // RESOLVE
         resolve({
           deleted: true,
@@ -348,7 +440,7 @@ export const StaffResolver = {
         // RESOLVE
         resolve({
           deleted: false,
-          error: error.message,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     }); // end promise

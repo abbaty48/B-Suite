@@ -1,8 +1,10 @@
+import config from 'config';
 import { CallbackError } from 'mongoose';
 import { productModel } from '@server-databases/mongodb/schema_product';
+import { Pagin, IPagin } from '@/src/databases/mongodb/interfaces/IPagin';
+import { deleteFileUploader, serverFileUploader } from '@server-commons/file';
 import { escapeRegExp, genRandom, stringToID } from '@server-commons/helpers';
 import { RolePrevileges } from '@server-databases/mongodb/enums/RolePrevilage';
-import { Filter, IFilters } from '@server-databases/mongodb/interfaces/IFilter';
 import staffRoleAuthorization from '@server-commons/auths/authorizationMiddleware';
 
 import {
@@ -13,6 +15,7 @@ import {
   IProductEditPayload,
   IProductDeletePayload,
 } from '@server-databases/mongodb/interfaces/IProduct';
+import { warehouseModel } from '@server-databases/mongodb/schema_warehouse';
 import { IResolverContext } from '@server-commons/models/interfaces/IResolverContext';
 
 export const ProductResolver = {
@@ -68,13 +71,13 @@ export const ProductResolver = {
                 : {},
               warehouseID
                 ? {
-                    warehouse: { $eq: stringToID(warehouseID) },
+                    warehouses: [warehouseID],
                   }
                 : {},
             ],
           },
           {},
-          { populate: 'category warehouse' }
+          { populate: 'category warehouses' }
         );
         resolve({
           error: null,
@@ -82,15 +85,15 @@ export const ProductResolver = {
         });
       } catch (error) {
         resolve({
-          error: `[INTERNAL ERROR]: ${error.message}`,
           product: null,
+          error: `[EXCEPTION]: ${error.message}`,
         }); // end resolve
       } // end catch
     }); // end  promise
   },
   products: async (
     searchFilter: any,
-    filter: IFilters,
+    pagin: IPagin,
     { request, config, response }: IResolverContext
   ) => {
     return new Promise<IProductsPayload>(async (resolve) => {
@@ -116,68 +119,67 @@ export const ProductResolver = {
           wholesalePrice,
         } = searchFilter ?? {};
         // PAGINATE THE PRODUCTS
-        const sort = filter.sort ?? Filter.sort,
-          limit = filter.limit ?? Filter.limit,
-          pageIndex = filter.pageIndex ?? Filter.pageIndex;
-        const products = await productModel
-          .find(
-            {
-              $or: [
-                inStock !== undefined ? { inStock } : {},
-                expired !== undefined ? { expired } : {},
-                quantity ? { quantity: { $eq: quantity } } : {},
-                retailPrice ? { retailPrice: { $eq: retailPrice } } : {},
-                expirationDate
-                  ? { expirationDate: { $eq: expirationDate } }
-                  : {},
-                wholesalePrice
-                  ? { wholesalePrice: { $eq: wholesalePrice } }
-                  : {},
-                name
-                  ? { name: { $regex: escapeRegExp(name), $options: 'si' } }
-                  : {},
-                productID
-                  ? {
-                      productID: {
-                        $eq: productID,
-                      },
-                    }
-                  : {},
-                categoryID
-                  ? {
-                      category: { $eq: stringToID(categoryID) },
-                    }
-                  : {},
-                warehouseID
-                  ? {
-                      warehouse: { $eq: stringToID(warehouseID) },
-                    }
-                  : {},
-              ],
-            },
-            {},
-            { populate: 'category warehouse' }
-          )
-          .sort({ firstName: sort })
-          .skip(limit * pageIndex)
-          .limit(limit);
+        const sort = pagin?.sort ?? Pagin.sort,
+          limit = pagin?.limit ?? Pagin.limit,
+          pageIndex = pagin?.pageIndex ?? Pagin.pageIndex;
+        //
+        const products = await productModel.find(
+          {
+            $or: [
+              inStock !== undefined ? { inStock } : {},
+              expired !== undefined ? { expired } : {},
+              quantity ? { quantity: { $eq: quantity } } : {},
+              retailPrice ? { retailPrice: { $eq: retailPrice } } : {},
+              expirationDate ? { expirationDate: { $eq: expirationDate } } : {},
+              wholesalePrice ? { wholesalePrice: { $eq: wholesalePrice } } : {},
+              name
+                ? { name: { $regex: escapeRegExp(name), $options: 'si' } }
+                : {},
+              productID
+                ? {
+                    productID: {
+                      $eq: productID,
+                    },
+                  }
+                : {},
+              categoryID
+                ? {
+                    category: { $eq: stringToID(categoryID) },
+                  }
+                : {},
+              warehouseID
+                ? {
+                    warehouse: { $eq: stringToID(warehouseID) },
+                  }
+                : {},
+            ],
+          },
+          {},
+          {
+            sort: { name: { sort } },
+            skip: limit * pageIndex,
+            limit,
+            populate: 'category warehouses',
+          }
+        );
         resolve({
           error: null,
           products,
-          filters: {
+          pagins: {
             sort,
-            total: products.length,
-            nextPageIndex: pageIndex + 1,
             currentPageIndex: pageIndex,
-          },
-        });
+            nextPageIndex: pageIndex + 1,
+            totalPaginated: products.length,
+            totalDocuments: await productModel.count(),
+          }, // end pagins
+        }); // end resolve
       } catch (error) {
         resolve({
-          error: error.message,
-          filters: null,
+          pagins: null,
           products: [],
-        });
-      }
+          error: `[EXCEPTION]: ${error.message}`,
+        }); // end resolve
+      } // end catch
     }); // end promise
   },
   addProduct: async (
@@ -192,40 +194,56 @@ export const ProductResolver = {
           config.get('jwt.private'),
           RolePrevileges.ADD_PRODUCT
         );
-        // PRODUCT VALIDATION
-        if (await productModel.exists({ name: addProductInput.name })) {
-          return resolve({
-            added: false,
-            newAdded: null,
-            error: `[DUPLICATE ERROR]: A product with the same name "${addProductInput.name}" already exist, please provide a different name.`,
-          });
-        }
-        //
         const productID = `PID${genRandom(10)}`;
-        productModel.create(
+        await productModel.create(
           {
             ...addProductInput,
             productID,
             category: addProductInput.categoryID,
-            warehouse: addProductInput.warehouseID ?? null,
           },
           async (error: CallbackError, newAdded: IProduct) => {
-            if (error) {
-              console.log(`[ERROR ADDING PRODUCT]: ${error.message}`);
-              return;
-            }
+            /**
+             * FEATURES
+             * --upload features image if provided
+             */
+            if (addProductInput.featuresURI) {
+              addProductInput.featuresURI.forEach(async (uri: string) => {
+                try {
+                  // upload each each
+                  const _feature = await serverFileUploader(
+                    // IMAGEPATH
+                    uri,
+                    // UPLOAD PATH
+                    `./public/uploads/features/products/${productID.toUpperCase()}`,
+                    // SERVER URL
+                    config.get('server.domain'),
+                    // DESTINATED FILE NAME
+                    `${addProductInput.name}_${genRandom().toLowerCase()}`
+                  );
+                  if (_feature) {
+                    // console.log('_F: ', _feature);
+                    newAdded.features.push(_feature);
+                    await newAdded.save({ validateBeforeSave: false });
+                    // _features.push(_feature);
+                  }
+                } catch (error) {}
+              }); // end forEach
+              // update the
+              // console.log('FEATURES: ', _features);
+            } // end featuresURI
+            //
             resolve({
               added: true,
               error: null,
-              newAdded: await newAdded.populate('category warehouse'),
-            });
-          }
-        );
+              newAdded: await newAdded.populate('category warehouses'),
+            }); // end resolve
+          } // end callbacck
+        ); // end create
       } catch (error) {
         resolve({
-          error: `[INTERNAL ERROR]: ${error.message}`,
           added: false,
           newAdded: null,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     }); // end promise
@@ -243,21 +261,66 @@ export const ProductResolver = {
           RolePrevileges.UPDATE_PRODUCT
         );
         // UPDATE
-        const newEdited = await productModel.findOneAndUpdate(
+        productModel.findOneAndUpdate(
           { productID: editProductInput.productID },
           { ...editProductInput },
-          { new: true, runValidators: true, populate: 'category warehouse' }
-        );
-        resolve({
-          edited: true,
-          error: null,
-          newEdited,
-        });
+          { new: true, runValidators: true, populate: 'category warehouses' },
+          async (error, newEdited: IProduct) => {
+            // EDIT FEATURE
+            if (editProductInput.editFeatures) {
+              const { action, addFeatureURI, removeFeatureByName } =
+                editProductInput.editFeatures;
+
+              if (action == 'ADD') {
+                addFeatureURI.forEach(async (uri: string) => {
+                  try {
+                    // upload each each
+                    const _feature = await serverFileUploader(
+                      // IMAGEPATH
+                      uri,
+                      // UPLOAD PATH
+                      `./public/uploads/features/products/${newEdited.productID.toUpperCase()}`,
+                      // SERVER URL
+                      config.get('server.domain'),
+                      // DESTINATED FILE NAME
+                      `${newEdited.name}_${genRandom().toLowerCase()}`
+                    );
+                    if (_feature) {
+                      newEdited.features.push(_feature);
+                      await newEdited.save({ validateBeforeSave: false });
+                      // _features.push(_feature);
+                    }
+                  } catch (error) {
+                    // console.log('#ERROR: ', error);
+                  }
+                }); // end forEach
+              } else if (action == 'REMOVE') {
+                if (
+                  deleteFileUploader(
+                    `./public/uploads/features/products/${editProductInput.productID}/${removeFeatureByName}`
+                  )
+                ) {
+                  // delete the file the product feature array
+                  newEdited.features = newEdited.features.filter(
+                    (_feature) => _feature.fileName !== removeFeatureByName
+                  );
+                  await newEdited.save({ validateBeforeSave: false });
+                }
+              } // end if EDIT
+            } // end if feature
+
+            resolve({
+              edited: true,
+              error: null,
+              newEdited,
+            }); // end resolve
+          } // end callback
+        ); // end fineOneAndUpdate
       } catch (error) {
         resolve({
           edited: false,
           newEdited: null,
-          error: error.message,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     });
@@ -275,14 +338,29 @@ export const ProductResolver = {
           config.get('jwt.private'),
           RolePrevileges.DELETE_PRODUCT
         );
-        // FIND THE PRDDUCT AND DELETE IT
+        // FIND THE PORDUCT AND DELETE IT
         if (warehouseID) {
           await productModel.findOneAndRemove({
             $and: [{ productID }, { warehouseID }],
           });
         } else {
           await productModel.findOneAndRemove({ productID });
+
+          // DELETE ALL PRODUCT IMAGES
+          await deleteFileUploader(
+            `./public/uploads/features/products/${productID}`
+          );
         }
+        // DELETE A PRODUCTID FROM WAREHOUSE IF WAREHOUSEID NOT UNDEFINED AND PRODUCTIDS CONTAIN THE PRODUCTID
+        const criteria = warehouseID
+          ? { $and: [{ warehouseID }, { productIDs: productID }] }
+          : { productIDs: productID };
+        await warehouseModel.findOneAndUpdate(
+          criteria,
+          { $pull: { productIDs: productID } },
+          { multi: true }
+        );
+        //
         resolve({
           deleted: true,
           error: null,
@@ -290,7 +368,7 @@ export const ProductResolver = {
       } catch (error) {
         resolve({
           deleted: false,
-          error: error.message,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     }); // end promise

@@ -17,11 +17,11 @@ export interface ISalePayload {
 export interface ISalesPayload {
   error: string | null;
   sales: ISale[];
-  filters: {
+  pagins: {
     currentPageIndex: number;
     nextPageIndex: number;
     totalDocuments: number;
-    totalFilter: number;
+    totalPaginated: number;
     sort: string;
   };
 }

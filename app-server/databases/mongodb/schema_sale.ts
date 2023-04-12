@@ -1,4 +1,4 @@
-import { Model, Schema, model, models } from 'mongoose';
+import { Model, Schema, Types, model, models } from 'mongoose';
 import {
   ISale,
   ISaleProduct,
@@ -86,7 +86,11 @@ const SaleSchema = new Schema<ISale>(
         const _diff = _total - this.paid;
         // Percentage
         // e.g 1700/1795 * 100 = 94.707521 ceil will round up and remove the decimal part = 95
-        const percentage = Math.floor((this.paid / _total) * 100);
+        // Math.min constraint the value from ranging over 100
+        const percentage = Math.min(
+          Math.floor((this.paid / _total) * 100),
+          100
+        );
 
         return {
           percentage,

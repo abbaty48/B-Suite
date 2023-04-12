@@ -2,8 +2,8 @@ import { CallbackError } from 'mongoose';
 import { escapeRegExp, genRandom } from '@server-commons/helpers';
 import { saleModel } from '@server-databases/mongodb/schema_sale';
 import { productModel } from '@server-databases/mongodb/schema_product';
+import { Pagin, IPagin } from '@/src/databases/mongodb/interfaces/IPagin';
 import { RolePrevileges } from '@server-databases/mongodb/enums/RolePrevilage';
-import { Filter, IFilters } from '@server-databases/mongodb/interfaces/IFilter';
 import staffRoleAuthorization from '@server-commons/auths/authorizationMiddleware';
 import {
   ISale,
@@ -98,7 +98,7 @@ export const SaleResolver = {
   },
   sales: async (
     searchFilter: any,
-    filter: IFilters,
+    pagin: IPagin,
     { request, response, config }: IResolverContext
   ) => {
     return new Promise<ISalesPayload>(async (resolve) => {
@@ -122,9 +122,9 @@ export const SaleResolver = {
           productName,
         } = searchFilter ?? {};
         // PAGINATE THE PRODUCTS
-        const sort = filter.sort ?? Filter.sort,
-          limit = filter.limit ?? Filter.limit,
-          pageIndex = filter.pageIndex ?? Filter.pageIndex;
+        const sort = pagin?.sort ?? Pagin.sort,
+          limit = pagin?.limit ?? Pagin.limit,
+          pageIndex = pagin?.pageIndex ?? Pagin.pageIndex;
 
         let sales: ISale[] = [];
 
@@ -176,9 +176,9 @@ export const SaleResolver = {
         resolve({
           error: null,
           sales,
-          filters: {
+          pagins: {
             sort,
-            totalFilter: sales.length,
+            totalPaginated: sales.length,
             currentPageIndex: pageIndex,
             totalDocuments: await saleModel.count(),
             nextPageIndex: sales.length ? pageIndex + 1 : 0,
@@ -187,7 +187,7 @@ export const SaleResolver = {
       } catch (error) {
         resolve({
           error: error.message,
-          filters: null,
+          pagins: null,
           sales: [],
         });
       }
@@ -205,7 +205,6 @@ export const SaleResolver = {
           config.get('jwt.private'),
           RolePrevileges.ADD_SALE
         );
-
         // SALEID
         const saleID = `SALE${genRandom(10)}`;
         /** PRODUCTS */
@@ -300,9 +299,9 @@ export const SaleResolver = {
         );
       } catch (error) {
         resolve({
-          error: `[INTERNAL ERROR]: ${error.message}`,
           added: false,
           newAdded: null,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     }); // end promise
@@ -374,7 +373,7 @@ export const SaleResolver = {
         resolve({
           edited: false,
           newEdited: null,
-          error: error.message,
+          error: `[EXCEPTION]: ${error.message}`,
         });
       }
     });
@@ -407,7 +406,7 @@ export const SaleResolver = {
       } catch (error) {
         resolve({
           deleted: false,
-          error: `[INTERNAL ERROR]: ${error.message}`,
+          error: `[EXCEPTION]: ${error.message}`,
         }); // end resolve
       } // end catch
     }); // end promise

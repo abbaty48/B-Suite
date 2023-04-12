@@ -14,7 +14,7 @@ export const staffVerifyToken = async (
 
     if (!authorizationKey) {
       throw new Error(
-        'Authorization bearer not found, authentication is required, provide your token.'
+        '[UNAUTHENTICATED] Authorization bearer not found, authentication is required, provide your token.'
       );
     }
 

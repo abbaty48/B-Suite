@@ -2,6 +2,7 @@ import { Document } from 'mongoose';
 
 export interface ICategoryAddPayload {
   added: boolean;
+  newAdded: string;
   error: string | null;
 }
 
@@ -19,4 +20,5 @@ export interface ICategoryDeletePayload {
 
 export interface ICategory extends Document {
   name: string;
+  _doc: ICategory;
 }

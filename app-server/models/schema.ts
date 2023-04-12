@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-express';
 
 const typeDef = gql(
   `
-   #######  ENUMS  #######
+   ####################################  ENUMS  ###################################
    enum StaffRole {
       Admin
       Saller
@@ -10,164 +10,50 @@ const typeDef = gql(
       Warehouse
       Accountant
    }
-
-   type timestamps {
+   ##################################### GLOBAL ###################################
+   type Timestamps {
       createdAt: String!
       updatedAt: String!
       currentTime: Int
    }
 
-   ####### INPUTS #######
-
-   input filterInput {
+   input paginInput {
       limit: Int
+      sort: String
       pageIndex: Int
+   }
+   type Pagins {
       sort: String
-   }
-
-   input searchStaffInput {
-      staffID: ID
-      firstName: String
-      lastName: String
-      warehouseID: ID
-   }
-
-   input searchProductInput {
-      productID: ID
-      name: String
-      quantity: Int
-      expirationDate: String
-      warehouseID: ID
-      expired: Boolean
-      inStock: Boolean
-      categoryID: ID 
-      retailPrice: Float
-      wholesalePrice: Float
-   }
-
-   input searchSaleInput {
-      saleID: ID
-      date: String
-      time: String
-      staffID: ID 
-      productID: ID
-      customerID: ID
-      productName: String
-      paidPrice: Float
-   }
-
-   input addProductInput {
-      name: String!
-      quantity: Int!
-      expirationDate: String
-      warehouseID: ID
-      categoryID: ID!
-      retailPrice: Float!
-      wholesalePrice: Float!
-      images: [String!]
-      description: String
-   }
-
-   input editProductInput {
-      productID: ID!
-      name: String
-      quantity: Int
-      expirationDate: String
-      warehouseID: ID
-      categoryID: ID
-      retailPrice: Float
-      wholesalePrice: Float
-      images: [String!]
-      description: String
-   }
-
-   input addStaffInput {
-      firstName: String!,
-      lastName: String!,
-      otherName: String,
-      passport: String,
-      email: String,
-      role: StaffRole!, 
-      address: String, 
-      phoneNumber: String,
-      password: String!, 
-      warehouseID: ID
-   }
-
-   input editStaffInput {
-      staffID: ID!, 
-      firstName: String, 
-      lastName: String, 
-      otherName: String,
-      passport: String, 
-      email: String, 
-      role: StaffRole, 
-      address: String, 
-      phoneNumber: String,
-      password: String, 
-      warehouseID: ID
-   }
-
-   input categoryInput {
-      name: String
-   }
-
-   input saleProductMetaInput {
-      productID: ID!
-      quantity: Int!
-   }
-
-   input addSaleProfitInput {
-      percentage: Float!
-      status: String!
-   }
-   input addSaleInput {
-      date: String,
-      time: String,
-      paid: Float,
-      discount: Float,
-      balance: Float
-      customerID: ID
-      warehouseID: ID,
-      productMetas: [saleProductMetaInput!]!
-      addCustomer: addCustomerInput
-   }
-
-   input editSaleInput {
-      saleID: ID!
-      date: String,
-      time: String,
-      paid: Float,
-      balance: Float
-      discount: Float,
-      customerID: ID!
-      warehouseID: ID,
-      productMetas: [saleProductMetaInput!]
-   }
-   
-
-   ####### PAYLOADS ######
-   type categoryPayload {
-      error: String
-   }
-   ####### TYPES ########
-
-   ## Filter
-   type Filters {
-      sort: String
-      totalFilter: Int 
+      totalPaginated: Int 
       totalDocuments: Int
       nextPageIndex: Int
       currentPageIndex: Int
    }
 
-   ## STAFF
+   ################################# FEATURES ######################################
+   type Feature {
+      size: Int,
+      url: String,
+      fileName: String,
+      filePath: String,
+      extension: String,
+   }
+   enum FeatureEditAction {
+      ADD,
+      REMOVE
+   }
+   input editFeature {
+      action: FeatureEditAction!,
+      addFeatureURI: [String!],
+      removeFeatureByName: String
+   }
+   ################################# STAFF ######################################
    type Staff {
       staffID: ID!
       firstName: String!
       lastName: String!
       otherName: String
-      passport: String
+      picture: Feature
       email: String
       phoneNumber: String
       role: StaffRole!
@@ -183,7 +69,7 @@ const typeDef = gql(
    type StaffsPayload {
       error: String
       staffs: [Staff!]!
-      filters: Filters
+      pagin: Pagins
    }
    type AddStaffPayload {
       error: String
@@ -199,11 +85,41 @@ const typeDef = gql(
       error: String
       deleted: Boolean!
    }
-   ## TYPE
+   input addStaffInput {
+      firstName: String!,
+      lastName: String!,
+      otherName: String,
+      featureURI: String,
+      email: String,
+      role: StaffRole!, 
+      address: String, 
+      phoneNumber: String!,
+      password: String!, 
+      warehouseID: ID
+   }
+   input editStaffInput {
+      staffID: ID!, 
+      firstName: String, 
+      lastName: String, 
+      otherName: String,
+      email: String, 
+      role: StaffRole, 
+      address: String, 
+      phoneNumber: String,
+      password: String, 
+      warehouseID: ID
+      editFeature: editFeature, 
+   }
+    input searchStaffInput {
+      staffID: ID
+      firstName: String
+      lastName: String
+      warehouseID: ID
+   }
+   ################################## PRODUCT ###################################
    type Product {
       productID: ID!
       name: String!
-      images: [String]
       inStock: Boolean!
       expired: Boolean
       quantity: Int!
@@ -211,22 +127,23 @@ const typeDef = gql(
       expirationDate: String
       wholesalePrice: Float!
       retailPrice: Float!
+      features: [Feature]
       description: String
-      warehouse: Warehouse
+      warehouses: [Warehouse!]
    }
    type ProductPayload {
       error: String
       product: Product
    }
    type ProductsPayload {
-         error: String
-         products: [Product!]!
-         filters: Filters
+      error: String
+      products: [Product!]!
+      pagins: Pagins
    }
    type AddProductPayload {
       error: String
       added: Boolean
-      newAdded: Product 
+      newAdded: Product
    }
    type EditProductPayload {
       error: String
@@ -237,13 +154,50 @@ const typeDef = gql(
       error: String
       deleted: Boolean!
    }
-   ## CATEGORY
+    input addProductInput {
+      name: String!
+      quantity: Int!
+      expirationDate: String
+      warehouseIDs: [ID!]
+      categoryID: ID!
+      retailPrice: Float!
+      wholesalePrice: Float!
+      featuresURI: [String!]
+      description: String
+   }
+
+   input editProductInput {
+      productID: ID!
+      name: String
+      expirationDate: String
+      warehouseIDs: [ID!]
+      categoryID: ID
+      retailPrice: Float
+      wholesalePrice: Float
+      description: String
+      editFeatures: editFeature
+   }
+  
+   input searchProductInput {
+      productID: ID
+      name: String
+      quantity: Int
+      expirationDate: String
+      warehouseID: ID
+      expired: Boolean
+      inStock: Boolean
+      categoryID: ID 
+      retailPrice: Float
+      wholesalePrice: Float
+   }
+   ##################################### CATEGORY #####################################
    type Category {
       name: String!
    }
    type AddCategoryPayload {
       error: String
       added: Boolean!
+      newAdded: String
    }
    type EditCategoryPayload {
       error: String
@@ -255,33 +209,72 @@ const typeDef = gql(
       error: String
       deleted: Boolean!
    }
-   ## WAREHOUSE
-   type Warehouse {
-      warehouseID: ID!
+   input addCategoryInput {
       name: String
-      address: String!
-      staffs: [Staff!]!
-      products: [Product!]!
    }
-   ### WAREHOUSE PAYLOADS
-   type AddWarehousePayload {
+   input editCategoryInput {
+      oldCategory: String!
+      newCategory: String!
+   }
+   type categoryPayload {
       error: String
-      added: Boolean!
-      newAdded: Warehouse
+   }
+   ################################### WAREHOUSE ######################################
+   type Warehouse {
+      warehouseID: ID!,
+      name: String,
+      address: String!,
+      staffIDs: [ID!]!,
+      productIDs: [ID!]!,
+      staffs: [Staff!]!,
+      products: [Product!]!,
+   }
+   type WarehousePayload {
+      error: String,
+      warehouse: Warehouse
+   }
+   type WarehousesPayload {
+      error: String,
+      warehouses: [Warehouse!]!
+   }
+   type AddWarehousePayload {
+      error: String,
+      added: Boolean!,
+      newAdded: Warehouse,
    }
    type EditWarehousePayload {
-      error: String
-      edited: Boolean!
+      error: String,
+      edited: Boolean!,
+      newEdited: Warehouse
    }
    type DeleteWarehousePayload {
-      error: String
-      deleted: Boolean!
+      error: String,
+      deleted: Boolean!,
    }
    type AddWarehouseStaffPayload {
-      error: String
-      added: Boolean!
+      error: String,
+      added: Boolean!,
    }
-   ## SALE
+  
+   input addWarehouseInput {
+      name: String!,
+      address: String!,
+      staffIDs: [ID!],
+      productIDs: [ID!],
+   }
+   input editWarehouseInput {
+      warehouseID: ID!,
+      name: String,
+      address: String,
+      staffIDs: [ID!],
+      productIDs: [ID!],
+   }
+   input warehouseSearchInput {
+      warehouseID: ID,
+      name: String,
+      address: String,
+   }
+   ############################# SALE #######################################
    type Sale {
       saleID: ID!
       staffID: ID!
@@ -328,7 +321,7 @@ const typeDef = gql(
    type SalesPayload {
       error: String
       sales: [Sale!]!
-      filters: Filters
+      pagins: Pagins
    }
    type AddSalePayload {
       error: String
@@ -344,7 +337,47 @@ const typeDef = gql(
       error: String
       deleted: Boolean!
    }
-   ## CUSTOMER
+     input saleProductMetaInput {
+      productID: ID!
+      quantity: Int!
+   }
+   input addSaleProfitInput {
+      percentage: Float!
+      status: String!
+   }
+   input addSaleInput {
+      date: String,
+      time: String,
+      paid: Float,
+      discount: Float,
+      balance: Float
+      customerID: ID
+      warehouseID: ID,
+      productMetas: [saleProductMetaInput!]!
+      addCustomer: addCustomerInput
+   }
+   input editSaleInput {
+      saleID: ID!
+      date: String,
+      time: String,
+      paid: Float,
+      balance: Float
+      discount: Float,
+      customerID: ID!
+      warehouseID: ID,
+      productMetas: [saleProductMetaInput!]
+   }
+   input searchSaleInput {
+      saleID: ID
+      date: String
+      time: String
+      staffID: ID 
+      productID: ID
+      customerID: ID
+      productName: String
+      paidPrice: Float
+   }
+   #################################### CUSTOMER #############################################
    type Customer {
       customerID: ID!,
       warehouseID: ID,
@@ -388,7 +421,7 @@ const typeDef = gql(
    type CustomersPayload {
       error: String,
       customers: [Customer!]!,
-      filters: Filters
+      pagins: Pagins
    }
    input searchCustomerInput {
       name: String,
@@ -430,7 +463,7 @@ const typeDef = gql(
       saleIDs: [ID!],
       metas: customerMetasInput
    }
-   ## PURCHASE
+   ###################################### SUPPLY ##########################################
    type Supply {
       supplyID: ID!,
       staffID: ID!,
@@ -440,6 +473,7 @@ const typeDef = gql(
       totalQuantity: Int!,
       totalPrice: Float!,
       date: String,
+      timestamps: Timestamps
    }
    type AddSupplyPayload {
       error: String,
@@ -462,6 +496,7 @@ const typeDef = gql(
    type SupplysPayload {
       error: String,
       supplies: [Supply!],
+      pagins: Pagins
    }
    input addSupplyInput {
       productID: ID!,
@@ -484,7 +519,7 @@ const typeDef = gql(
       warehouseID : ID
    }
 
-   ## STORE
+   #################################### STORE #########################################
    type StorePayload {
       error: String
       result: Int!
@@ -502,7 +537,7 @@ const typeDef = gql(
       _enterpriseInitialized: Boolean!
    }
 
-   ## ENTERPRISE
+   ######################################## ENTERPRISE ########################################
 
    type EnterpriseSocialAccounts {
       facebook: String,
@@ -606,64 +641,99 @@ const typeDef = gql(
       _initialized: Boolean!
    }
 
-   ## 
+   ##################################### QUERIES ########################################
    type Query {
-      ##STAFF
-      staff(searchFilter: searchStaffInput!): StaffPayload
-      staffs(searchFilter: searchStaffInput, filters: filterInput) : StaffsPayload
-      ##PRODUCT
-      product(searchFilter: searchProductInput!): ProductPayload
-      products(searchFilter: searchProductInput, filters: filterInput): ProductsPayload
-      ##CATEGORY
+      ################################## STAFF ##########################################
+      staff(searchFilter: searchStaffInput!): StaffPayload!
+      staffs(searchFilter: searchStaffInput, pagin: paginInput) : StaffsPayload!
+      
+      ################################## PRODUCT #########################################
+      product(searchFilter: searchProductInput!): ProductPayload!
+      products(searchFilter: searchProductInput, pagin: paginInput): ProductsPayload!
+
+      ################################## CATEGORY ########################################
       categories: [Category!]!
-      ##WAREHOUSE
-      warehouses: [Warehouse!]!
-      ##SALE
-      sale(searchFilter: searchSaleInput!): SalePayload
-      sales(searchFilter: searchSaleInput, filters: filterInput): SalesPayload
-      ##CUSTOMER
-      customer(searchFilter: searchCustomerInput!): CustomerPayload
-      customers(searchFilter: searchCustomerInput, filters: filterInput): CustomersPayload
-      ##PURCHASE
-      supply(searchFilter: searchSupplyInput!): SupplyPayload
-      supplies(searchFilter: searchSupplyInput, filters: filterInput): SupplysPayload
-      ##STORE
+
+      ################################## WAREHOUSE #######################################
+      warehouse(searchFilter: warehouseSearchInput!): WarehousePayload!
+      warehouses(searchFilter: warehouseSearchInput, pagin: paginInput): WarehousesPayload!
+
+      ################################## SALE ############################################
+      sale(searchFilter: searchSaleInput!): SalePayload!
+      sales(searchFilter: searchSaleInput, pagin: paginInput): SalesPayload!
+
+      ################################## CUSTOMER ########################################
+      customer(searchFilter: searchCustomerInput!): CustomerPayload!
+      customers(searchFilter: searchCustomerInput, pagin: paginInput): CustomersPayload!
+
+      ################################## PURCHASE ########################################
+      supply(searchFilter: searchSupplyInput!): SupplyPayload!
+      supplies(searchFilter: searchSupplyInput, pagin: paginInput): SupplysPayload!
+
+      ################################## STORE ###########################################
       store: Store!
    }
+   ######################################## MUTATONS #####################################
    type Mutation {
-      ###STAFF
-      addStaff(inputs: addStaffInput!): AddStaffPayload
-      editStaff(inputs: editStaffInput!): EditStaffPayload
-      deleteStaff(staffID: ID!): DeleteStaffPayload
-      ###PRODUCT
-      addProduct(addProductInput: addProductInput!): AddProductPayload
-      editProduct(editProductInput: editProductInput!): EditProductPayload
-      deleteProduct(productID: ID!, warehouseID: ID): DeleteProductPayload
-      ###CATEGORY
-      addCategory(category: String!): AddCategoryPayload
-      editCategory(oldCategory: String!, newCategory: String!): EditCategoryPayload
-      deleteCategory(category: String!): DeleteCategoryPayload
-      ###WAREHOUSE
-      addWarehouse(name: String, address: String!, staffs: [addStaffInput!], products: [addProductInput!]): AddWarehousePayload
-      editWarehouse(warehouseID: ID!, name: String, address: String, staffs: [editStaffInput!], products: [addProductInput!]): EditWarehousePayload
-      deleteWarehouse(warehouseID: ID!): DeleteWarehousePayload
-      ###SALE
-      addSale(addSaleInput: addSaleInput!): AddSalePayload
-      editSale(editSaleInput: editSaleInput!): EditSalePayload
-      deleteSale(saleID: ID!, warehouseID: ID): DeleteSalePayload
-      ###CUSTOMER
-      addCustomer(addCustomerInput: addCustomerInput!) : AddCustomerPayload
-      editCustomer(editCustomerInput: editCustomerInput!) : EditCustomerPayload
-      deleteCustomer(customerID: ID!, warehouseID: ID) : DeleteCustomerPayload
-      ###PURCHASE
-      makeSupply(addSupplyInput: [addSupplyInput!]!, warehouseID: ID) : AddSupplyPayload
-      editSupply(supplyID: ID!, editSupplyInput: [editSupplyInput!]!, warehouseID: ID) : EditSupplyPayload
-      deleteSupply(supplyID: ID!, warehouseID: ID) : DeleteSupplyPayload
-      ###ENTERPRISE
-      addEnterprise(addEnterpriseInput: addEnterpriseInput!): addEnterprisePayload
-      editEnterprise(editEnterpriseInput: editEnterpriseInput!): editEnterprisePayload
+
+      ################################## STAFF ###########################################
+      addStaff(addStaffInput: addStaffInput!): AddStaffPayload!
+      editStaff(editStaffInput: editStaffInput!): EditStaffPayload!
+      deleteStaff(staffID: ID!): DeleteStaffPayload!
+
+      ################################## PRODUCT #########################################
+      addProduct(addProductInput: addProductInput!): AddProductPayload!
+      editProduct(editProductInput: editProductInput!): EditProductPayload!
+      deleteProduct(productID: ID!, warehouseID: ID): DeleteProductPayload!
+
+      ################################## CATEGORY ########################################
+      addCategory(addCategoryInput: addCategoryInput!): AddCategoryPayload!
+      editCategory(editCategoryInput: editCategoryInput!): EditCategoryPayload!
+      deleteCategory(category: String!): DeleteCategoryPayload!
+      
+      ################################## WAREHOUSE #######################################
+      addWarehouse(addWarehouseInput: addWarehouseInput!): AddWarehousePayload!
+      editWarehouse(editWarehouseInput: editWarehouseInput!): EditWarehousePayload!
+      deleteWarehouse(warehouseID: ID!): DeleteWarehousePayload!
+      
+      ################################## SALE ############################################
+      addSale(addSaleInput: addSaleInput!): AddSalePayload!
+      editSale(editSaleInput: editSaleInput!): EditSalePayload!
+      deleteSale(saleID: ID!, warehouseID: ID): DeleteSalePayload!
+      
+      ################################## CUSTOMER #########################################
+      addCustomer(addCustomerInput: addCustomerInput!) : AddCustomerPayload!
+      editCustomer(editCustomerInput: editCustomerInput!) : EditCustomerPayload!
+      deleteCustomer(customerID: ID!, warehouseID: ID) : DeleteCustomerPayload!
+
+      ################################# PURCHASE ##########################################
+      makeSupply(addSupplyInput: [addSupplyInput!]!, warehouseID: ID) : AddSupplyPayload!
+      editSupply(supplyID: ID!, editSupplyInput: [editSupplyInput!]!, warehouseID: ID) : EditSupplyPayload!
+      deleteSupply(supplyID: ID!, warehouseID: ID) : DeleteSupplyPayload!
+
+      ################################# ENTERPRISE ########################################
+      addEnterprise(addEnterpriseInput: addEnterpriseInput!): addEnterprisePayload!
+      editEnterprise(editEnterpriseInput: editEnterpriseInput!): editEnterprisePayload!
       _initializeSys(_init: Boolean!): initPayload!
    }
+   ########################################### SUBSCRIBE ###################################
+   # -- subscription when a sale is make
+   # -- subscription when a sale is edited
+   # -- subscription when a sale is deleted
+  
+   # -- subscription when a product is added
+   # -- subscription when a product is edited
+   # -- subscription when a product is deleted
+  
+   # -- subscription when a new staff is added
+   # -- subscription when a new staff is deleted
+
+   # -- subscription when a supply is added
+   # -- subscription when a supply is edited
+   # -- subscription when a supply is deleted
+   # -- subscription when a supply is deleted
+
+   # -- subscription when a supply is deleted
 `
 );
 
