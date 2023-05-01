@@ -1,0 +1,1019 @@
+## PRODUCT
+
+    product(searchTerm: {expired: true}) {
+        error,
+        product {
+            name
+            quantity
+            features {
+                url
+                fileName
+            }
+        }
+    }
+
+    products {
+        error,
+        products {
+            name
+            quantity
+            category {
+                name
+            }
+            features {
+                url
+                fileName
+            }
+        }
+    }
+
+    productAddSubscription {
+        error {
+            message
+            status
+            code
+            success
+        }
+        payload {
+        timestamp,
+        actionType,
+        actionBy {
+            staffID
+            firstName
+            lastName
+            picture {url}
+            phoneNumber
+            role
+            address
+            warehouse {name address}
+        } ,
+        actionResult {
+            ... on Product {
+            productID
+            name
+            retailPrice
+            wholesalePrice
+            quantity
+            category {
+                name
+            },
+            features {
+                size
+                url
+                fileName
+                filePath
+                extension
+            } 
+            }
+        }
+        }
+    }
+
+    productEditSubscription {
+        error {
+        message
+        status
+        code
+        success
+        }
+        payload {
+        timestamp,
+        actionType,
+        actionBy {
+            staffID
+            firstName
+            lastName
+            picture {url}
+            phoneNumber
+            role
+            address
+            warehouse {name address}
+        },
+        actionResult {
+            ... on Product {
+            productID
+            name
+            retailPrice
+            wholesalePrice
+            quantity
+            category {
+                name
+            },
+            features {
+                size
+                url
+                fileName
+                filePath
+                extension
+            } 
+            }
+        }
+        }
+    }
+
+    productDeleteSubscription {
+        error {
+        message
+        status
+        code
+        success
+        }
+        payload {
+        timestamp,
+        actionType,
+        actionBy {
+        staffID
+        firstName
+        lastName
+        picture {
+          url
+        }
+        phoneNumber
+        role
+        address
+        warehouse {
+          name
+          address
+        }
+      } ,
+        actionResult {
+            ... on Product {
+            productID
+            name
+            retailPrice
+            wholesalePrice
+            quantity,
+            features {
+                size
+                url
+                fileName
+                filePath
+                extension
+            } 
+            }
+        }
+        }
+    }
+
+    productAdd(productAddInput: {
+        name: "ProductG",
+        quantity: 4,
+        retailPrice: 450,
+        wholesalePrice: 400,
+        description: "Product for ProductG",
+        categoryID: "6418dcedc2592344d6436979",
+        featuresURI: [
+            "C:\\Users\\abbat\\Pictures\\free-logo.jpg"
+        ],
+        warehouseIDs: ["WIDF0TCN8AV"]
+    }) {
+        error,
+        added,
+        newAdded {
+            productID,
+            name,
+            quantity,
+            retailPrice,
+            wholesalePrice,
+            category {name},
+            features {
+                url,
+                fileName
+            }
+        }
+    }
+
+    productEdit(productEditInput: {
+        productID: "PID400120181713",
+        retailPrice: 500,
+    }) {
+        error,
+        edited,
+        newEdited {
+            productID,
+            name,
+            quantity,
+            retailPrice,
+            wholesalePrice,
+            category {name},
+        }
+    }
+
+    productDelete(productID: "PID400120181713") {
+        error,
+        deleted
+    }
+
+## STAFF
+  staff(searchTerm: { role: Saller }){
+      error
+      staff {
+        staffID
+        firstName
+        lastName
+        otherName
+        phoneNumber
+        role
+        warehouse {
+          name
+        }
+      }
+  }
+
+  staffs(searchTerm: {role: Saller}) {
+      error,
+      staffs {
+        staffID,
+        firstName,
+        lastName,
+        otherName,
+        phoneNumber,
+        role,
+        warehouse {
+          name
+        }
+      },
+      pagin {
+        totalPaginated,
+        totalDocuments,
+        nextPageIndex,
+        currentPageIndex
+      }
+  }
+
+  staffAdd(staffAddInput: {
+      firstName: "randomguy",
+      lastName: "guy",
+      role: Accountant,
+      password: "randomguy",
+      phoneNumber: "0832"
+    }) {
+      error
+      added
+      newAdded {
+        staffID
+        firstName
+        lastName
+        otherName
+        picture {url}
+        email
+        phoneNumber
+        role
+        address
+        password
+        token
+      }
+  } 
+
+  staffAddSubscription {
+      error {
+        message
+        status
+        code
+        success
+      }
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          staffID
+          firstName
+          lastName
+          picture {
+            url
+          }
+          phoneNumber
+          role
+          address
+          warehouse {
+            name
+            address
+          }
+        } ,
+        actionResult {
+          ... on Staff {
+            firstName,
+            lastName,
+            phoneNumber,
+            phoneNumber,
+            picture {url},
+            role
+          }
+        }
+      }
+  }
+
+  staffDelete(staffID: "") {
+      error
+      deleted
+  } 
+
+  staffDeleteSubscription {
+      error {
+        message
+        status
+        code
+        success
+      }
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          staffID
+          firstName
+          lastName
+          picture {
+            url
+          }
+          phoneNumber
+          role
+          address
+          warehouse {
+            name
+            address
+          }
+        } ,
+        actionResult {
+          ... on Staff {
+            firstName,
+            lastName,
+            phoneNumber,
+            phoneNumber,
+            picture {url},
+            role
+          }
+        }
+      }
+  }
+
+## CATEGORY
+  categories(pagin: { sort: asc, limit: 0 }) {
+      error
+      categories {
+        name
+      }
+      pagins {
+        sort
+        totalDocuments
+        nextPageIndex
+        currentPageIndex
+      }
+  }
+
+  categoryEdit(categoryEditInput: {oldCategory: "", newCategory: ""}){
+      error,
+      edited,
+      newValue 
+  }
+
+  categoryDelete(category: "") {
+      error,
+      deleted
+  }
+
+  categoryAddSubscription {
+      error {
+        code,
+        message,
+        status,
+        success
+      },
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          firstName,
+          lastName,
+          role,
+        },
+        actionResult {
+          ... on Category {
+            name
+          },
+        },
+      },
+  }
+
+  categoryEditSubscription {
+      error {
+        code,
+        message,
+        status,
+        success
+      },
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          firstName,
+          lastName,
+          role,
+        },
+        actionResult {
+          ... on Category {
+            name
+          },
+        },
+      },
+  }
+
+  categoryDeleteSubscription {
+      error {
+        code,
+        message,
+        status,
+        success
+      },
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          firstName,
+          lastName,
+          role,
+        },
+        actionResult {
+          ... on Category {
+            name
+          },
+        },
+      },
+  }
+
+## WAREHOUSE
+
+  warehouse(searchTerm: {name: ""}){
+      error,
+      warehouse {
+        name,
+        address,
+        products {
+          productID,
+          name,
+          category{name},
+          inStock,
+          quantity,
+          retailPrice,
+          wholesalePrice
+        },
+        staffs {
+          firstName,
+          lastName,
+          role
+        }
+      }
+  }
+
+  warehouses{
+      error,
+      warehouses {
+        name,
+        address,
+        products {
+          productID,
+          name,
+          category{name},
+          inStock,
+          quantity,
+          retailPrice,
+          wholesalePrice
+        },
+        staffs {
+          firstName,
+          lastName,
+          role
+        }
+      }
+  }
+
+  warehouseAdd(warehouseAddInput: {name: "", address: ""}) {
+      error,
+      added,
+      newAdded {
+        name,
+        address
+      }
+  }
+
+  warehouseAddSubscription {
+      error {
+        message
+        status
+        code
+        success
+      },
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          firstName
+          lastName
+          role
+          phoneNumber
+          picture {url}
+        },
+        actionResult {
+          ... on Warehouse {
+            name,
+            address
+          }
+        }
+      }
+  }
+
+  warehouseEditSubscription {
+      error {
+        message
+        status
+        code
+        success
+      },
+      payload {
+        timestamp,
+        actionType,
+        actionBy {
+          firstName
+          lastName
+          role
+          phoneNumber
+          picture {url}
+        },
+        actionResult {
+          ... on Warehouse {
+            name,
+            address
+          }
+        }
+      }
+  }
+
+## SUPPLY
+  supply(searchTerm: {supplyID: ""}){
+        error,
+        supply {
+          supplyID,
+          date,
+          products {
+            name
+          },
+          staff {
+            firstName,
+            lastName,
+            role
+          },
+          totalPrice,
+          totalQuantity
+        }
+  }
+
+  supplies{
+        error,
+        supplies {
+          supplyID,
+          date,
+          products {
+            name
+          },
+          staff {
+            firstName,
+            lastName,
+            role
+          },
+          totalPrice,
+          totalQuantity
+        }
+  }
+
+  makeSupply(supplyAddInput: {productID: "", quantity: 2, retailPrice: 500, wholesalePrice: 400}) {
+    error,
+    added,
+    newAdded {
+      supplyID,
+      date,
+      products {
+        name,
+        quantity,
+        retailPrice,
+        wholesalePrice,
+        category {name},
+      }
+      totalPrice,
+      totalQuantity,
+    },
+  }
+
+  supplyAddSubscription {
+    error {
+      message
+      status
+      code
+      success
+    },
+    payload {
+      timestamp,
+      actionType,
+      actionBy {
+        firstName,
+        lastName,
+        role
+      },
+      actionResult {
+        ... on Supply {
+          staffID,
+          date,
+          products {
+            name,
+            quantity,
+            retailPrice,
+            wholesalePrice,
+          },
+          totalPrice,
+          totalQuantity,
+        }
+      }
+    }
+  }
+
+  supplyDelete(supplyDeleteInput: {supplyID: ""}){
+     error,
+     deleted
+  }
+
+  supplyEditSubscription {
+    error {
+      message
+      status
+      code
+      success
+    },
+    payload {
+      timestamp,
+      actionType,
+      actionBy {
+        firstName,
+        lastName,
+        role
+      },
+      actionResult {
+        ... on Supply {
+          staffID,
+          date,
+          products {
+            name,
+            quantity,
+            retailPrice,
+            wholesalePrice,
+          },
+          totalPrice,
+          totalQuantity,
+        }
+      }
+    }
+  }
+
+  supplyEdit(supplyID: "", supplyEditInput: [{productID: "", quantity: 40, retailPrice: 650, wholesalePrice: 550}]) {
+    error,
+    edited,
+    newEdited {
+      supplyID,
+      date,
+      products {
+        name,
+        quantity,
+        retailPrice,
+        wholesalePrice,
+        category {name},
+      }
+      totalPrice,
+      totalQuantity,
+    },
+  }
+
+  supplyDeleteSubscription {
+    error {
+      message
+      status
+      code
+      success
+    },
+    payload {
+      timestamp,
+      actionType,
+      actionBy {
+        firstName,
+        lastName,
+        role
+      },
+      actionResult {
+        ... on Supply {
+          staffID,
+          date,
+          products {
+            name,
+            quantity,
+            retailPrice,
+            wholesalePrice,
+          },
+          totalPrice,
+          totalQuantity,
+        }
+      }
+    }
+  }
+
+## SALE
+  saleAdd(saleAddInput: {
+    paid: 450,
+    discount: 1,
+    productMetas: [
+      {productID: "", quantity: 1}
+    ],
+    addCustomer: {
+      name: "Me",
+      saleIDs: []
+    }
+    #customerID: "CIN627X0"
+  }){
+    added,
+    error,
+    newAdded {
+      date,
+      discount,
+      paid,
+      balance,
+      profit{
+        percentage,
+        status
+      },
+      totalPrice,
+      totalQuantity,
+      products{
+        kind,
+        inStock,
+        quantity,
+        retailPrice,
+        wholesalePrice,
+        subTotal,
+      },
+      customer {
+        name,
+        address,
+      }
+    }
+  }
+  
+  saleAddSubscription {
+    error {
+      message
+      status
+      code
+      success
+    },
+    payload {
+      timestamp,
+      actionType,
+      actionBy {
+        firstName,
+        lastName,
+        role,
+      },
+      actionResult {
+        ... on Sale {
+          profit {
+            percentage,
+            status
+          },
+          products {
+            name,
+            expired,
+            kind,
+            quantity,
+            subTotal,
+            retailPrice,
+            wholesalePrice,
+            features {url}
+          },
+          customer {
+            name,
+            address
+          }
+        },
+      }
+    }
+  }
+
+  saleEditSubscription {
+    error {
+      message
+      status
+      code
+      success
+    },
+    payload {
+      timestamp,
+      actionType,
+      actionBy {
+        firstName,
+        lastName,
+        role,
+      },
+      actionResult {
+        ... on Sale {
+          profit {
+            percentage,
+            status
+          },
+          products {
+            name,
+            expired,
+            kind,
+            quantity,
+            subTotal,
+            retailPrice,
+            wholesalePrice,
+            features {url}
+          },
+          customer {
+            name,
+            address
+          }
+        },
+      }
+    }
+  }
+
+  saleEdit(saleEditInput: {
+    saleID: "SALE784633931045",
+    paid: 950,
+    discount: 1,
+    productMetas: [
+      {productID: "PID953913699273", quantity: 2}
+    ],
+    customerID: "CIN627X0"
+  }){
+    edited,
+    error,
+    newEdited {
+      date,
+      discount,
+      paid,
+      balance,
+      profit{
+        percentage,
+        status
+      },
+      totalPrice,
+      totalQuantity,
+      products{
+        kind,
+        inStock,
+        quantity,
+        retailPrice,
+        wholesalePrice,
+        subTotal,
+      },
+      customer {
+        name,
+        address,
+      }
+    }
+  }
+
+  saleDelete(
+    saleID: "SALE1664322035100",
+  ){
+    error,
+    deleted,
+  }
+
+  saleDeleteSubscription {
+    error {
+      message
+      status
+      code
+      success
+    },
+    payload {
+      timestamp,
+      actionType,
+      actionBy {
+        firstName,
+        lastName,
+        role,
+      },
+      actionResult {
+        ... on Sale {
+          profit {
+            percentage,
+            status
+          },
+          products {
+            name,
+            expired,
+            kind,
+            quantity,
+            subTotal,
+            retailPrice,
+            wholesalePrice,
+            features {url}
+          }
+        },
+      }
+    }
+  }
+
+
+# STORE
+
+  store {
+    totalSales {
+      error
+      result
+    }
+    totalStaffs {
+      error
+      result
+    }
+    totalProducts {
+      error
+      result
+    }
+    totalCustomers {
+      error
+      result
+    }
+    totalWarehouses {
+      error
+      result
+    }
+    totalExpiredProducts {
+      error
+      result
+    }
+    enterPrise {
+      error
+      result {
+        name
+        slogan
+        title
+        address
+        about
+        contacts
+        website
+        email
+      }
+    }
+    _sysInitialized
+    _enterpriseInitialized
+  }
+
+  mutation {
+
+    _initializeSys(_init:  true){
+      error,
+      _initialized
+    }
+    enterpriseAdd(enterpriseAddInput: {name: "Vsual Enterprise", address: "BC 12 kabir street, Rigasa, Kaduna state", contacts: ["08065642512"], owners: [{
+       name: "Abbaty Abdul",
+       email: "abbaty48@gmail.com",
+       phoneNumber: "08065642512",
+     }]}) {
+       error
+       added
+       newAdded {
+         name
+         slogan
+         title
+         address
+         about
+         contacts
+         website
+         email
+         owners {
+           name
+           email
+           about
+           picture
+           phoneNumber
+           website
+         }
+         socialAccounts {
+           facebook
+           twitter
+           youtube
+           instagram
+         }
+       }
+    } 
+  }
+
+  subscription {
+     storeRealTime {
+       totalCustomers,
+       totalExpiredProducts,
+       totalProducts,
+       totalSales,
+       totalStaffs,
+       totalWarehouses
+     }
+  }

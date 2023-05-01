@@ -84,6 +84,7 @@ typings/
 
 # Webpack
 .webpack/
+.app/
 
 # Electron-Forge
 out/

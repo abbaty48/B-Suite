@@ -1,0 +1,38 @@
+[{
+  "_id": {
+    "$oid": "641852c625a17aa2c289de0a"
+  },
+  "warehouseID": "WIDF0TCN8AV",
+  "name": "Abs#1",
+  "address": "Bc kabir street, Makarfi road, Rigasa Kaduna",
+  "staffIDs": [
+    "ID7IZOT",
+    "IDII40V"
+  ],
+  "productIDs": [
+    "PID1322701191146"
+  ],
+  "createdAt": {
+    "$date": "2023-03-20T12:34:14.243Z"
+  },
+  "updatedAt": {
+    "$date": "2023-04-22T10:54:07.094Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "641852dc25a17aa2c289de17"
+  },
+  "warehouseID": "WIDHQVJYYKU",
+  "name": "Abs#2",
+  "address": "Kano road, Tudun wada kaduna state",
+  "staffIDs": [],
+  "productIDs": [],
+  "createdAt": {
+    "$date": "2023-03-20T12:34:36.178Z"
+  },
+  "updatedAt": {
+    "$date": "2023-04-03T09:13:59.158Z"
+  },
+  "__v": 0
+}]

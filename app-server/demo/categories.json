@@ -1,0 +1,37 @@
+[{
+  "_id": {
+    "$oid": "6418dca5c2592344d6436966"
+  },
+  "name": "Electronics",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6418dcb5c2592344d643696d"
+  },
+  "name": "Foods",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6418dcbac2592344d6436971"
+  },
+  "name": "Cloths",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6418dccec2592344d6436975"
+  },
+  "name": "Home Affiliance",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6418dcedc2592344d6436979"
+  },
+  "name": "Computer Accessories",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6418dd06c2592344d6436981"
+  },
+  "name": "Phones",
+  "__v": 0
+}]

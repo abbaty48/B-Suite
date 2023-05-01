@@ -1,0 +1,93 @@
+[{
+  "_id": {
+    "$oid": "6415553adb4a4dc48b1d1983"
+  },
+  "staffID": "ID67YY6",
+  "firstName": "Yusuf",
+  "lastName": "Abdulrahman",
+  "otherName": "Abs",
+  "email": "abbaty48@gmail.com",
+  "role": "Manager",
+  "phoneNumber": "2348065642512",
+  "password": "$2b$10$dMVm0oZ9SL.7YGl.EE/GzO9QUjtjYrhjqynp9EfPeHmVyb/PgsF1O",
+  "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSUQ2N1lZNiIsImZpcnN0TmFtZSI6Ill1c3VmIiwibGFzdE5hbWUiOiJBYmR1bHJhaG1hbiIsImVtYWlsIjoiYWJiYXR5NDhAZ21haWwuY29tIiwicm9sZSI6Ik1hbmFnZXIiLCJpYXQiOjE2NzkxMTk2NzR9.AWHeUOfxY0-oH0wPJGKcewDJ_Pmj8v_gOV3BX_zxsHqSLR5aMi8J-MmTnqRadg7ajMhVAI0OW6wa1iRF9X1CBQ",
+  "createdAt": {
+    "$date": "2023-03-18T06:07:54.224Z"
+  },
+  "updatedAt": {
+    "$date": "2023-03-18T06:07:54.224Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "64155756aeed9b692992db08"
+  },
+  "staffID": "ID9IJZC",
+  "firstName": "superAdmin",
+  "lastName": "superAdmin",
+  "email": "@superAdmin",
+  "role": "Admin",
+  "password": "$2b$10$R3h5VjsM5fY728SSX2e6QuAj5cvAlUjqrVeycP6oQCC8yXZeyePTa",
+  "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSUQ5SUpaQyIsImZpcnN0TmFtZSI6InN1cGVyQWRtaW4iLCJsYXN0TmFtZSI6InN1cGVyQWRtaW4iLCJlbWFpbCI6IkBzdXBlckFkbWluIiwicm9sZSI6IkFkbWluIiwiaWF0IjoxNjc5MTIwMjE0fQ.49bnSvNHHSLcjvYkfQ7M9alnDy33iC7Bv3OfR1NWJuQ2gG6b-KR0p1VRRthSu5udB0H1f_xJmAcVl0-HEaK-SQ",
+  "createdAt": {
+    "$date": "2023-03-18T06:16:54.990Z"
+  },
+  "updatedAt": {
+    "$date": "2023-03-18T06:16:54.990Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "641559d1aeed9b692992db0d"
+  },
+  "staffID": "IDII40V",
+  "firstName": "staffA",
+  "lastName": "staff",
+  "role": "Saller",
+  "phoneNumber": "08054343211",
+  "password": "$2b$10$IN7pheLBUnrThKW.nnAZC.6O0edFYo6H5u2fcQWbI/HQLBBxiDx5W",
+  "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSURJSTQwViIsImZpcnN0TmFtZSI6InN0YWZmQSIsImxhc3ROYW1lIjoic3RhZmYiLCJyb2xlIjoiU2FsbGVyIiwiaWF0IjoxNjc5MTIwODQ5fQ.XDkaKaA34BvCloFwoiMrCnAyl674BNG-bDY9jFa7gOn14oM7ccc1LO_QoufZE7XFrbRloAkuIqA2oIqvFSrPcQ",
+  "createdAt": {
+    "$date": "2023-03-18T06:27:29.276Z"
+  },
+  "updatedAt": {
+    "$date": "2023-03-20T20:37:10.682Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "641559e3aeed9b692992db0f"
+  },
+  "staffID": "IDIQLR8",
+  "firstName": "staffB",
+  "lastName": "staff",
+  "role": "Saller",
+  "phoneNumber": "080124343211",
+  "password": "$2b$10$6Y4QNNKMblcIL4YqhARsLuc3R5EjOEt089S6FHF7xD/PUjJFRvAh.",
+  "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSURJUUxSOCIsImZpcnN0TmFtZSI6InN0YWZmQiIsImxhc3ROYW1lIjoic3RhZmYiLCJyb2xlIjoiU2FsbGVyIiwiaWF0IjoxNjc5MTIwODY3fQ.ABaYXX86-k3dAVfLeGzb2kDVup3uJ5sWy9U-RstpMyoQ05gi-WxwVhGjZbBtXskc_E-gDSzn5VUaIAviYQOSpg",
+  "createdAt": {
+    "$date": "2023-03-18T06:27:47.882Z"
+  },
+  "updatedAt": {
+    "$date": "2023-03-18T06:27:47.882Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6418935d6db86424d5510304"
+  },
+  "staffID": "ID7IZOT",
+  "firstName": "staffC",
+  "lastName": "staff",
+  "role": "Saller",
+  "phoneNumber": "08012234443",
+  "password": "$2b$10$S6cG1m16fGP.ltEhVduhp.ECHNGNz/5Atjrf.2NkUNN1sr3BF7bZe",
+  "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSUQ3SVpPVCIsImZpcnN0TmFtZSI6InN0YWZmQyIsImxhc3ROYW1lIjoic3RhZmYiLCJyb2xlIjoiU2FsbGVyIiwiaWF0IjoxNjc5MzMyMTg5fQ.qJqVvOPRAQIK1yYRB82XqfkaffRHFa9fYSfuT6Ry9s7VJxrT3ej6nWOC_Vrjfc-76i7FYBVL34TILHaAlDEMIQ",
+  "createdAt": {
+    "$date": "2023-03-20T17:09:49.295Z"
+  },
+  "updatedAt": {
+    "$date": "2023-03-20T21:38:18.603Z"
+  },
+  "__v": 0
+}]

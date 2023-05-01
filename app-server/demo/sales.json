@@ -1,0 +1,169 @@
+[{
+  "_id": {
+    "$oid": "6448f087aea6df80999150fb"
+  },
+  "saleID": "SALE157105207544",
+  "staffID": "IDII40V",
+  "customerID": "CING1B5M",
+  "date": "4/26/2023",
+  "time": "10:36:02 AM",
+  "paid": 500,
+  "discount": 0,
+  "products": [
+    {
+      "productID": "PID953913699273",
+      "name": "ProductA",
+      "inStock": true,
+      "expired": false,
+      "category": {
+        "$oid": "6418dcedc2592344d6436979"
+      },
+      "quantity": 1,
+      "retailPrice": 500,
+      "wholesalePrice": 400,
+      "features": [],
+      "description": "Product for ProductA",
+      "warehouseIDs": [],
+      "_id": {
+        "$oid": "6446a89ea5faab8a7c93712c"
+      },
+      "createdAt": {
+        "$date": "2023-04-24T16:04:46.304Z"
+      },
+      "updatedAt": {
+        "$date": "2023-04-26T09:33:55.102Z"
+      },
+      "__v": 0,
+      "subTotal": 500,
+      "kind": "Computer Accessories"
+    }
+  ],
+  "profit": {
+    "percentage": 100,
+    "status": "Gain",
+    "_id": {
+      "$oid": "6448f087aea6df80999150fd"
+    }
+  },
+  "totalPrice": 500,
+  "totalQuantity": 1,
+  "createdAt": {
+    "$date": "2023-04-26T09:36:07.322Z"
+  },
+  "updatedAt": {
+    "$date": "2023-04-26T09:36:07.322Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "6448ffcc5bd276451c7914aa"
+  },
+  "saleID": "SALE1543459146797",
+  "staffID": "IDII40V",
+  "customerID": "CINGH8G8",
+  "date": "4/26/2023",
+  "time": "11:41:04 AM",
+  "paid": 900,
+  "discount": 2,
+  "products": [
+    {
+      "productID": "PID953913699273",
+      "name": "ProductA",
+      "inStock": true,
+      "expired": false,
+      "category": {
+        "$oid": "6418dcedc2592344d6436979"
+      },
+      "quantity": 2,
+      "retailPrice": 500,
+      "wholesalePrice": 400,
+      "features": [],
+      "description": "Product for ProductA",
+      "warehouseIDs": [],
+      "_id": {
+        "$oid": "6446a89ea5faab8a7c93712c"
+      },
+      "createdAt": {
+        "$date": "2023-04-24T16:04:46.304Z"
+      },
+      "updatedAt": {
+        "$date": "2023-04-26T10:38:16.406Z"
+      },
+      "__v": 0,
+      "subTotal": 1000,
+      "kind": "Computer Accessories"
+    }
+  ],
+  "profit": {
+    "percentage": 90,
+    "status": "Gain",
+    "_id": {
+      "$oid": "6448ffcc5bd276451c7914ac"
+    }
+  },
+  "totalPrice": 1000,
+  "totalQuantity": 2,
+  "createdAt": {
+    "$date": "2023-04-26T10:41:16.242Z"
+  },
+  "updatedAt": {
+    "$date": "2023-04-26T10:41:16.242Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "64490d218f817b89ed05e1f7"
+  },
+  "saleID": "SALE784633931045",
+  "staffID": "IDII40V",
+  "customerID": "CIN627X0",
+  "date": "4/26/2023",
+  "time": "12:37:58 PM",
+  "paid": 450,
+  "discount": 1,
+  "products": [
+    {
+      "productID": "PID953913699273",
+      "name": "ProductA",
+      "inStock": true,
+      "expired": false,
+      "category": {
+        "$oid": "6418dcedc2592344d6436979"
+      },
+      "quantity": 1,
+      "retailPrice": 500,
+      "wholesalePrice": 400,
+      "features": [],
+      "description": "Product for ProductA",
+      "warehouseIDs": [],
+      "_id": {
+        "$oid": "6446a89ea5faab8a7c93712c"
+      },
+      "createdAt": {
+        "$date": "2023-04-24T16:04:46.304Z"
+      },
+      "updatedAt": {
+        "$date": "2023-04-26T11:36:52.526Z"
+      },
+      "__v": 0,
+      "subTotal": 500,
+      "kind": "Computer Accessories"
+    }
+  ],
+  "profit": {
+    "percentage": 90,
+    "status": "Gain",
+    "_id": {
+      "$oid": "64490d218f817b89ed05e1f9"
+    }
+  },
+  "totalPrice": 500,
+  "totalQuantity": 1,
+  "createdAt": {
+    "$date": "2023-04-26T11:38:09.568Z"
+  },
+  "updatedAt": {
+    "$date": "2023-04-26T11:38:09.568Z"
+  },
+  "__v": 0
+}]

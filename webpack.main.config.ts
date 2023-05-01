@@ -7,6 +7,10 @@ export const mainConfig: Configuration = {
    * that runs in the main process.
    */
   entry: './app-main/index.ts',
+  output: {
+    // path: path.resolve(__dirname, '.app/app-main'),
+    // publicPath: 'http://localhost:3001/v1/public/uploads/features/',
+  },
   // Put your normal webpack config below here
   module: {
     rules,
