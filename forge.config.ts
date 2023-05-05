@@ -25,11 +25,11 @@ const config: ForgeConfig = {
         config: rendererConfig,
         entryPoints: [
           {
-            html: './app-ui/index.html',
-            js: './app-ui/index.tsx',
+            html: './appUI/index.html',
+            js: './appUI/index.tsx',
             name: 'main_window',
             preload: {
-              js: './app-main/preload.ts',
+              js: './appMain/preload.ts',
             },
           },
         ],
