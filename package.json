@@ -11,9 +11,9 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "compile-server": "npx ttsc app-server/index.ts --outDir .webpack/",
-    "start-server": "node .webpack/app-server/index.js",
-    "codegen": "graphql-codegen --config app-server/src/commons/commons.codegen.ts"
+    "compile-server": "npx ttsc appServer/index.ts --outDir .webpack/",
+    "start-server": "npm run compile-server && node .webpack/appServer/index.js",
+    "codegen": "graphql-codegen --config appServer/src/commons/commons.codegen.ts"
   },
   "keywords": [
     "RMS",

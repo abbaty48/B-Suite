@@ -1,12 +1,62 @@
 import { App } from 'antd'
+import { createClient } from 'graphql-ws'
+import { Kind, OperationTypeNode } from 'graphql'
 import { AppProvider } from '@ui-stores/contexts/app'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { Staff } from '@/appServer/src/models/@types/resolver_types'
+import { ApolloProvider, ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client'
+
+declare const CONFIG: any
 
 const Application = () => {
+
+   /**
+    * get the domain & ws from the config
+    */
+   const { domain, ws } = CONFIG.server
+   /**
+    * get user token
+    */
+   // TODO:  case the parse to a IStaff type
+   const _token = JSON.parse(localStorage.getItem('_app_current_user')) as Staff ?? null
+   /**
+    *   Define a unique ApolloClient that could use both WebSocket and HttpLink
+      * The split function takes three parameters:
+      
+      * A function that's called for each operation to execute
+      * The Link to use for an operation if the function returns a "truthy" value
+      * The Link to use for an operation if the function returns a "falsy" value
+    */
+   const _apolloClient = new ApolloClient({
+      cache: new InMemoryCache(),
+      link: split(({ query }) => {
+         const _defination = getMainDefinition(query)
+         return (
+            _defination.kind === Kind.OPERATION_DEFINITION &&
+            _defination.operation === OperationTypeNode.SUBSCRIPTION
+         )
+      }, new GraphQLWsLink(createClient({
+         url: ws,
+         connectionParams: {
+            authToken: `Bearer ${_token?.token || ''}`
+         }
+      })), new HttpLink({
+         uri: domain,
+         headers: {
+            'content-type': 'application/json',
+            'authorization': `Bearer ${_token?.token || ''}`
+         }
+      })) // end split
+   }) // end new ApolloClient
+
    return (
       // Antd global component for general antd component configuration
-      <App className={'bg-white'}>
+      <App notification={{ placement: 'bottomRight', maxCount: 5 }}>
          {/* AppProvider for global configurations and states */}
          <AppProvider>
+            <ApolloProvider client={_apolloClient}>
+            </ApolloProvider>
          </AppProvider>
       </App>
    )

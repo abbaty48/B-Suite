@@ -663,7 +663,7 @@ input customerAddInput {
   address: String,
   phoneNumber: String,
   beneficiary: Boolean,
-  saleIDs: [ID!]!,
+  saleIDs: [ID!],
   metas: customerMetasInput,
   warehouseID: ID
 }

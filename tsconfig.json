@@ -33,6 +33,7 @@
       "@ui-styles/*": ["appUI/assets/styles/*"],
       "@ui-themes/*": ["appUI/assets/themes/*"],
       "@ui-components/*": ["appUI/components/*"],
+      "@ui-gqls/*": ["appUI/commons/models/gqls/*"],
       // SERVER
       "@server/*": ["appServer/*"],
       "@server-models/*": ["appServer/src/models/*"],

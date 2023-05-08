@@ -495,6 +495,36 @@
       }
   }
 
+  warehouseDelete(warehouseID: $warehouseID) {
+      error
+      deleted
+  }
+
+   mutation EDITWAREHOUSE(
+      $warehouseID: ID!,
+       $name: String,
+   $address: String,
+   $productIDs: [ID!],
+   $staffIDs: [ID!]
+  ) {
+    warehouseEdit(
+      warehouseEditInput: {
+        warehouseID: $warehouseID,
+        name: $name,
+        address: $address,
+        productIDs: $productIDs,
+        staffIDs: $staffIDs,
+      }
+    ) {
+      error
+      edited,
+      newEdited {
+        name,
+        address,
+      }
+    }
+  }
+
   warehouseAddSubscription {
       error {
         message
@@ -922,9 +952,7 @@
     }
   }
 
-
 # STORE
-
   store {
     totalSales {
       error

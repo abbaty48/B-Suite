@@ -219,7 +219,6 @@ export type IProduct = {
   expirationDate?: Maybe<Scalars['String']>;
   expired?: Maybe<Scalars['Boolean']>;
   features?: Maybe<Array<Maybe<Feature>>>;
-  inStock: Scalars['Boolean'];
   name: Scalars['String'];
   productID: Scalars['ID'];
   quantity: Scalars['Int'];
@@ -679,7 +678,6 @@ export type SaleProduct = IProduct & {
   expirationDate?: Maybe<Scalars['String']>;
   expired?: Maybe<Scalars['Boolean']>;
   features?: Maybe<Array<Maybe<Feature>>>;
-  inStock: Scalars['Boolean'];
   kind: Scalars['String'];
   name: Scalars['String'];
   productID: Scalars['ID'];
@@ -1040,7 +1038,7 @@ export type CustomerAddInput = {
   metas?: InputMaybe<CustomerMetasInput>;
   name: Scalars['String'];
   phoneNumber?: InputMaybe<Scalars['String']>;
-  saleIDs: Array<Scalars['ID']>;
+  saleIDs?: InputMaybe<Array<Scalars['ID']>>;
   warehouseID?: InputMaybe<Scalars['ID']>;
 };
 
@@ -1847,7 +1845,6 @@ export type IProductResolvers<ContextType = IResolverContext, ParentType extends
   expirationDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   expired?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   features?: Resolver<Maybe<Array<Maybe<ResolversTypes['Feature']>>>, ParentType, ContextType>;
-  inStock?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   productID?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   quantity?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -2055,7 +2052,6 @@ export type SaleProductResolvers<ContextType = IResolverContext, ParentType exte
   expirationDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   expired?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   features?: Resolver<Maybe<Array<Maybe<ResolversTypes['Feature']>>>, ParentType, ContextType>;
-  inStock?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   productID?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
