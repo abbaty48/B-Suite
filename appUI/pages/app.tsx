@@ -7,9 +7,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { Staff } from '@/appServer/src/models/@types/resolver_types'
 import { ApolloProvider, ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client'
 
-declare const CONFIG: any
-
-const Application = () => {
+const Main = () => {
 
    /**
     * get the domain & ws from the config
@@ -62,4 +60,4 @@ const Application = () => {
    )
 }
 
-export default Application
+export default Main

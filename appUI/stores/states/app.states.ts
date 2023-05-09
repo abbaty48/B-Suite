@@ -5,10 +5,10 @@ import initialStates from '@/config/initialStates.json';
  * Represent the states properties
  */
 export interface IAppStates {
-  themes: 'System' | 'Viva Light' | 'Viva Dark';
   appName: string;
+  themes: 'System' | 'Viva Light' | 'Viva Dark';
+  appStates: { isTop: boolean; minimized: boolean; maximized: boolean };
 }
-
 /**
  * AppInitStates
  * represent the initial application states, this first get the _app_state stored in localStorage and parse it into IAppStates,

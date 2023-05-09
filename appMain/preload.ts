@@ -8,10 +8,12 @@ contextBridge.exposeInMainWorld('Renderer', {
   toggleTheme: (themeType: string) =>
     ipcRenderer.invoke('themeMode', themeType),
   // minimize
-  minimizeApp: () => ipcRenderer.send('minimize'),
+  minimizeApp: () => ipcRenderer.invoke('minimize'),
   // close
   closeApp: () => ipcRenderer.send('close'),
   // toggleMaximize
-  miximizeRestore: (toMaximized: boolean) =>
+  miximizeOrRestore: (toMaximized: boolean) =>
     ipcRenderer.invoke('maximizeOrRestore', toMaximized),
+  // onTop
+  onTop: (isTop: boolean) => ipcRenderer.invoke('isTop', isTop),
 });

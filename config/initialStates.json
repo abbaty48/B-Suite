@@ -1,4 +1,9 @@
 {
   "themes": "System",
-  "appName": "B-Suite Enterprise"
+  "appName": "B-Suite Enterprise",
+  "appStates": {
+    "isTop": false,
+    "maximized": true,
+    "minimized": false
+  }
 }
