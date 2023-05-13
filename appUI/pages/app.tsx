@@ -1,5 +1,6 @@
 import { App } from 'antd'
 import { createClient } from 'graphql-ws'
+import Window from '@ui-components/window/window'
 import { Kind, OperationTypeNode } from 'graphql'
 import { AppProvider } from '@ui-stores/contexts/app'
 import { getMainDefinition } from '@apollo/client/utilities'
@@ -54,6 +55,7 @@ const Main = () => {
          {/* AppProvider for global configurations and states */}
          <AppProvider>
             <ApolloProvider client={_apolloClient}>
+               <Window />
             </ApolloProvider>
          </AppProvider>
       </App>
