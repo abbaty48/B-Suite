@@ -13,7 +13,8 @@
     "lint": "eslint --ext .ts,.tsx .",
     "compile-server": "npx ttsc appServer/index.ts --outDir .webpack/",
     "start-server": "npm run compile-server && node .webpack/appServer/index.js",
-    "codegen": "graphql-codegen --config appServer/src/commons/commons.codegen.ts"
+    "codegen": "graphql-codegen --config appServer/src/commons/commons.codegen.ts",
+    "build:tailwind": "npx tailwindcss -w -o appUI/assets/styles/tailwind.css"
   },
   "keywords": [
     "RMS",
@@ -87,6 +88,7 @@
     "body-parser": "^1.20.2",
     "concurrent": "^0.3.2",
     "config": "^3.3.9",
+    "copy-webpack-plugin": "^11.0.0",
     "core-js": "^3.30.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -106,6 +108,8 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "postcss": "^8.4.23",
+    "react-idle-timer": "^5.6.2",
+    "react-router-dom": "^6.11.1",
     "regenerator-runtime": "^0.13.11",
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-webpack-plugin": "^4.0.1",

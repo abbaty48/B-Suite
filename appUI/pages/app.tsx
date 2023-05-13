@@ -50,7 +50,7 @@ const Main = () => {
 
    return (
       // Antd global component for general antd component configuration
-      <App notification={{ placement: 'bottomRight', maxCount: 5 }}>
+      <App notification={{ placement: 'bottomRight', maxCount: 5 }} >
          {/* AppProvider for global configurations and states */}
          <AppProvider>
             <ApolloProvider client={_apolloClient}>

@@ -12,8 +12,8 @@ contextBridge.exposeInMainWorld('Renderer', {
   // close
   closeApp: () => ipcRenderer.send('close'),
   // toggleMaximize
-  miximizeOrRestore: (toMaximized: boolean) =>
+  maximizeOrRestore: (toMaximized: boolean) =>
     ipcRenderer.invoke('maximizeOrRestore', toMaximized),
   // onTop
-  onTop: (isTop: boolean) => ipcRenderer.invoke('isTop', isTop),
+  onTop: (isTop: boolean) => ipcRenderer.invoke('onTop', isTop),
 });

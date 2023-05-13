@@ -1,9 +1,26 @@
 {
-  "themes": "System",
   "appName": "B-Suite Enterprise",
   "appStates": {
     "isTop": false,
     "maximized": true,
-    "minimized": false
+    "minimized": false,
+    "appLocker": {
+      "lockScreenTimeOut": 300000,
+      "lockScreenSaverTimeOut": 120000,
+      "lockScreenState": "unlocked",
+      "lockScreenSaverState": "hide",
+      "allowLockScreenSaver": false,
+      "lockScreenBackgroundColor": "rgba(255,255,255,1)",
+      "lockScreenBackgroundImage": null,
+      "lockScreenSaverBackgroundColor": "rgba(255,255,255,1)",
+      "lockScreenSaverBackgroundImage": null
+    },
+    "preference": {
+      "generalFontSize": "sm",
+      "generalIconSize": "sm",
+      "IconSize": "sm",
+      "FontSize": "sm",
+      "themes": "System"
+    }
   }
 }

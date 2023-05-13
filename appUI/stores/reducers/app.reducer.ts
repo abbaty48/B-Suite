@@ -26,6 +26,75 @@ export const appStateReducer = (
         ...states,
         appStates: { ...states.appStates, minimized: payload },
       };
+    // SET LOCKSCREEN
+    case 'SET_LOCKSCREEN':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          appLocker: {
+            ...states.appStates.appLocker,
+            lockScreenState: payload,
+          },
+        },
+      };
+    // SET LOCKSCREENSAVER STATE
+    case 'SET_LOCKSCREENSAVER':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          appLocker: {
+            ...states.appStates.appLocker,
+            lockScreenSaverState: payload,
+          },
+        },
+      };
+    // SET LOCKSCREENSAVER STATE
+    case 'SET_LOCKSCREENTIMEOUT':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          appLocker: {
+            ...states.appStates.appLocker,
+            lockScreenTimeOut: payload,
+          },
+        },
+      };
+    // SET LOCKSCREENSAVER STATE
+    case 'SET_LOCKSCREENSAVERTIMEOUT':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          appLocker: {
+            ...states.appStates.appLocker,
+            lockScreenSaverTimeOut: payload,
+          },
+        },
+      };
+    // SET PREFERENCES
+    case 'SET_PREFERENCE':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          preference: {
+            ...states.appStates.preference,
+            [payload.key]: payload.value,
+          },
+        },
+      };
+    // SET APPSTATES:
+    case 'SET_APPSTATE':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          [payload.key]: payload.value,
+        },
+      };
     default:
       return states;
   }

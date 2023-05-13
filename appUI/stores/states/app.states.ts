@@ -6,8 +6,29 @@ import initialStates from '@/config/initialStates.json';
  */
 export interface IAppStates {
   appName: string;
-  themes: 'System' | 'Viva Light' | 'Viva Dark';
-  appStates: { isTop: boolean; minimized: boolean; maximized: boolean };
+  appStates: {
+    isTop: boolean;
+    minimized: boolean;
+    maximized: boolean;
+    appLocker: {
+      allowLockScreenSaver: false;
+      lockScreenTimeOut: number; // default to 30 Minute
+      lockScreenSaverTimeOut: number; // default to 2 Minute
+      lockScreenState: 'unlocked' | 'locked';
+      lockScreenSaverState: 'hide' | 'show' | 'showing' | 'hiding';
+      lockScreenBackgroundColor: string;
+      lockScreenBackgroundImage: string | null;
+      lockScreenSaverBackgroundColor: string;
+      lockScreenSaverBackgroundImage: string | null;
+    };
+    preference: {
+      generalFontSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
+      generalIconSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
+      IconSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
+      FontSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
+      themes: 'System' | 'Viva Light' | 'Viva Dark';
+    };
+  };
 }
 /**
  * AppInitStates

@@ -1,8 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'tailwind.css';
+@import '../fonts/bsuite/css/animation.css';
+@import '../fonts/bsuite/css/bsuite-embedded.css';
+
+/* FONTS */
+@import '../styles/fonts/exo.css';
+@import '../styles/fonts/saira.css';
+
+*,
+html {
+  outline: 'none' !important;
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
-  margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
-  background: #eee;
+  background: #fff;
+  overflow-y: hidden;
+}
+
+.--window-topbar-dragable {
+  -webkit-app-region: drag;
+}
+
+/* Scrollbar STYLE*/
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: transparent;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
 }
