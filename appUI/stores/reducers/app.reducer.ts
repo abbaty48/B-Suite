@@ -10,7 +10,13 @@ export const appStateReducer = (
   switch (type) {
     // SWITCH THENES
     case 'SWITCH_THEMES':
-      return { ...states, themes: payload };
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          preference: { ...states.appStates.preference, themes: payload },
+        },
+      };
     // SET_WINDOW_ONTOP
     case 'SET_WINDOW_ONTOP':
       return { ...states, appStates: { ...states.appStates, isTop: payload } };

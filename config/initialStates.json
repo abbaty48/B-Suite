@@ -11,8 +11,8 @@
       "lockScreenSaverState": "hide",
       "allowLockScreenSaver": false,
       "lockScreenBackgroundColor": "rgba(255,255,255,1)",
-      "lockScreenBackgroundImage": null,
-      "lockScreenSaverBackgroundColor": "rgba(255,255,255,1)",
+      "lockScreenBackgroundImage": "/appUI/assets/imgs/defaultLockScreen.jpg",
+      "lockScreenSaverBackgroundColor": "rgba(243,243,243,1)",
       "lockScreenSaverBackgroundImage": null
     },
     "preference": {
@@ -20,7 +20,8 @@
       "generalIconSize": "sm",
       "IconSize": "sm",
       "FontSize": "sm",
-      "themes": "System"
+      "themes": "System",
+      "font": "Exo"
     }
   }
 }

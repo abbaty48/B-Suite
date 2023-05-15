@@ -15,7 +15,18 @@ html {
   outline: 'none' !important;
 }
 
+html,
 body {
+  font-family: 'sairalight' 'exo_2regular' !important;
+}
+
+*::after,
+*::before {
+  border-color: unset;
+}
+
+body {
+  color: #353535;
   background: #fff;
   overflow-y: hidden;
 }
