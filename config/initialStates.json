@@ -20,7 +20,8 @@
       "generalIconSize": "sm",
       "IconSize": "sm",
       "FontSize": "sm",
-      "themes": "System",
+      "themes": "Auto",
+      "themeMode": "",
       "font": "Exo"
     }
   }

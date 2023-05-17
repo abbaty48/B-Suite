@@ -5,6 +5,7 @@ import { Kind, OperationTypeNode } from 'graphql'
 import { AppProvider } from '@ui-stores/contexts/app'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { ThemeProvider } from '@ui-stores/providers/themeProvider'
 import { Staff } from '@/appServer/src/models/@types/resolver_types'
 import { ApolloProvider, ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client'
 
@@ -55,7 +56,9 @@ const Main = () => {
          {/* AppProvider for global configurations and states */}
          <AppProvider>
             <ApolloProvider client={_apolloClient}>
-               <Window />
+               <ThemeProvider>
+                  <Window />
+               </ThemeProvider>
             </ApolloProvider>
          </AppProvider>
       </App>

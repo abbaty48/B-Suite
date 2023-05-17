@@ -1,7 +1,8 @@
 import TextInput, { TextInputButtonTypes } from "@/appUI/components/textInput/TextInput";
 import { AppContext } from "@/appUI/stores/contexts/app";
 import { useContext, useReducer, useRef } from "react";
-import { Button } from "antd";
+import { Button, Form, Input, Select, Space } from "antd";
+import { rules } from '../../../webpack.rules';
 
 export const useStateReducer = () => {
    interface IState {
@@ -51,12 +52,14 @@ export const LoginForm = () => {
 
    return (
       <div className={"mb-5 w-full relative"}>
-         <form
-            ref={formRef}
+         <Form
+            size="middle"
             method="post"
-            className="w-full flex flex-col flex-nowrap justify-between"
-            onSubmit={(event) => {
-               event.preventDefault();
+            layout="vertical"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 420 }}
+            onFinish={(values) => {
                setStates({ type: 'SET_ISAUTHENTICATING', payload: true })
 
                setTimeout(() => {
@@ -68,45 +71,53 @@ export const LoginForm = () => {
                      setStates({ type: 'SET_ISAUTHENTICATING', payload: false })
                   } // end else
                }, 500);
+
             }}
          >
-            <TextInput required type="text" name="id"
-               value={states.credential.id}
-               containerClassName={'border-none bg-transparent'}
-               inputAttributes={{
-                  autoFocus: true, placeholder: 'ID', className: 'bg-transparent w-full px-4 py-2 border-b border-b-[#CCC] outline-none',
-                  onChange: (e) => setStates({ type: 'SET_CREDENTIAL', payload: { ...states.credential, id: e.currentTarget.value } })
-               }}
-            />
-            <TextInput required type="password" name="secret"
-               showButtonOnHover={false}
-               value={states.credential.secret}
-               buttons={[TextInputButtonTypes.ShowHidePassword]}
-               containerClassName={'border-none bg-transparent'}
-               inputAttributes={{
-                  autoFocus: true, placeholder: 'Password', className: 'bg-transparent w-full px-4 py-2 border-b border-b-[#CCC] outline-none',
-                  onChange: (e) => setStates({ type: 'SET_CREDENTIAL', payload: { ...states.credential, secret: e.currentTarget.value } })
-               }}
-            />
+            {/* SID */}
+            <Form.Item
+               required
+               id="id"
+               hasFeedback
+               noStyle
+               rules={[{ required: true, message: 'Your ID is not provided.' }]}
+            >
+               <Space direction="horizontal">
+                  <Input
+                     name="id"
+                     allowClear
+                     placeholder="ID"
+                     value={states.credential.id}
+                     disabled={states.isAuthenticating}
+                     className={'border-none w-[350px] px-4 py-2 outline-none'}
+                     onChange={(e) => setStates({ type: 'SET_CREDENTIAL', payload: { ...states.credential, id: e.currentTarget.value } })}
+                  />
+                  {/* Load already loggedIn users from localStroage for user to select instead of typing */}
+                  <Select bordered={false} placeholder={<span className={'--icon --icon-users'}></span>}
+                     options={[{ label: 'StaffA', value: 'staffA' }, { label: 'StaffB', value: 'staffB' }]} />
+               </Space>
+            </Form.Item>
+            {/* SECRET */}
+            <Form.Item required id="secret" rules={[{ required: true, message: 'Password not provided.' }]}>
+               <Input.Password
+                  required
+                  allowClear
+                  name="secret"
+                  placeholder="Password"
+                  value={states.credential.secret}
+                  disabled={states.isAuthenticating}
+                  className={'border-none w-full px-4 outline-none'}
+                  onChange={(e) => setStates({ type: 'SET_CREDENTIAL', payload: { ...states.credential, secret: e.currentTarget.value } })}
+               />
+            </Form.Item>
 
             {
-               (states.credential.id && states.credential.secret) && (
-                  <Button type="ghost" loading={states.isAuthenticating} icon={<i className={'--icon --icon-login'}></i>}
-                     className={'place-self-start my-2 bg-[#fff1] border w-[63px] h-[29px] rounded-none'}
-                     onClick={(e) => formRef.current.dispatchEvent(new Event('submit', { bubbles: true }))} >Login</Button>
-               )
+               <Form.Item wrapperCol={{ offset: 0, span: 0 }} hidden={!states.credential.id || !states.credential.secret}>
+                  <Button type="primary" htmlType="submit" loading={states.isAuthenticating} icon={<i className={'--icon --icon-login'}></i>}
+                     className={'bg-[#fff1] border w-[73px] h-[29px] rounded-none'}>Login</Button>
+               </Form.Item>
             }
-         </form>
-         {states.valid && (
-            <p
-               className={
-                  "font-light text-sm text-center bold text-orange-700 animate-fadeOut"
-               }
-            >
-               Sorry, password authentication didn't work
-               <br /> Please try again.
-            </p>
-         )}
+         </Form>
       </div>
    )
 }

@@ -7,8 +7,10 @@
 @import '../fonts/bsuite/css/bsuite-embedded.css';
 
 /* FONTS */
-@import '../styles/fonts/exo.css';
 @import '../styles/fonts/saira.css';
+@import '../styles/fonts/exo.css';
+
+/* THEMES COLOR */
 
 *,
 html {
@@ -17,7 +19,8 @@ html {
 
 html,
 body {
-  font-family: 'sairalight' 'exo_2regular' !important;
+  font-family: 'sairalight' -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 *::after,
@@ -26,9 +29,8 @@ body {
 }
 
 body {
-  color: #353535;
-  background: #fff;
   overflow-y: hidden;
+  background: #fff;
 }
 
 .--window-topbar-dragable {
@@ -43,6 +45,6 @@ body {
 }
 
 .disabled {
-  pointer-events: none;
   opacity: 0.4;
+  pointer-events: none;
 }

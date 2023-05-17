@@ -1,0 +1,33 @@
+{
+  "token": {
+    "fontSize": 13,
+    "sizeStep": 3,
+    "borderRadius": 0,
+    "wireframe": false,
+    "colorSuccess": "#FAAD14",
+    "colorBgBase": "#393e46",
+    "colorTextBase": "#eeeeee",
+    "colorPrimary": "#FAAD14",
+    "colorPrimaryBg": "#eee",
+    "colorSuccessBg": "#393E46",
+    "colorSuccessBorder": "#393E46",
+    "colorSuccessBgHover": "#222831",
+    "colorSuccessBorderHover": "#393E46",
+    "colorSuccessHover": "#393E46",
+    "colorWarningBg": "#393E46",
+    "colorWarningBgHover": "#222831",
+    "colorWarningBorder": "#222831",
+    "colorWarningBorderHover": "#393E46",
+    "colorWarningHover": "#222831",
+    "colorErrorBg": "#393E46",
+    "colorErrorBgHover": "#222831",
+    "colorErrorBorder": "#222831",
+    "colorInfoBg": "#393E46",
+    "colorInfoBgHover": "#222831",
+    "colorInfoBorder": "#222831",
+    "colorInfoBorderHover": "#222831",
+    "colorInfo": "#FAAD14",
+    "colorText": "#eeeeee",
+    "colorBgLayout": "#16191f"
+  }
+}

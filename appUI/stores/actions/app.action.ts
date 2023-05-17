@@ -1,7 +1,7 @@
 export type AppStateActions =
   | {
       type: 'SWITCH_THEMES';
-      payload: 'System' | 'Viva Light' | 'Viva Dark';
+      payload: string;
     }
   | {
       type: 'SET_WINDOW_ONTOP';
@@ -38,4 +38,8 @@ export type AppStateActions =
   | {
       type: 'SET_APPSTATE';
       payload: { key: string; value: any };
+    }
+  | {
+      type: 'SET_THEMEMODE';
+      payload: 'Dark' | 'Light';
     };

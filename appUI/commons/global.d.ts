@@ -23,4 +23,15 @@ declare global {
    * any property and it value declared in default.json configuration file.
    */
   const CONFIG: any;
+  /**
+   *
+   */
+  const AppThemes: [
+    'Auto',
+    'Viva Light',
+    'Viva Dark',
+    'Nord',
+    'Lither',
+    'GrayHunt'
+  ];
 }

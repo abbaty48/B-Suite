@@ -16,17 +16,20 @@ export interface IAppStates {
       lockScreenSaverTimeOut: number; // default to 2 Minute
       lockScreenState: 'unlocked' | 'locked';
       lockScreenSaverState: 'hide' | 'show' | 'showing' | 'hiding';
-      // lockScreenBackgroundColor: string;
-      // lockScreenBackgroundImage: string | null;
-      // lockScreenSaverBackgroundColor: string;
-      // lockScreenSaverBackgroundImage: string | null;
     };
     preference: {
       generalFontSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
       generalIconSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
       IconSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
       FontSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
-      themes: 'System' | 'Viva Light' | 'Viva Dark';
+      themes:
+        | 'Auto'
+        | 'Viva Light'
+        | 'Viva Dark'
+        | 'Nord'
+        | 'Lither'
+        | 'GrayHunt';
+      themeMode: 'Dark' | 'Light';
       font: 'Exo' | 'Saira' | 'Roboto';
     };
   };

@@ -1,3 +1,4 @@
+import { theme } from 'antd'
 import { useCallback } from "react";
 import { loadFull } from "tsparticles";
 import Particles from "react-tsparticles";
@@ -12,6 +13,7 @@ export const Particle = (prop: { children: React.ReactNode }) => {
       await loadFull(engine);
    }, []);
 
+   const { token } = theme.useToken()
 
    return (
       <>
@@ -45,10 +47,10 @@ export const Particle = (prop: { children: React.ReactNode }) => {
                },
                particles: {
                   color: {
-                     value: "#434343",
+                     value: token.colorPrimary,
                   },
                   links: {
-                     color: "#434343",
+                     color: token.colorTextBase,
                      distance: 150,
                      enable: true,
                      opacity: 0.2,
@@ -106,13 +108,7 @@ export const Particle = (prop: { children: React.ReactNode }) => {
                   },
                },
                detectRetina: true,
-               background: {
-                  opacity: 0.1,
-                  position: "50% 50%",
-                  color: '#f9f9f9',
-                  size: "cover",
-                  repeat: "none"
-               }
+
             }}
          />
          {prop.children}

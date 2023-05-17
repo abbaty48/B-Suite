@@ -142,23 +142,17 @@ const AppLocker: React.FC<{ children: ReactNode }> = (props: { children: ReactNo
    };
    return (
       <IdleTimerProvider
-         timeout={appLocker.lockScreenTimeOut}
          onIdle={onlockScreen}
+         timeout={appLocker.lockScreenTimeOut}
          startOnMount={true} // chnage this to true/remove it
       >
          {appLocker.allowLockScreenSaver &&
             appLocker.lockScreenState === "locked" &&
             appLocker.lockScreenSaverState === 'show' && (
-               <LockSaver
-                  backgroundColor={appLocker.lockScreenSaverBackgroundColor}
-                  backgroundImage={appLocker.lockScreenSaverBackgroundImage}
-               />
+               <LockSaver />
             )}
          {appLocker.lockScreenState === 'locked' && (
-            <LockScreen
-               backgroundColor={appLocker.lockScreenBackgroundColor}
-               backgroundImage={appLocker.lockScreenBackgroundImage}
-            />
+            <LockScreen />
          )}
          {appLocker.lockScreenState === 'unlocked' && props.children}
       </IdleTimerProvider>
