@@ -1,4 +1,9 @@
+import { Staff } from '@/appServer/src/models/@types/resolver_types';
 import { ILocalStaff } from '@ui-commons/interfaces/istaff';
+
+export const currentUser: Staff = JSON.parse(
+  localStorage.getItem('_app_current_user')
+);
 
 export const getlStaffs = (): ILocalStaff[] | null =>
   JSON.parse(localStorage.getItem('_app_users')) as ILocalStaff[] | null;
@@ -23,5 +28,19 @@ export const setLocalStaff = (staff: ILocalStaff) => {
     lStaffs.push(staff);
     // update the local storage
     localStorage.setItem('_app_users', JSON.stringify(lStaffs));
+  }
+};
+
+export const getStaffIcon = (role: string) => {
+  switch (role) {
+    case 'Admin':
+      return '--icon-staff-admin';
+    case 'Manager':
+      return '--icon-staff-manager';
+    case 'Seller':
+    case 'Warehouse':
+      return '--icon-staff';
+    case 'Accountant':
+      return '--icon-staff-accountant';
   }
 };

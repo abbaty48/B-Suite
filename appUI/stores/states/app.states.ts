@@ -7,7 +7,7 @@ import initialStates from '@/config/initialStates.json';
  */
 export interface IAppStates {
   appName: string;
-  currentUser?: Staff;
+  appCurrentRoute: string;
   appStates: {
     isTop: boolean;
     minimized: boolean;

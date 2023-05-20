@@ -8,6 +8,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { ThemeProvider } from '@ui-stores/providers/themeProvider'
 import { Staff } from '@/appServer/src/models/@types/resolver_types'
 import { ApolloProvider, ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client'
+import { HashRouter } from 'react-router-dom'
 
 const Main = () => {
 
@@ -56,7 +57,9 @@ const Main = () => {
          <AppProvider>
             <ApolloProvider client={_apolloClient}>
                <ThemeProvider>
-                  <Window />
+                  <HashRouter>
+                     <Window />
+                  </HashRouter>
                </ThemeProvider>
             </ApolloProvider>
          </AppProvider>

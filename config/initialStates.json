@@ -1,5 +1,6 @@
 {
   "appName": "B-Suite Enterprise",
+  "appCurrentRoute": "/main",
   "appStates": {
     "isTop": false,
     "maximized": true,

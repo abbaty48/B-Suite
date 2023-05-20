@@ -40,7 +40,7 @@ export const appStateReducer = (
       }
       return {
         ...states,
-        currentUser: null,
+        // currentUser: null,
         appStates: {
           ...states.appStates,
           appLocker: {
@@ -107,11 +107,11 @@ export const appStateReducer = (
           [payload.key]: payload.value,
         },
       };
-    //SET CURRENT USER
-    case 'SET_CURRENT_USER':
+    //SET CURRENT ROUTE
+    case 'SET_CURRENT_ROUTE':
       return {
         ...states,
-        currentUser: payload,
+        appCurrentRoute: payload,
       };
     // SET THEMEMODE
     case 'SET_THEMEMODE':

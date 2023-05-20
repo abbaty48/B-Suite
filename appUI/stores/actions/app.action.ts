@@ -45,4 +45,4 @@ export type AppStateActions =
       type: 'SET_THEMEMODE';
       payload: 'Dark' | 'Light';
     }
-  | { type: 'SET_CURRENT_USER'; payload: Staff | null };
+  | { type: 'SET_CURRENT_ROUTE'; payload: string };

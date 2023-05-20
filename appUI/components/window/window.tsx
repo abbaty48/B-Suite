@@ -1,5 +1,5 @@
 import AppLocker from "@ui-components/appLocker/appLocker";
-import WindowToolbar from "@/appUI/components/window/windowTopBar";
+import WindowTopBar  from "@/appUI/components/window/windowTopBar";
 import WindowContent from "@/appUI/components/window/windowContentBar";
 import WindowStatusBar from "@/appUI/components/window/windowBottomBar";
 
@@ -13,7 +13,7 @@ export default function Window() {
             }
          >
             {/* WindowToolBar */}
-            <WindowToolbar />
+            <WindowTopBar />
             {/* WindowContent */}
             <WindowContent />
             {/* WindowStatusBar */}
