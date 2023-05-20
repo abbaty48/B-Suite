@@ -1,8 +1,9 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { IIdleTimer, IdleTimerProvider } from "react-idle-timer";
-import { Particle } from "@ui-components/particle/particle";
-import { AppContext } from "@/appUI/stores/contexts/app";
 import { LoginForm } from "@/appUI/pages/auth/login";
+import { AppContext } from "@/appUI/stores/contexts/app";
+import { Particle } from "@ui-components/particle/particle";
+import ResetPassword from "@/appUI/pages/auth/resetPassword";
+import { IIdleTimer, IdleTimerProvider } from "react-idle-timer";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 
 interface ILockSaverProps {
    backgroundImage?: string;
@@ -79,11 +80,13 @@ const LockSaver = (props: ILockSaverProps) => {
  *
  *
  *
- */
+*/
+export enum LockScreenFormType { Login, ResetForm }
 const LockScreen = (props: ILockScreenProp) => {
 
    // HOOKS
    const { dispatch } = useContext(AppContext) // global context 
+   const [formType, setFormType] = useState<LockScreenFormType>(LockScreenFormType.Login)
 
    useEffect(() => {
       dispatch({ 'type': 'SET_LOCKSCREEN', payload: 'locked' });
@@ -115,7 +118,9 @@ const LockScreen = (props: ILockScreenProp) => {
                }
             >
                <div className={'p-[1%] w-[420px] animate-pulse'} style={{ position: 'absolute', ...randomPosition() }}>
-                  <LoginForm />
+                  {/* SHOW LOGIN FORM OR RESET PASSWORD */}
+                  {formType === LockScreenFormType.Login && <LoginForm setFormType={setFormType} />}
+                  {formType === LockScreenFormType.ResetForm && <ResetPassword setFormType={setFormType} />}
                </div>
             </div>
          </Particle>
@@ -132,7 +137,10 @@ const AppLocker: React.FC<{ children: ReactNode }> = (props: { children: ReactNo
    const { state: { appStates: { appLocker } }, dispatch } = useContext(AppContext)
    const onlockScreen = (event?: Event, idleTimer?: IIdleTimer) => {
       if (appLocker.lockScreenState !== 'locked') {
+         // lock the screen
          dispatch({ type: 'SET_LOCKSCREEN', payload: 'locked' })
+         // reset the current user
+         dispatch({ type: 'SET_CURRENT_USER', payload: null })
       } else {
          // set timeout for screensaver
          setTimeout(() => {

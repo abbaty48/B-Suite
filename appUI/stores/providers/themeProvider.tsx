@@ -31,8 +31,8 @@ export const ThemeProvider = (props: { children: React.ReactNode }) => {
          }
       }
       // Change the body backgroudColor everytime a theme is changed
-      document.querySelector('body').style.color = token().colorTextBase
-      document.querySelector('body').style.backgroundColor = token().colorBgLayout
+      document.querySelector('body').style.color = token().colorTextBase;
+      document.querySelector('body').style.backgroundColor = token().colorBgLayout;
 
       return token();
    }

@@ -33,9 +33,14 @@ export const appStateReducer = (
         appStates: { ...states.appStates, minimized: payload },
       };
     // SET LOCKSCREEN
-    case 'SET_LOCKSCREEN':
+    case 'SET_LOCKSCREEN': {
+      // remove the current user
+      if (payload === 'locked') {
+        localStorage.setItem('_app_current_user', null);
+      }
       return {
         ...states,
+        currentUser: null,
         appStates: {
           ...states.appStates,
           appLocker: {
@@ -44,6 +49,7 @@ export const appStateReducer = (
           },
         },
       };
+    }
     // SET LOCKSCREENSAVER STATE
     case 'SET_LOCKSCREENSAVER':
       return {
@@ -101,6 +107,25 @@ export const appStateReducer = (
           [payload.key]: payload.value,
         },
       };
+    //SET CURRENT USER
+    case 'SET_CURRENT_USER':
+      return {
+        ...states,
+        currentUser: payload,
+      };
+    // SET THEMEMODE
+    case 'SET_THEMEMODE':
+      return {
+        ...states,
+        appStates: {
+          ...states.appStates,
+          preference: {
+            ...states.appStates.preference,
+            themeMode: payload,
+          },
+        },
+      };
+    //
     default:
       return states;
   }

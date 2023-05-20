@@ -18,7 +18,6 @@ const Main = () => {
    /**
     * get user token
     */
-   // TODO:  case the parse to a IStaff type
    const _token = JSON.parse(localStorage.getItem('_app_current_user')) as Staff ?? null
    /**
     *   Define a unique ApolloClient that could use both WebSocket and HttpLink
@@ -45,7 +44,7 @@ const Main = () => {
          uri: domain,
          headers: {
             'content-type': 'application/json',
-            'authorization': `Bearer ${_token?.token || ''}`
+            'authorization': _token ? `Bearer ${_token?.token || ''}` : `Authentication`
          }
       })) // end split
    }) // end new ApolloClient

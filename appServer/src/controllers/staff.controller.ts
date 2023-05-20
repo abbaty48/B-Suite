@@ -28,8 +28,12 @@ import {
   SearchStaffInput,
   StaffDeletePayload,
   SubscriptionActionType,
+  StaffCredentialInput,
+  AuthPayload,
+  StaffResetPasswordPayload,
 } from '@server-models/@types/resolver_types';
 import { PubSub } from 'graphql-subscriptions';
+import { StaffResetPasswordInput } from '@server-models/@types/resolver_types';
 
 export class StaffController {
   static staff = async (searchTerm: SearchStaffInput) => {
@@ -75,7 +79,7 @@ export class StaffController {
       }
     });
   };
-
+  // end staff
   static staffs = async (searchTerm: SearchStaffInput, pagin: PaginInput) => {
     return new Promise<StaffsPayload>(async (resolve) => {
       try {
@@ -150,7 +154,7 @@ export class StaffController {
       }
     });
   };
-
+  // end Staffs
   static addStaff = async (
     addStaffInput: StaffAddInput,
     { config, pubSub, authenticatedStaff }: IResolverContext
@@ -255,7 +259,7 @@ export class StaffController {
   // end addStaff
   static editStaff = async (
     editStaffInput: any,
-    { config, pubSub, authenticatedStaff }: IResolverContext
+    { config }: IResolverContext
   ) => {
     return new Promise<StaffEditPayload>(async (resolve) => {
       try {
@@ -282,49 +286,6 @@ export class StaffController {
             }
           }
         } // end if input.role
-        // IF TO UPDATE THE PASSWORD
-        let passwordHash, token: string;
-        if (editStaffInput.password) {
-          //   BCRYPT STAFF PASSWORD
-          passwordHash = await bcrypt.hash(
-            editStaffInput.password,
-            await bcrypt.genSalt()
-          );
-          //   GENERATE TOKEN
-          token = JWT.sign(
-            {
-              staffID,
-              firstName,
-              lastName,
-              email,
-              role,
-            },
-            decodeRSAKey(config.get('jwt.private')),
-            { algorithm: 'HS512' }
-          );
-          // UPDATE WITH PASSWORD
-          const newEdited = (await staffModel.findOneAndUpdate(
-            { staffID: editStaffInput.staffID },
-            { ...editStaffInput, password: passwordHash, token }
-          )) as Staff;
-
-          /** Publish Subscription on LISTEN_EDIT_STAFF 
-             * 
-            this.publishSubscribe(
-              'LISTEN_EDIT_STAFF',
-              newEdited,
-              authenticatedStaff as Staff,
-              SubscriptionActionType.Edited,
-              pubSub
-              );
-            */
-
-          return resolve({
-            edited: true,
-            error: null,
-            newEdited,
-          });
-        } // end editStaffInput.password
         // EDIT STAFF
         const newEdited = await staffModel.findOneAndUpdate(
           { staffID: editStaffInput.staffID },
@@ -461,8 +422,156 @@ export class StaffController {
         });
       }
     }); // end promise
-  }; // end deleteStaff
+  };
+  //
+  static resetPassword = async (
+    {
+      staffID,
+      refereeID,
+      newPassword,
+      refereePassword,
+    }: StaffResetPasswordInput,
+    { config }: IResolverContext
+  ) => {
+    return new Promise<StaffResetPasswordPayload>(async (resolve) => {
+      try {
+        // TARGET STAFF
+        const _targetStaff = await staffModel.findOne({ staffID });
+        // REFEREE STAFF
+        const _refereeStaff = await staffModel.findOne({ staffID: refereeID });
+        // CHECK EXIST
+        if (!_targetStaff || !_refereeStaff) {
+          return resolve({
+            success: false,
+            error: null,
+            message: `Either the target or referee staff does not exist, please check both the ID's an try again.`,
+          });
+        }
+        // referee is not eligible to perform this action, not a Admin/Manager/Accounter
+        if (
+          _refereeStaff.role !== StaffRole.Admin &&
+          _refereeStaff.role !== StaffRole.Manager &&
+          _refereeStaff.role !== StaffRole.Accountant
+        ) {
+          return resolve({
+            error: null,
+            success: false,
+            message: `The referee is not authorize to perform this action, please contact an authorized user for help.`,
+          });
+        }
 
+        // if the referee is an accountant and the targetStaff is a Admin/Manager
+        if (
+          _refereeStaff.role === StaffRole.Accountant &&
+          (_targetStaff.role === StaffRole.Admin ||
+            _targetStaff.role === StaffRole.Manager)
+        ) {
+          return resolve({
+            error: null,
+            success: false,
+            message: `The referee is not authorize to perform this action, please contact an authorized user for help.`,
+          });
+        }
+
+        // if the referee password does not match
+        if (!(await bcrypt.compare(refereePassword, _refereeStaff.password))) {
+          return resolve({
+            error: null,
+            success: false,
+            message: `Referee password mismatch.`,
+          });
+        }
+        // -- we've an accountant referee or admin or manager
+        // -- we've a seller,admin,manager,accountant,warehouseman target
+        // GOOD TO GO
+        // IF TO UPDATE THE PASSWORD
+        let passwordHash, token: string;
+        //   BCRYPT NEW PASSWORD
+        passwordHash = await bcrypt.hash(newPassword, await bcrypt.genSalt());
+        //   GENERATE TOKEN
+        token = JWT.sign(
+          {
+            staffID,
+            firstName: _targetStaff.firstName,
+            lastName: _targetStaff.lastName,
+            email: _targetStaff.email,
+            role: _targetStaff.role,
+          },
+          decodeRSAKey(config.get('jwt.private')),
+          { algorithm: 'HS512' }
+        );
+        // UPDATE USER PASSWORD AND TOKEN
+        _targetStaff.password = passwordHash;
+        _targetStaff.token = token;
+        _targetStaff.save();
+
+        return resolve({
+          error: null,
+          success: true,
+          message: `Password reset successfull.`,
+        });
+      } catch (error) {
+        resolve({
+          success: false,
+          message: null,
+          error: `[EXCEPTION]: ${error.message}`,
+        });
+      }
+    }); // end
+  };
+  // end deleteStaff
+  static authenticate = async (
+    credential: StaffCredentialInput,
+    { config }: IResolverContext
+  ) => {
+    return new Promise<AuthPayload>(async (resolve) => {
+      try {
+        const { staffID, secret } = credential;
+        // GET THE STAFF BY ID
+        const staff = await staffModel.findOne({ staffID });
+        // COMPARE USER PROVIDED SECRET
+        if (!staff || !(await bcrypt.compare(secret, staff?.password))) {
+          return resolve({
+            error: null,
+            staff: null,
+            message: `Authentication failed, a staff with the provided identity ID or Password does not exist.`,
+          });
+        }
+
+        const { firstName, lastName, email, role } = staff;
+        /*
+           - regenerate the user's token 
+           - store the new token back to user's data
+         */
+        //   GENERATE A NEW TOKEN
+        const token = JWT.sign(
+          {
+            staffID,
+            firstName,
+            lastName,
+            email,
+            role,
+          },
+          decodeRSAKey(config.get('jwt.private')),
+          { algorithm: 'HS512' }
+        );
+        staff.token = token;
+        await staff.save();
+        // RESOLVE
+        resolve({
+          error: null,
+          message: null,
+          staff: staff as Staff,
+        }); // end resolve
+      } catch (error) {
+        resolve({
+          staff: null,
+          message: null,
+          error: `[EXCEPTION]: ${error.message}`,
+        }); // end resolve
+      } // end catchc
+    }); // end Promise
+  }; // end authenticate
   /** Publish Subscription on LISTEN_EDIT_STAFF */
   private static publishSubscribe(
     listen: string,

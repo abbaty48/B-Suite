@@ -1,3 +1,4 @@
+import { Staff } from '@/appServer/src/models/@types/resolver_types';
 import initialStates from '@/config/initialStates.json';
 
 /**
@@ -6,6 +7,7 @@ import initialStates from '@/config/initialStates.json';
  */
 export interface IAppStates {
   appName: string;
+  currentUser?: Staff;
   appStates: {
     isTop: boolean;
     minimized: boolean;
@@ -22,13 +24,7 @@ export interface IAppStates {
       generalIconSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
       IconSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
       FontSize: 'xs' | 'sm' | 'md' | 'lg' | 'xlg';
-      themes:
-        | 'Auto'
-        | 'Viva Light'
-        | 'Viva Dark'
-        | 'Nord'
-        | 'Lither'
-        | 'GrayHunt';
+      themes: string;
       themeMode: 'Dark' | 'Light';
       font: 'Exo' | 'Saira' | 'Roboto';
     };

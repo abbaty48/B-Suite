@@ -7,5 +7,5 @@ export interface IResolverContext {
   config: IConfig;
   models: Models;
   pubSub: PubSub;
-  authenticatedStaff: IStaff;
+  authenticatedStaff?: IStaff;
 }

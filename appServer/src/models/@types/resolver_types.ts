@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { IResolverContext } from '../../models/interfaces/IResolverContext';
+import { IResolverContext } from 'appServer/src/models/interfaces/IResolverContext';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -23,6 +23,13 @@ export type AddWarehouseStaffPayload = {
   __typename?: 'AddWarehouseStaffPayload';
   added: Scalars['Boolean'];
   error?: Maybe<Scalars['String']>;
+};
+
+export type AuthPayload = {
+  __typename?: 'AuthPayload';
+  error?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  staff?: Maybe<Staff>;
 };
 
 export type Category = {
@@ -235,6 +242,7 @@ export type ISubscription = {
 export type Mutation = {
   __typename?: 'Mutation';
   _initializeSys: InitPayload;
+  authenticate?: Maybe<AuthPayload>;
   categoryAdd: CategoryAddPayload;
   categoryDelete: CategoryDeletePayload;
   categoryEdit: CategoryEditPayload;
@@ -253,6 +261,7 @@ export type Mutation = {
   staffAdd: StaffAddPayload;
   staffDelete: StaffDeletePayload;
   staffEdit: StaffEditPayload;
+  staffResetPassword: StaffResetPasswordPayload;
   supplyDelete: SupplyDeletePayload;
   supplyEdit: SupplyEditPayload;
   warehouseAdd: WarehouseAddPayload;
@@ -263,6 +272,11 @@ export type Mutation = {
 
 export type Mutation_InitializeSysArgs = {
   _init: Scalars['Boolean'];
+};
+
+
+export type MutationAuthenticateArgs = {
+  credential: StaffCredentialInput;
 };
 
 
@@ -356,6 +370,11 @@ export type MutationStaffDeleteArgs = {
 
 export type MutationStaffEditArgs = {
   staffEditInput: StaffEditInput;
+};
+
+
+export type MutationStaffResetPasswordArgs = {
+  staffResetPasswordInput: StaffResetPasswordInput;
 };
 
 
@@ -598,6 +617,7 @@ export enum RolePrevileges {
   ReadStaff = 'READ_STAFF',
   ReadSupply = 'READ_SUPPLY',
   ReadWarehouse = 'READ_WAREHOUSE',
+  ResetPassword = 'RESET_PASSWORD',
   UpdateCategory = 'UPDATE_CATEGORY',
   UpdateCustomer = 'UPDATE_CUSTOMER',
   UpdateEnterprise = 'UPDATE_ENTERPRISE',
@@ -759,6 +779,13 @@ export type StaffPayload = {
   __typename?: 'StaffPayload';
   error?: Maybe<Scalars['String']>;
   staff?: Maybe<Staff>;
+};
+
+export type StaffResetPasswordPayload = {
+  __typename?: 'StaffResetPasswordPayload';
+  error?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  success: Scalars['Boolean'];
 };
 
 /** Staff Roles previleges this includes Admin, Saller, Manager, Warehouse, Accountant */
@@ -1252,6 +1279,11 @@ export type StaffAddInput = {
   warehouseID?: InputMaybe<Scalars['ID']>;
 };
 
+export type StaffCredentialInput = {
+  secret: Scalars['String'];
+  staffID: Scalars['ID'];
+};
+
 export type StaffEditInput = {
   address?: InputMaybe<Scalars['String']>;
   editFeature?: InputMaybe<EditFeature>;
@@ -1259,11 +1291,23 @@ export type StaffEditInput = {
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   otherName?: InputMaybe<Scalars['String']>;
-  password?: InputMaybe<Scalars['String']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<StaffRole>;
   staffID: Scalars['ID'];
   warehouseID?: InputMaybe<Scalars['ID']>;
+};
+
+export type StaffResetPasswordInput = {
+  newPassword: Scalars['String'];
+  /**
+   * RefereeID, the ID of someone that's eligable to reset the password.
+   * for example, an accounter can't change admin or manager password, but could change any staff password.
+   * and staff could not able change any password including himself.
+   */
+  refereeID: Scalars['ID'];
+  refereePassword: Scalars['String'];
+  /** Staff ID to reset the password for.   */
+  staffID: Scalars['ID'];
 };
 
 export type SupplyAddInput = {
@@ -1387,6 +1431,7 @@ export type ResolversUnionParentTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   AddWarehouseStaffPayload: ResolverTypeWrapper<AddWarehouseStaffPayload>;
+  AuthPayload: ResolverTypeWrapper<AuthPayload>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
   CategoryAddPayload: ResolverTypeWrapper<CategoryAddPayload>;
@@ -1451,6 +1496,7 @@ export type ResolversTypes = ResolversObject<{
   StaffDeleteSubscription: ResolverTypeWrapper<StaffDeleteSubscription>;
   StaffEditPayload: ResolverTypeWrapper<StaffEditPayload>;
   StaffPayload: ResolverTypeWrapper<StaffPayload>;
+  StaffResetPasswordPayload: ResolverTypeWrapper<StaffResetPasswordPayload>;
   StaffRole: StaffRole;
   StaffsPayload: ResolverTypeWrapper<StaffsPayload>;
   Store: ResolverTypeWrapper<Store>;
@@ -1507,7 +1553,9 @@ export type ResolversTypes = ResolversObject<{
   searchStaffInput: SearchStaffInput;
   searchSupplyInput: SearchSupplyInput;
   staffAddInput: StaffAddInput;
+  staffCredentialInput: StaffCredentialInput;
   staffEditInput: StaffEditInput;
+  staffResetPasswordInput: StaffResetPasswordInput;
   supplyAddInput: SupplyAddInput;
   supplyDeleteInput: SupplyDeleteInput;
   supplyEditInput: SupplyEditInput;
@@ -1519,6 +1567,7 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   AddWarehouseStaffPayload: AddWarehouseStaffPayload;
+  AuthPayload: AuthPayload;
   Boolean: Scalars['Boolean'];
   Category: Category;
   CategoryAddPayload: CategoryAddPayload;
@@ -1580,6 +1629,7 @@ export type ResolversParentTypes = ResolversObject<{
   StaffDeleteSubscription: StaffDeleteSubscription;
   StaffEditPayload: StaffEditPayload;
   StaffPayload: StaffPayload;
+  StaffResetPasswordPayload: StaffResetPasswordPayload;
   StaffsPayload: StaffsPayload;
   Store: Store;
   StorePayload: StorePayload;
@@ -1634,7 +1684,9 @@ export type ResolversParentTypes = ResolversObject<{
   searchStaffInput: SearchStaffInput;
   searchSupplyInput: SearchSupplyInput;
   staffAddInput: StaffAddInput;
+  staffCredentialInput: StaffCredentialInput;
   staffEditInput: StaffEditInput;
+  staffResetPasswordInput: StaffResetPasswordInput;
   supplyAddInput: SupplyAddInput;
   supplyDeleteInput: SupplyDeleteInput;
   supplyEditInput: SupplyEditInput;
@@ -1652,6 +1704,13 @@ export type AuthorizeRoleDirectiveResolver<Result, Parent, ContextType = IResolv
 export type AddWarehouseStaffPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['AddWarehouseStaffPayload'] = ResolversParentTypes['AddWarehouseStaffPayload']> = ResolversObject<{
   added?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type AuthPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  staff?: Resolver<Maybe<ResolversTypes['Staff']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -1861,6 +1920,7 @@ export type ISubscriptionResolvers<ContextType = IResolverContext, ParentType ex
 
 export type MutationResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _initializeSys?: Resolver<ResolversTypes['initPayload'], ParentType, ContextType, RequireFields<Mutation_InitializeSysArgs, '_init'>>;
+  authenticate?: Resolver<Maybe<ResolversTypes['AuthPayload']>, ParentType, ContextType, RequireFields<MutationAuthenticateArgs, 'credential'>>;
   categoryAdd?: Resolver<ResolversTypes['CategoryAddPayload'], ParentType, ContextType, RequireFields<MutationCategoryAddArgs, 'categoryAddInput'>>;
   categoryDelete?: Resolver<ResolversTypes['CategoryDeletePayload'], ParentType, ContextType, RequireFields<MutationCategoryDeleteArgs, 'category'>>;
   categoryEdit?: Resolver<ResolversTypes['CategoryEditPayload'], ParentType, ContextType, RequireFields<MutationCategoryEditArgs, 'categoryEditInput'>>;
@@ -1879,6 +1939,7 @@ export type MutationResolvers<ContextType = IResolverContext, ParentType extends
   staffAdd?: Resolver<ResolversTypes['StaffAddPayload'], ParentType, ContextType, RequireFields<MutationStaffAddArgs, 'staffAddInput'>>;
   staffDelete?: Resolver<ResolversTypes['StaffDeletePayload'], ParentType, ContextType, RequireFields<MutationStaffDeleteArgs, 'staffID'>>;
   staffEdit?: Resolver<ResolversTypes['StaffEditPayload'], ParentType, ContextType, RequireFields<MutationStaffEditArgs, 'staffEditInput'>>;
+  staffResetPassword?: Resolver<ResolversTypes['StaffResetPasswordPayload'], ParentType, ContextType, RequireFields<MutationStaffResetPasswordArgs, 'staffResetPasswordInput'>>;
   supplyDelete?: Resolver<ResolversTypes['SupplyDeletePayload'], ParentType, ContextType, RequireFields<MutationSupplyDeleteArgs, 'supplyDeleteInput'>>;
   supplyEdit?: Resolver<ResolversTypes['SupplyEditPayload'], ParentType, ContextType, RequireFields<MutationSupplyEditArgs, 'supplyEditInput' | 'supplyID'>>;
   warehouseAdd?: Resolver<ResolversTypes['WarehouseAddPayload'], ParentType, ContextType, RequireFields<MutationWarehouseAddArgs, 'warehouseAddInput'>>;
@@ -2130,6 +2191,13 @@ export type StaffPayloadResolvers<ContextType = IResolverContext, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type StaffResetPasswordPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['StaffResetPasswordPayload'] = ResolversParentTypes['StaffResetPasswordPayload']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type StaffsPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['StaffsPayload'] = ResolversParentTypes['StaffsPayload']> = ResolversObject<{
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   pagin?: Resolver<Maybe<ResolversTypes['Pagins']>, ParentType, ContextType>;
@@ -2337,6 +2405,7 @@ export type InitPayloadResolvers<ContextType = IResolverContext, ParentType exte
 
 export type Resolvers<ContextType = IResolverContext> = ResolversObject<{
   AddWarehouseStaffPayload?: AddWarehouseStaffPayloadResolvers<ContextType>;
+  AuthPayload?: AuthPayloadResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   CategoryAddPayload?: CategoryAddPayloadResolvers<ContextType>;
   CategoryAddSubscription?: CategoryAddSubscriptionResolvers<ContextType>;
@@ -2394,6 +2463,7 @@ export type Resolvers<ContextType = IResolverContext> = ResolversObject<{
   StaffDeleteSubscription?: StaffDeleteSubscriptionResolvers<ContextType>;
   StaffEditPayload?: StaffEditPayloadResolvers<ContextType>;
   StaffPayload?: StaffPayloadResolvers<ContextType>;
+  StaffResetPasswordPayload?: StaffResetPasswordPayloadResolvers<ContextType>;
   StaffsPayload?: StaffsPayloadResolvers<ContextType>;
   Store?: StoreResolvers<ContextType>;
   StorePayload?: StorePayloadResolvers<ContextType>;

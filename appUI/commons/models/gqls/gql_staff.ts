@@ -107,13 +107,6 @@ export const GET_STAFFS = gql`
 `;
 
 export const ADD_STAFF = gql`
-  enum StaffRole {
-    Admin
-    Saller
-    Manager
-    Accountant
-    warehouse
-  }
   mutation ADDSTAFF(
     $firstName: String!
     $lastName: String!
@@ -160,11 +153,99 @@ export const ADD_STAFF = gql`
   }
 `;
 
+export const EDIT_STAFF = gql`
+  mutation EDITSTAFF(
+    $id: ID!
+    $firstName: String
+    $lastName: String
+    $phoneNumber: String
+    $password: String
+    $role: StaffRole
+    $otherName: String
+    $email: String
+    $editFeature: editFeature
+    $address: String
+    $warehouseID: ID
+  ) {
+    staffEdit(
+      staffEditInput: {
+        staffID: $id
+        firstName: $firstName
+        lastName: $lastName
+        role: $role
+        password: $password
+        phoneNumber: $phoneNumber
+        otherName: $otherName
+        email: $email
+        editFeature: $editFeature
+        address: $address
+        warehouseID: $warehouseID
+      }
+    ) {
+      error
+      edited
+      newEdited {
+        staffID
+        firstName
+        lastName
+        otherName
+        role
+        picture {
+          url
+          fileName
+        }
+        email
+        phoneNumber
+        address
+      }
+    }
+  }
+`;
+
 export const DELETE_STAFF = gql`
   mutation DELETESTAFF($staffID: ID!) {
     staffDelete(staffID: $staffID) {
       error
       deleted
+    }
+  }
+`;
+
+export const RESET_STAFF_PASSWORD = gql`
+  mutation RESETPASSWORD(
+    $staffID: ID!
+    $newPassword: String!
+    $refereeID: ID!
+    $refereePassword: String!
+  ) {
+    staffResetPassword(
+      staffResetPasswordInput: {
+        staffID: $staffID
+        refereeID: $refereeID
+        newPassword: $newPassword
+        refereePassword: $refereePassword
+      }
+    ) {
+      error
+      message
+      success
+    }
+  }
+`;
+
+export const AUTHENTICATE = gql`
+  mutation Authenticate($id: ID!, $secret: String!) {
+    authenticate(credential: { staffID: $id, secret: $secret }) {
+      error
+      staff {
+        staffID
+        firstName
+        lastName
+        phoneNumber
+        role
+        token
+      }
+      message
     }
   }
 `;

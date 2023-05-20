@@ -34,6 +34,12 @@ const StaffMutations: MutationResolvers = {
   // staffDelete
   staffDelete: async (_, { staffID }, context) =>
     await StaffController.deleteStaff(staffID, context),
+  //staffResetPassword
+  staffResetPassword: async (_, { staffResetPasswordInput }, context) =>
+    await StaffController.resetPassword(staffResetPasswordInput, context),
+  // authenticate
+  authenticate: async (_, { credential }, context) =>
+    await StaffController.authenticate(credential, context),
 };
 
 // CATEGORY MUTATIONS

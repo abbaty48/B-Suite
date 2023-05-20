@@ -210,6 +210,11 @@ type Staff{
   token: String!
   warehouse: Warehouse
 }
+type AuthPayload {
+  error: String
+  message: String
+  staff: Staff
+}
 type StaffPayload {
   error: String
   staff: Staff
@@ -232,6 +237,11 @@ type StaffEditPayload {
 type StaffDeletePayload {
   error: String
   deleted: Boolean!
+}
+type StaffResetPasswordPayload {
+  error: String,
+  message: String,
+  success: Boolean!
 }
 type StaffAddSubscription implements ISubscription {
   error: Error
@@ -262,9 +272,24 @@ input staffEditInput {
   role: StaffRole
   address: String
   phoneNumber: String
-  password: String
   warehouseID: ID
   editFeature: editFeature
+}
+input staffResetPasswordInput {
+  """Staff ID to reset the password for.  """
+  staffID: ID!,
+  """
+    RefereeID, the ID of someone that's eligable to reset the password.
+    for example, an accounter can't change admin or manager password, but could change any staff password.
+    and staff could not able change any password including himself.
+  """
+  refereeID: ID!,
+  refereePassword: String!
+  newPassword: String!
+}
+input staffCredentialInput {
+  staffID: ID!,
+  secret: String!
 }
 input searchStaffInput {
   staffID: ID
@@ -945,6 +970,9 @@ const Mutation = `#graphql
       staffDelete(staffID: ID!): StaffDeletePayload! @authorizeRole(previlege: DELETE_STAFF)
       staffAdd(staffAddInput: staffAddInput!): StaffAddPayload! @authorizeRole(previlege: ADD_STAFF)
       staffEdit(staffEditInput: staffEditInput!): StaffEditPayload! @authorizeRole(previlege: UPDATE_STAFF)
+      staffResetPassword(staffResetPasswordInput: staffResetPasswordInput!): StaffResetPasswordPayload!
+      authenticate(credential: staffCredentialInput!): AuthPayload
+
 
       ################################## PRODUCT ########################################
       productAdd(productAddInput: productAddInput!): ProductAddPayload! @authorizeRole(previlege: ADD_PRODUCT)

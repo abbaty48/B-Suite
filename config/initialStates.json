@@ -5,7 +5,7 @@
     "maximized": true,
     "minimized": false,
     "appLocker": {
-      "lockScreenTimeOut": 300000,
+      "lockScreenTimeOut": 1,
       "lockScreenSaverTimeOut": 120000,
       "lockScreenState": "unlocked",
       "lockScreenSaverState": "hide",

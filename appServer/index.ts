@@ -105,17 +105,30 @@ async function Main() {
       // EXPRESSMIDDLWARE
       expressMiddleware(apolloServer, {
         context: async ({ req }) => {
-          // perform authentication
-          const authenticatedStaff = await authenticationToken(
-            req.headers.authorization,
-            config.get('jwt.private')
-          );
-          return {
-            models,
-            config,
-            pubSub,
-            authenticatedStaff,
-          }; // end return
+          const authorizationToken = req.headers.authorization;
+          // if user is authenticating (login)
+          if (
+            authorizationToken === 'Authentication' ||
+            authorizationToken === 'Reset'
+          ) {
+            return {
+              models,
+              config,
+              pubSub,
+            }; // end return
+          } else {
+            // perform authentication
+            const authenticatedStaff = await authenticationToken(
+              authorizationToken,
+              config.get('jwt.private')
+            );
+            return {
+              models,
+              config,
+              pubSub,
+              authenticatedStaff,
+            }; // end return
+          }
         }, // end context
       }) // end expressMiddleware
     ); // end MIDDLWARE

@@ -1,3 +1,5 @@
+import { Staff } from '@/appServer/src/models/@types/resolver_types';
+
 export type AppStateActions =
   | {
       type: 'SWITCH_THEMES';
@@ -42,4 +44,5 @@ export type AppStateActions =
   | {
       type: 'SET_THEMEMODE';
       payload: 'Dark' | 'Light';
-    };
+    }
+  | { type: 'SET_CURRENT_USER'; payload: Staff | null };
