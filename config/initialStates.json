@@ -1,6 +1,11 @@
 {
   "appName": "B-Suite Enterprise",
   "appCurrentRoute": "/main",
+  "appCurrentUser": null,
+  "activityOnGoing": {
+    "onGoing": false,
+    "reason": ""
+  },
   "appStates": {
     "isTop": false,
     "maximized": true,

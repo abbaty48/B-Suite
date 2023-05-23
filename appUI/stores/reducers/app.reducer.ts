@@ -125,7 +125,19 @@ export const appStateReducer = (
           },
         },
       };
-    //
+    // SET ACTIVITY ONGOING
+    case 'SET_ACTIVITY_ONGOING':
+      return {
+        ...states,
+        activityOnGoing: payload,
+      };
+    // SET CURRENT USER
+    case 'SET_CURRENT_USER':
+      return {
+        ...states,
+        appCurrentUser: payload,
+      };
+    // 
     default:
       return states;
   }

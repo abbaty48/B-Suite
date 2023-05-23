@@ -221,6 +221,15 @@ export enum FeatureEditAction {
   Remove = 'REMOVE'
 }
 
+export type INotification = {
+  dateTime: Scalars['Date'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  status: NotificationStatus;
+  title: Scalars['String'];
+  type: NotificationType;
+};
+
 export type IProduct = {
   description?: Maybe<Scalars['String']>;
   expirationDate?: Maybe<Scalars['String']>;
@@ -252,6 +261,10 @@ export type Mutation = {
   enterpriseAdd: EnterpriseAddPayload;
   enterpriseEdit: EnterpriseEditPayload;
   makeSupply: SupplyAddPayload;
+  notificationAdd: NotificationAddPayload;
+  notificationAsRead: NotificationAsReadPayload;
+  notificationClear: NotificationDeletePayload;
+  notificationDelete: NotificationDeletePayload;
   productAdd: ProductAddPayload;
   productDelete: ProductDeletePayload;
   productEdit: ProductEditPayload;
@@ -323,6 +336,26 @@ export type MutationEnterpriseEditArgs = {
 export type MutationMakeSupplyArgs = {
   supplyAddInput: Array<SupplyAddInput>;
   warehouseID?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type MutationNotificationAddArgs = {
+  notificationAddInput?: InputMaybe<NotificationAddInput>;
+};
+
+
+export type MutationNotificationAsReadArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationNotificationClearArgs = {
+  deleteTerm?: InputMaybe<NotificationSearchInput>;
+};
+
+
+export type MutationNotificationDeleteArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -402,6 +435,60 @@ export type MutationWarehouseDeleteArgs = {
 
 export type MutationWarehouseEditArgs = {
   warehouseEditInput: WarehouseEditInput;
+};
+
+export type Notification = INotification & {
+  __typename?: 'Notification';
+  dateTime: Scalars['Date'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  status: NotificationStatus;
+  title: Scalars['String'];
+  type: NotificationType;
+};
+
+export type NotificationAddPayload = {
+  __typename?: 'NotificationAddPayload';
+  added: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+  newAdded?: Maybe<Notification>;
+};
+
+export type NotificationAsReadPayload = {
+  __typename?: 'NotificationAsReadPayload';
+  error?: Maybe<Scalars['String']>;
+  marked: Scalars['Boolean'];
+};
+
+export type NotificationDeletePayload = {
+  __typename?: 'NotificationDeletePayload';
+  deleted: Scalars['Boolean'];
+  error?: Maybe<Scalars['String']>;
+};
+
+export type NotificationPayload = {
+  __typename?: 'NotificationPayload';
+  error?: Maybe<Scalars['String']>;
+  notification?: Maybe<Notification>;
+};
+
+export enum NotificationStatus {
+  Read = 'Read',
+  UnRead = 'UnRead'
+}
+
+/** Notification Type */
+export enum NotificationType {
+  Error = 'Error',
+  Info = 'Info',
+  Success = 'Success'
+}
+
+export type NotificationsPayload = {
+  __typename?: 'NotificationsPayload';
+  error?: Maybe<Scalars['String']>;
+  notifications?: Maybe<Array<Notification>>;
+  pagins?: Maybe<Pagins>;
 };
 
 export type Pagins = {
@@ -485,6 +572,7 @@ export type Query = {
   categories: CategoryPayload;
   customer: CustomerPayload;
   customers: CustomersPayload;
+  notifications: NotificationsPayload;
   product: ProductPayload;
   products: ProductsPayload;
   sale: SalePayload;
@@ -512,6 +600,12 @@ export type QueryCustomerArgs = {
 export type QueryCustomersArgs = {
   pagin?: InputMaybe<PaginInput>;
   searchTerm?: InputMaybe<SearchCustomerInput>;
+};
+
+
+export type QueryNotificationsArgs = {
+  pagin?: InputMaybe<PaginInput>;
+  searchTerm?: InputMaybe<NotificationSearchInput>;
 };
 
 
@@ -617,7 +711,6 @@ export enum RolePrevileges {
   ReadStaff = 'READ_STAFF',
   ReadSupply = 'READ_SUPPLY',
   ReadWarehouse = 'READ_WAREHOUSE',
-  ResetPassword = 'RESET_PASSWORD',
   UpdateCategory = 'UPDATE_CATEGORY',
   UpdateCustomer = 'UPDATE_CUSTOMER',
   UpdateEnterprise = 'UPDATE_ENTERPRISE',
@@ -1153,6 +1246,23 @@ export type InitPayload = {
   error?: Maybe<Scalars['String']>;
 };
 
+export type NotificationAddInput = {
+  dateTime: Scalars['Date'];
+  description: Scalars['String'];
+  status: NotificationStatus;
+  title: Scalars['String'];
+  type: NotificationType;
+};
+
+export type NotificationSearchInput = {
+  date?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  status?: InputMaybe<NotificationStatus>;
+  time?: InputMaybe<Scalars['String']>;
+  title?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<NotificationType>;
+};
+
 /** Pagination inputs */
 export type PaginInput = {
   /** Limit: maximum number of data to return */
@@ -1460,10 +1570,19 @@ export type ResolversTypes = ResolversObject<{
   FeatureEditAction: FeatureEditAction;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  INotification: ResolversTypes['Notification'];
   IProduct: ResolversTypes['Product'] | ResolversTypes['SaleProduct'];
   ISubscription: ResolversTypes['CategoryAddSubscription'] | ResolversTypes['CategoryDeleteSubscription'] | ResolversTypes['CategoryEditSubscription'] | ResolversTypes['ProductAddSubscription'] | ResolversTypes['ProductDeleteSubscription'] | ResolversTypes['ProductEditSubscription'] | ResolversTypes['SaleAddSubscription'] | ResolversTypes['SaleDeleteSubscription'] | ResolversTypes['SaleEditSubscription'] | ResolversTypes['StaffAddSubscription'] | ResolversTypes['StaffDeleteSubscription'] | ResolversTypes['SupplyAddSubscription'] | ResolversTypes['SupplyDeleteSubscription'] | ResolversTypes['SupplyEditSubscription'] | ResolversTypes['WarehouseAddSubscription'] | ResolversTypes['WarehouseDeleteSubscription'] | ResolversTypes['WarehouseEditSubscription'];
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
+  Notification: ResolverTypeWrapper<Notification>;
+  NotificationAddPayload: ResolverTypeWrapper<NotificationAddPayload>;
+  NotificationAsReadPayload: ResolverTypeWrapper<NotificationAsReadPayload>;
+  NotificationDeletePayload: ResolverTypeWrapper<NotificationDeletePayload>;
+  NotificationPayload: ResolverTypeWrapper<NotificationPayload>;
+  NotificationStatus: NotificationStatus;
+  NotificationType: NotificationType;
+  NotificationsPayload: ResolverTypeWrapper<NotificationsPayload>;
   Object: ResolverTypeWrapper<Scalars['Object']>;
   Pagins: ResolverTypeWrapper<Pagins>;
   Product: ResolverTypeWrapper<Product>;
@@ -1541,6 +1660,8 @@ export type ResolversTypes = ResolversObject<{
   enterpriseEditInput: EnterpriseEditInput;
   enterprisePayload: ResolverTypeWrapper<EnterprisePayload>;
   initPayload: ResolverTypeWrapper<InitPayload>;
+  notificationAddInput: NotificationAddInput;
+  notificationSearchInput: NotificationSearchInput;
   paginInput: PaginInput;
   productAddInput: ProductAddInput;
   productEditInput: ProductEditInput;
@@ -1595,10 +1716,17 @@ export type ResolversParentTypes = ResolversObject<{
   Feature: Feature;
   Float: Scalars['Float'];
   ID: Scalars['ID'];
+  INotification: ResolversParentTypes['Notification'];
   IProduct: ResolversParentTypes['Product'] | ResolversParentTypes['SaleProduct'];
   ISubscription: ResolversParentTypes['CategoryAddSubscription'] | ResolversParentTypes['CategoryDeleteSubscription'] | ResolversParentTypes['CategoryEditSubscription'] | ResolversParentTypes['ProductAddSubscription'] | ResolversParentTypes['ProductDeleteSubscription'] | ResolversParentTypes['ProductEditSubscription'] | ResolversParentTypes['SaleAddSubscription'] | ResolversParentTypes['SaleDeleteSubscription'] | ResolversParentTypes['SaleEditSubscription'] | ResolversParentTypes['StaffAddSubscription'] | ResolversParentTypes['StaffDeleteSubscription'] | ResolversParentTypes['SupplyAddSubscription'] | ResolversParentTypes['SupplyDeleteSubscription'] | ResolversParentTypes['SupplyEditSubscription'] | ResolversParentTypes['WarehouseAddSubscription'] | ResolversParentTypes['WarehouseDeleteSubscription'] | ResolversParentTypes['WarehouseEditSubscription'];
   Int: Scalars['Int'];
   Mutation: {};
+  Notification: Notification;
+  NotificationAddPayload: NotificationAddPayload;
+  NotificationAsReadPayload: NotificationAsReadPayload;
+  NotificationDeletePayload: NotificationDeletePayload;
+  NotificationPayload: NotificationPayload;
+  NotificationsPayload: NotificationsPayload;
   Object: Scalars['Object'];
   Pagins: Pagins;
   Product: Product;
@@ -1672,6 +1800,8 @@ export type ResolversParentTypes = ResolversObject<{
   enterpriseEditInput: EnterpriseEditInput;
   enterprisePayload: EnterprisePayload;
   initPayload: InitPayload;
+  notificationAddInput: NotificationAddInput;
+  notificationSearchInput: NotificationSearchInput;
   paginInput: PaginInput;
   productAddInput: ProductAddInput;
   productEditInput: ProductEditInput;
@@ -1898,6 +2028,16 @@ export type FeatureResolvers<ContextType = IResolverContext, ParentType extends 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type INotificationResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['INotification'] = ResolversParentTypes['INotification']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Notification', ParentType, ContextType>;
+  dateTime?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['NotificationStatus'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>;
+}>;
+
 export type IProductResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['IProduct'] = ResolversParentTypes['IProduct']> = ResolversObject<{
   __resolveType: TypeResolveFn<'Product' | 'SaleProduct', ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1930,6 +2070,10 @@ export type MutationResolvers<ContextType = IResolverContext, ParentType extends
   enterpriseAdd?: Resolver<ResolversTypes['EnterpriseAddPayload'], ParentType, ContextType, RequireFields<MutationEnterpriseAddArgs, 'enterpriseAddInput'>>;
   enterpriseEdit?: Resolver<ResolversTypes['EnterpriseEditPayload'], ParentType, ContextType, RequireFields<MutationEnterpriseEditArgs, 'enterpriseEditInput'>>;
   makeSupply?: Resolver<ResolversTypes['SupplyAddPayload'], ParentType, ContextType, RequireFields<MutationMakeSupplyArgs, 'supplyAddInput'>>;
+  notificationAdd?: Resolver<ResolversTypes['NotificationAddPayload'], ParentType, ContextType, Partial<MutationNotificationAddArgs>>;
+  notificationAsRead?: Resolver<ResolversTypes['NotificationAsReadPayload'], ParentType, ContextType, RequireFields<MutationNotificationAsReadArgs, 'id'>>;
+  notificationClear?: Resolver<ResolversTypes['NotificationDeletePayload'], ParentType, ContextType, Partial<MutationNotificationClearArgs>>;
+  notificationDelete?: Resolver<ResolversTypes['NotificationDeletePayload'], ParentType, ContextType, RequireFields<MutationNotificationDeleteArgs, 'id'>>;
   productAdd?: Resolver<ResolversTypes['ProductAddPayload'], ParentType, ContextType, RequireFields<MutationProductAddArgs, 'productAddInput'>>;
   productDelete?: Resolver<ResolversTypes['ProductDeletePayload'], ParentType, ContextType, RequireFields<MutationProductDeleteArgs, 'productID'>>;
   productEdit?: Resolver<ResolversTypes['ProductEditPayload'], ParentType, ContextType, RequireFields<MutationProductEditArgs, 'productEditInput'>>;
@@ -1945,6 +2089,48 @@ export type MutationResolvers<ContextType = IResolverContext, ParentType extends
   warehouseAdd?: Resolver<ResolversTypes['WarehouseAddPayload'], ParentType, ContextType, RequireFields<MutationWarehouseAddArgs, 'warehouseAddInput'>>;
   warehouseDelete?: Resolver<ResolversTypes['WarehouseDeletePayload'], ParentType, ContextType, RequireFields<MutationWarehouseDeleteArgs, 'warehouseID'>>;
   warehouseEdit?: Resolver<ResolversTypes['WarehouseEditPayload'], ParentType, ContextType, RequireFields<MutationWarehouseEditArgs, 'warehouseEditInput'>>;
+}>;
+
+export type NotificationResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['Notification'] = ResolversParentTypes['Notification']> = ResolversObject<{
+  dateTime?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['NotificationStatus'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['NotificationType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NotificationAddPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['NotificationAddPayload'] = ResolversParentTypes['NotificationAddPayload']> = ResolversObject<{
+  added?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  newAdded?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NotificationAsReadPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['NotificationAsReadPayload'] = ResolversParentTypes['NotificationAsReadPayload']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  marked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NotificationDeletePayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['NotificationDeletePayload'] = ResolversParentTypes['NotificationDeletePayload']> = ResolversObject<{
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NotificationPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['NotificationPayload'] = ResolversParentTypes['NotificationPayload']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type NotificationsPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['NotificationsPayload'] = ResolversParentTypes['NotificationsPayload']> = ResolversObject<{
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  notifications?: Resolver<Maybe<Array<ResolversTypes['Notification']>>, ParentType, ContextType>;
+  pagins?: Resolver<Maybe<ResolversTypes['Pagins']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export interface ObjectScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Object'], any> {
@@ -2031,6 +2217,7 @@ export type QueryResolvers<ContextType = IResolverContext, ParentType extends Re
   categories?: Resolver<ResolversTypes['CategoryPayload'], ParentType, ContextType, Partial<QueryCategoriesArgs>>;
   customer?: Resolver<ResolversTypes['CustomerPayload'], ParentType, ContextType, RequireFields<QueryCustomerArgs, 'searchTerm'>>;
   customers?: Resolver<ResolversTypes['CustomersPayload'], ParentType, ContextType, Partial<QueryCustomersArgs>>;
+  notifications?: Resolver<ResolversTypes['NotificationsPayload'], ParentType, ContextType, Partial<QueryNotificationsArgs>>;
   product?: Resolver<ResolversTypes['ProductPayload'], ParentType, ContextType, RequireFields<QueryProductArgs, 'searchTerm'>>;
   products?: Resolver<ResolversTypes['ProductsPayload'], ParentType, ContextType, Partial<QueryProductsArgs>>;
   sale?: Resolver<ResolversTypes['SalePayload'], ParentType, ContextType, RequireFields<QuerySaleArgs, 'searchTerm'>>;
@@ -2430,9 +2617,16 @@ export type Resolvers<ContextType = IResolverContext> = ResolversObject<{
   EnterpriseSocialAccounts?: EnterpriseSocialAccountsResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   Feature?: FeatureResolvers<ContextType>;
+  INotification?: INotificationResolvers<ContextType>;
   IProduct?: IProductResolvers<ContextType>;
   ISubscription?: ISubscriptionResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  Notification?: NotificationResolvers<ContextType>;
+  NotificationAddPayload?: NotificationAddPayloadResolvers<ContextType>;
+  NotificationAsReadPayload?: NotificationAsReadPayloadResolvers<ContextType>;
+  NotificationDeletePayload?: NotificationDeletePayloadResolvers<ContextType>;
+  NotificationPayload?: NotificationPayloadResolvers<ContextType>;
+  NotificationsPayload?: NotificationsPayloadResolvers<ContextType>;
   Object?: GraphQLScalarType;
   Pagins?: PaginsResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;

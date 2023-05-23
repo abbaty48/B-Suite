@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Avatar, Button, Popover, Space } from "antd";
+import { Avatar, Button, Divider, Popover, Space } from "antd";
 import { AppContext } from "@/appUI/stores/contexts/app";
 import { currentUser, getStaffIcon } from "@/appUI/commons/helpers";
 
@@ -61,13 +61,21 @@ export default function WinowTopBar() {
             <Button type="text" icon={<i className={'--icon --icon-lock'}></i>} title="Lock App" onClick={() => dispatch({ type: 'SET_LOCKSCREEN', payload: 'locked' })} />
             {/* USER PROFILE */}
             <Popover placement="bottomLeft" content={
-              <Space direction="horizontal" wrap>
-                <Avatar icon={currentUser?.password ?
-                  (<img src={currentUser?.picture?.url} />) :
-                  (<i className={`--icon ${getStaffIcon(currentUser?.role)}`}></i>)
-                }
-                />
-                <h5>{currentUser?.firstName} {currentUser?.lastName}</h5>
+              <Space direction="vertical">
+                <Space direction="horizontal" wrap>
+                  <Avatar icon={state.appCurrentUser?.password ?
+                    (<img src={state.appCurrentUser?.picture?.url} />) :
+                    (<i className={`--icon ${getStaffIcon(state.appCurrentUser?.role)}`}></i>)
+                  }
+                  />
+                  <h5>{state.appCurrentUser?.firstName} {state.appCurrentUser?.lastName}</h5>
+                </Space>
+                <Divider dashed orientation="center" type="horizontal" orientationMargin={'1px'} />
+                {/* Role and Logout */}
+                <Space className={'flex flex-row justify-between'} wrap>
+                  <strong>{state.appCurrentUser?.role}</strong>
+                  <Button type="text" icon={<i className={'--icon --icon-logout'}></i>} onClick={() => dispatch({ type: 'SET_LOCKSCREEN', payload: 'locked' })}>Logout</Button>
+                </Space>
               </Space>
             }>
               <Button type="text" size={'small'} icon={<i className={'--icon --icon-user'}></i>} />

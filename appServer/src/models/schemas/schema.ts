@@ -31,6 +31,14 @@ const Interfaces = `#graphql
     description: String
     warehouses: [Warehouse!]
   }
+  interface INotification {
+    id: ID!
+    title: String!
+    dateTime: Date!
+    description: String!
+    type: NotificationType!
+    status: NotificationStatus!
+  }
 `;
 
 const Enums = `#graphql
@@ -53,6 +61,17 @@ const Enums = `#graphql
       "Accountant Role : Accountant staff has every previlege to ADD,READ,DELETE,EDIT except to delete a Admin/Manager staff."
       Accountant
    }
+
+    "Notification Type"
+    enum NotificationType {
+      Error,
+      Success,
+      Info,
+    }
+    enum NotificationStatus {
+      Read,
+      UnRead
+    }
 
    enum RolePrevileges {
       #STAFF
@@ -781,6 +800,54 @@ input searchSupplyInput {
 }
 `;
 
+const Notification = `#graphql
+  type Notification implements INotification {
+    id: ID!
+    title: String!
+    dateTime: Date!
+    description: String!
+    type: NotificationType!
+    status: NotificationStatus!
+  }
+  type NotificationPayload {
+    error: String,
+    notification: Notification
+  }
+  type NotificationsPayload {
+    error: String,
+    pagins: Pagins,
+    notifications: [Notification!]
+  }
+  type NotificationAddPayload {
+    error: String,
+    added: Boolean!,
+    newAdded: Notification
+  }
+  type NotificationDeletePayload {
+    error: String,
+    deleted: Boolean!
+  }
+  type NotificationAsReadPayload {
+    error: String,
+    marked: Boolean!
+  }
+  input notificationSearchInput {
+    id: ID,
+    date: String,
+    time: String,
+    title: String,
+    type: NotificationType
+    status: NotificationStatus
+  }
+  input notificationAddInput {
+    title: String!,
+    dateTime: Date!,
+    description: String!,
+    type: NotificationType!,
+    status: NotificationStatus!
+  }
+`;
+
 const Store = `#graphql
 
 type StorePayload {
@@ -958,7 +1025,10 @@ const Query = `#graphql
     ################################## PURCHASE ########################################
     supply(searchTerm: searchSupplyInput!): SupplyPayload! @authorizeRole(previlege: READ_SUPPLY)
     supplies(searchTerm: searchSupplyInput, pagin: paginInput): SupplysPayload! @authorizeRole(previlege: READ_SUPPLY)
-
+    
+    ################################## NOTIFICATION ########################################
+    notifications(searchTerm: notificationSearchInput, pagin: paginInput): NotificationsPayload!
+    
     ################################## STORE ########################################### 
     store: Store!
   }
@@ -1010,6 +1080,12 @@ const Mutation = `#graphql
         warehouseID: ID
       ): SupplyEditPayload! @authorizeRole(previlege: UPDATE_SUPPLY)
       supplyDelete(supplyDeleteInput: supplyDeleteInput!): SupplyDeletePayload! @authorizeRole(previlege: DELETE_SUPPLY)
+
+      ################################# NOTIFICATION ########################################
+      notificationAdd(notificationAddInput: notificationAddInput): NotificationAddPayload!
+      notificationDelete(id: ID!): NotificationDeletePayload!
+      notificationClear(deleteTerm: notificationSearchInput): NotificationDeletePayload!
+      notificationAsRead(id: ID!): NotificationAsReadPayload!
 
       ################################# ENTERPRISE ########################################
       enterpriseAdd(enterpriseAddInput: enterpriseAddInput!): EnterpriseAddPayload! @authorizeRole(previlege: ADD_ENTERPRISE)
@@ -1088,6 +1164,7 @@ const schemas = `
   ${Query}
   ${Mutation}
   ${Subscription}
+  ${Notification}
 `;
 
 export const typeDefs = buildSchema(schemas);

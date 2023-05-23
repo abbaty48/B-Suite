@@ -45,4 +45,12 @@ export type AppStateActions =
       type: 'SET_THEMEMODE';
       payload: 'Dark' | 'Light';
     }
-  | { type: 'SET_CURRENT_ROUTE'; payload: string };
+  | { type: 'SET_CURRENT_ROUTE'; payload: string }
+  | {
+      type: 'SET_ACTIVITY_ONGOING';
+      payload: { onGoing: boolean; reason: string };
+    }
+  | {
+      type: 'SET_CURRENT_USER';
+      payload: Staff | null;
+    };

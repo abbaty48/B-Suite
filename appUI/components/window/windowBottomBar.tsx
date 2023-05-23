@@ -1,14 +1,38 @@
-import { Space } from "antd";
+import { useNotification } from "@/appUI/hooks/useNotification";
+// import { useRealDateTime } from "@/appUI/hooks/useRealDateTime";
+import { AppContext } from "@/appUI/stores/contexts/app";
+import { Badge, Button, Popover, Space, Tooltip } from "antd";
+import { useContext, useEffect } from "react";
 
 export default function WindowBottomBar() {
+
+  // const { RealDate, RealTime } = useRealDateTime()
+  const { NoficationButton } = useNotification()
+  const { state } = useContext(AppContext)
+
   return (
     <>
       <footer className={"--window-bottom-bar m-0 p-0"}>
         <Space
           size={'large'}
           direction="horizontal"
-          className={'flex items-center justify-end py-2 px-2'}
+          className={'flex items-center justify-end px-1'}
         >
+          {
+            /* ACTIVITY INDICATOR */
+            state.activityOnGoing.onGoing && (
+              <Tooltip title={state.activityOnGoing.reason}>
+                <span className={'--icon --icon-spin3 --spin'}></span>
+              </Tooltip>
+            )
+          }
+          {/* NOTIFICATION */}
+          <NoficationButton />
+          {/* DATE AND TIME */}
+          {/* <Space direction="horizontal">
+            <RealDate />
+            <RealTime />
+          </Space> */}
         </Space>
       </footer>
     </>

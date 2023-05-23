@@ -7,6 +7,7 @@ import { ProductController } from '@server-controllers/product.controller';
 import { CustomerController } from '@server-controllers/customer.controller';
 import { CategoryController } from '@server-controllers/category.controller';
 import { WarehouseController } from '@server-controllers/warehouse.controller';
+import { NotificationController } from '@server-controllers/notification.controller';
 
 // PRODUCT MUTATIONS
 
@@ -103,6 +104,18 @@ const SaleMutations: MutationResolvers = {
     await SaleController.deleteSale(saleID, warehouseID, context),
 };
 
+// NOTIFICATION MUTATIONS
+const NotificationMutations: MutationResolvers = {
+  notificationAdd: async (_, { notificationAddInput }) =>
+    await NotificationController.addNotification(notificationAddInput),
+  notificationDelete: async (_, { id }) =>
+    await NotificationController.deleteNotification(id),
+  notificationClear: async (_, { deleteTerm }) =>
+    await NotificationController.clearNotifications(deleteTerm),
+  notificationAsRead: async (_, { id }) =>
+    await NotificationController.markAsReadNotificaion(id),
+};
+
 // STORE MUTATIONS
 const StoreMutations: MutationResolvers = {
   enterpriseAdd: async (_, { enterpriseAddInput }) =>
@@ -114,6 +127,7 @@ const StoreMutations: MutationResolvers = {
 };
 
 export const Mutations: MutationResolvers = {
+  ...NotificationMutations,
   ...WarehouseMutations,
   ...CategoryMutations,
   ...CustomerMutations,

@@ -90,6 +90,34 @@ async function Main() {
     // start the apollo server
     await apolloServer.start();
     // MIDDLEWARES
+    // NOTIFICATION ROUTE
+    app.use(
+      '/v1/notification',
+      // SET UP CORS
+      cors<cors.CorsRequest>({ origin: ['http://localhost:3000'] }),
+      // BODYPARSER
+      bodyParser.json(),
+      // MORGAN
+      morgan('combined'),
+      // ERROR HANDLE
+      errorMiddlwares(__dirname),
+      // EXPRESSMIDDLWARE
+      expressMiddleware(apolloServer, {
+        context: async ({ req }) => {
+          // perform authentication
+          const authenticatedStaff = await authenticationToken(
+            req.headers.authorization,
+            config.get('jwt.private')
+          );
+          return {
+            models,
+            config,
+            pubSub,
+            authenticatedStaff,
+          }; // end return
+        }, // end context
+      }) // end expressMiddleware
+    );
     app.use(
       '/v1',
       // SET UP CORS
@@ -132,7 +160,7 @@ async function Main() {
         }, // end context
       }) // end expressMiddleware
     ); // end MIDDLWARE
-    //
+
     // start mongodb Server
     await mongodbService(),
       // apply express app as middleware to the apollo server

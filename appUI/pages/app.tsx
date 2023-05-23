@@ -1,14 +1,14 @@
 import { App } from 'antd'
 import { createClient } from 'graphql-ws'
+import { HashRouter } from 'react-router-dom'
 import Window from '@ui-components/window/window'
 import { Kind, OperationTypeNode } from 'graphql'
 import { AppProvider } from '@ui-stores/contexts/app'
 import { getMainDefinition } from '@apollo/client/utilities'
+import { ThemeProvider } from '@/appUI/providers/themeProvider'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
-import { ThemeProvider } from '@ui-stores/providers/themeProvider'
 import { Staff } from '@/appServer/src/models/@types/resolver_types'
 import { ApolloProvider, ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client'
-import { HashRouter } from 'react-router-dom'
 
 const Main = () => {
 
@@ -51,19 +51,18 @@ const Main = () => {
    }) // end new ApolloClient
 
    return (
-      // Antd global component for general antd component configuration
-      <App notification={{ placement: 'bottomRight', maxCount: 5 }} >
-         {/* AppProvider for global configurations and states */}
+      // {/* AppProvider for global configurations and states */ }
+      <HashRouter>
          <AppProvider>
             <ApolloProvider client={_apolloClient}>
                <ThemeProvider>
-                  <HashRouter>
+                  <App notification={{ placement: 'bottomRight', maxCount: 5 }}  >
                      <Window />
-                  </HashRouter>
+                  </App>
                </ThemeProvider>
             </ApolloProvider>
          </AppProvider>
-      </App>
+      </HashRouter>
    )
 }
 

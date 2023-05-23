@@ -77,7 +77,6 @@ export class SupplyController {
           : time
           ? { date: { $regex: time, $options: 'si' } }
           : {};
-        console.log('CRITERIA: ', criteria);
         //
         const supplies = await supplyModel.find<Supply>(
           {

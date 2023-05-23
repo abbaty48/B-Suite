@@ -1,5 +1,6 @@
 import { Staff } from '@/appServer/src/models/@types/resolver_types';
 import { ILocalStaff } from '@ui-commons/interfaces/istaff';
+import dayjs from 'dayjs';
 
 export const currentUser: Staff = JSON.parse(
   localStorage.getItem('_app_current_user')
@@ -43,4 +44,37 @@ export const getStaffIcon = (role: string) => {
     case 'Accountant':
       return '--icon-staff-accountant';
   }
+};
+
+// DAYOFWEEK
+// return the name of a day within  a week
+export const DayOfWeek = (dayNumber = 0) => {
+  switch (dayNumber) {
+    case 0:
+      return 'Sunday';
+    case 1:
+      return 'Monday';
+    case 2:
+      return 'Tuesday';
+    case 3:
+      return 'Wednesday';
+    case 4:
+      return 'Thursday';
+    case 5:
+      return 'Friday';
+    case 6:
+      return 'Saturday';
+  }
+};
+
+// DATEOPTION
+export const DateTransfomer = {
+  todayDate: (format = 'DD/MM/YYYY') => dayjs().format(format),
+  exploidDate: (date: string) => dayjs(date).toDate().toDateString(),
+  extractedDate: (isoDateString: string) => isoDateString.split('T')[0],
+  extractedTime: (isoDateString: string) => isoDateString.split('T')[1],
+  exploidTime: (time: string) => dayjs(time).toDate().toLocaleTimeString(),
+  dayName: (isoDateString: string) => DayOfWeek(dayjs(isoDateString).day()),
+  dateString: (isoDateString: string) =>
+    dayjs(isoDateString).toDate().toDateString(),
 };

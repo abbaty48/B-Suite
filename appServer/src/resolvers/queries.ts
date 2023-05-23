@@ -1,4 +1,5 @@
 import { QueryResolvers } from '@server-models/@types/resolver_types';
+import { NotificationController } from '@server-controllers/notification.controller';
 import { WarehouseController } from '@server-controllers/warehouse.controller';
 import { CategoryController } from '@server-controllers/category.controller';
 import { CustomerController } from '@server-controllers/customer.controller';
@@ -48,4 +49,7 @@ export const Queries: QueryResolvers = {
   // sales
   sales: async (_, { searchTerm, pagin }) =>
     await SaleController.sales(searchTerm, pagin),
+  // notifications
+  notifications: async (_, { searchTerm, pagin }) =>
+    await NotificationController.notifications(searchTerm, pagin),
 };

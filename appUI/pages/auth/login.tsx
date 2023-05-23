@@ -31,6 +31,8 @@ export const LoginForm = (props: { setFormType: React.Dispatch<SetStateAction<Lo
             localStorage.setItem('_app_current_user', JSON.stringify(staff))
             // add/get the current loggedIn Staff to the _app_users storage
             setLocalStaff({ staffID: staff.staffID, name: `${staff.firstName} ${staff.lastName}` })
+            // set LocalStaff state
+            dispatch({ type: 'SET_CURRENT_USER', payload: staff })
             // unlocked the screen
             dispatch({ type: 'SET_LOCKSCREEN', payload: 'unlocked' })
             // set the lock time to 5 minute

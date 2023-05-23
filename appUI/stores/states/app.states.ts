@@ -8,6 +8,11 @@ import initialStates from '@/config/initialStates.json';
 export interface IAppStates {
   appName: string;
   appCurrentRoute: string;
+  appCurrentUser: Staff | null;
+  activityOnGoing: {
+    onGoing: boolean;
+    reason: string;
+  };
   appStates: {
     isTop: boolean;
     minimized: boolean;
