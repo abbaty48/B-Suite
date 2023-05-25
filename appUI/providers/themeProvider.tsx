@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ConfigProvider, theme } from 'antd'
+import { ConfigProvider, Space, theme } from 'antd'
 import { AliasToken } from 'antd/es/theme/internal'
 import { AppContext } from '@ui-stores/contexts/app'
 // THEMES
@@ -36,10 +36,20 @@ export const ThemeProvider = (props: { children: React.ReactNode }) => {
       return token();
    }
 
+   const customEmpty = () => (
+      <div style={{ textAlign: 'center' }}>
+         <Space direction='vertical'>
+            <i className='--icon --icon-emo-unhappy text-lg my-2'></i>
+            <p>No Data</p>
+         </Space>
+      </div>
+   )
+
    return (
-      <ConfigProvider theme={{
+      <ConfigProvider renderEmpty={customEmpty} theme={{
          token: themeToken(),
          algorithm: [
+            theme.compactAlgorithm,
             state.appStates.preference.themeMode === 'Dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
          ]
       }}>

@@ -102,22 +102,9 @@ async function Main() {
       // ERROR HANDLE
       errorMiddlwares(__dirname),
       // EXPRESSMIDDLWARE
-      expressMiddleware(apolloServer, {
-        context: async ({ req }) => {
-          // perform authentication
-          const authenticatedStaff = await authenticationToken(
-            req.headers.authorization,
-            config.get('jwt.private')
-          );
-          return {
-            models,
-            config,
-            pubSub,
-            authenticatedStaff,
-          }; // end return
-        }, // end context
-      }) // end expressMiddleware
+      expressMiddleware(apolloServer, { context: undefined }) // end expressMiddleware
     );
+    // UNIVERAL
     app.use(
       '/v1',
       // SET UP CORS

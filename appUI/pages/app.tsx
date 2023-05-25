@@ -8,6 +8,7 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { ThemeProvider } from '@/appUI/providers/themeProvider'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { Staff } from '@/appServer/src/models/@types/resolver_types'
+import { NotificationProvider } from '@ui-providers/notificationProvider'
 import { ApolloProvider, ApolloClient, InMemoryCache, split, HttpLink } from '@apollo/client'
 
 const Main = () => {
@@ -55,11 +56,13 @@ const Main = () => {
       <HashRouter>
          <AppProvider>
             <ApolloProvider client={_apolloClient}>
-               <ThemeProvider>
-                  <App notification={{ placement: 'bottomRight', maxCount: 5 }}  >
-                     <Window />
-                  </App>
-               </ThemeProvider>
+               <NotificationProvider>
+                  <ThemeProvider>
+                     <App notification={{ placement: 'bottomRight', maxCount: 5 }}  >
+                        <Window />
+                     </App>
+                  </ThemeProvider>
+               </NotificationProvider>
             </ApolloProvider>
          </AppProvider>
       </HashRouter>

@@ -32,9 +32,9 @@ export class NotificationController {
           : title
           ? { title: { $eq: title } }
           : date
-          ? { date: { $regex: date, $options: 'si' } }
+          ? { dateTime: date }
           : time
-          ? { date: { $regex: time, $options: 'si' } }
+          ? { dateTime: time }
           : status
           ? { status: { $eq: status } }
           : type

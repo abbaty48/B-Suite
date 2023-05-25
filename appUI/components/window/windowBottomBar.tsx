@@ -1,14 +1,13 @@
-import { useNotification } from "@/appUI/hooks/useNotification";
-// import { useRealDateTime } from "@/appUI/hooks/useRealDateTime";
+import { NotificationButton } from "@ui-components/notification/notificationButton";
+import { useRealDateTime } from "@/appUI/hooks/useRealDateTime";
 import { AppContext } from "@/appUI/stores/contexts/app";
-import { Badge, Button, Popover, Space, Tooltip } from "antd";
-import { useContext, useEffect } from "react";
+import { Space, Tooltip } from "antd";
+import { useContext } from "react";
 
 export default function WindowBottomBar() {
 
-  // const { RealDate, RealTime } = useRealDateTime()
-  const { NoficationButton } = useNotification()
   const { state } = useContext(AppContext)
+  const { RealDate, RealTime } = useRealDateTime()
 
   return (
     <>
@@ -27,12 +26,12 @@ export default function WindowBottomBar() {
             )
           }
           {/* NOTIFICATION */}
-          <NoficationButton />
+          <NotificationButton />
           {/* DATE AND TIME */}
-          {/* <Space direction="horizontal">
+          <Space direction="horizontal">
             <RealDate />
             <RealTime />
-          </Space> */}
+          </Space>
         </Space>
       </footer>
     </>

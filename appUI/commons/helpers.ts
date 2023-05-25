@@ -77,4 +77,5 @@ export const DateTransfomer = {
   dayName: (isoDateString: string) => DayOfWeek(dayjs(isoDateString).day()),
   dateString: (isoDateString: string) =>
     dayjs(isoDateString).toDate().toDateString(),
+  dateNumber: (date: string) => dayjs(date).valueOf()
 };

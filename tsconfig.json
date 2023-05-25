@@ -29,6 +29,7 @@
       "@ui-assets/*": ["appUI/assets/*"],
       "@ui-commons/*": ["appUI/commons/*"],
       "@ui-svgs/*": ["appUI/assets/svgs/*"],
+      "@ui-providers/*": ["appUI/providers/*"],
       "@ui-images/*": ["appUI/assets/images/*"],
       "@ui-styles/*": ["appUI/assets/styles/*"],
       "@ui-themes/*": ["appUI/assets/themes/*"],
