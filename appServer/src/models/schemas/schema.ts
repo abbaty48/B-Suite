@@ -541,6 +541,7 @@ type Sale {
   warehouse: Warehouse,
   products: [SaleProduct!]!
 }
+
 type SaleProduct implements IProduct {
   productID: ID!,
   name: String!,
@@ -558,6 +559,12 @@ type SaleProduct implements IProduct {
 type SaleProfit {
   percentage: Float!,
   status: String!
+}
+type SaleStats {
+  counts: Int!,
+  sum: Float!,
+  average: Float!,
+  sales: [Sale!]!
 }
 type SalePayload {
   error: String,
@@ -634,6 +641,22 @@ input searchSaleInput {
   customerID: ID,
   productName: String,
   paidPrice: Float
+}
+
+input salesStatsFilterByRangeInputs {
+  startDate: String!,
+  endingDate: String!
+}
+
+input salesStatsTerms {
+  filterByDate: String,
+  filterByDateRange: salesStatsFilterByRangeInputs,
+  groupByYears: Boolean,
+  groupByMonths: Boolean,
+  groupByWeek: Boolean,
+  groupByDate: Boolean,
+  groupByYearsAndMonths: Boolean,
+  groupByYearsAndMonthsAndWeeks: Boolean
 }
 `;
 
@@ -867,7 +890,7 @@ type Store {
   _sysInitialized: Boolean!,
 }
 
-type StoreRealTime {
+type Stats {
   "get the total number of sales in a real time subscription. "
   totalSales: Int!,
   "get the total number of staffs in a real time subscription. "
@@ -1014,6 +1037,7 @@ const Query = `#graphql
     ################################## SALE ############################################
     sale(searchTerm: searchSaleInput!): SalePayload! @authorizeRole(previlege: READ_SALE)
     sales(searchTerm: searchSaleInput, pagin: paginInput): SalesPayload! @authorizeRole(previlege: READ_SALE)
+    salesStats(terms: salesStatsTerms!): [SaleStats]
 
     ################################## CUSTOMER ########################################
     customer(searchTerm: searchCustomerInput!): CustomerPayload! @authorizeRole(previlege: READ_CUSTOMER)
@@ -1139,7 +1163,7 @@ const Subscription = `#graphql
     warehouseDeleteSubscription: WarehouseDeleteSubscription! @authorizeRole(previlege: LISTEN_DELETE_WAREHOUSE)
 
     "subscription for a realtime store counts"
-    storeRealTime: StoreRealTime!
+    storeStats: Stats!
     #"subscription to alarm for an expired product, watch any product at a realtime for it expiration date"
   }
 `;

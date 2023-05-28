@@ -152,6 +152,60 @@ export const EDIT_SALE = gql`
   }
 `;
 
+export const SALESTATS = gql`
+  query SALESTATS(
+    $filterByDate: String
+    $filterByDateRange: salesStatsFilterByRangeInputs
+    $groupByDate: Boolean
+    $groupByMonths: Boolean
+    $groupByWeek: Boolean
+    $groupByYears: Boolean
+    $groupByYearsAndMonths: Boolean
+    $groupByYearsAndMonthsAndWeeks: Boolean
+  ) {
+    salesStats(
+      terms: {
+        filterByDate: $filterByDate
+        filterByDateRange: $filterByDateRange
+        groupByDate: $groupByDate
+        groupByMonths: $groupByMonths
+        groupByWeek: $groupByWeek
+        groupByYears: $groupByYears
+        groupByYearsAndMonths: $groupByYearsAndMonths
+        groupByYearsAndMonthsAndWeeks: $groupByYearsAndMonthsAndWeeks
+      }
+    ) {
+      counts
+      average
+      sum
+      sales {
+        saleID
+        products {
+          name
+          kind
+          subTotal
+          quantity
+          wholesalePrice
+        }
+      }
+    }
+  }
+
+  #   {
+  #           "filterByDate": "",
+  #           "filterByDateRange": {
+  #   					"startDate": "",
+  #   					"endingDate": ""
+  # 					},
+  #           "groupByDate": true,
+  #           "groupByMonths": true,
+  #           "groupByWeek": true,
+  #           "groupByYears": true,
+  #           "groupByYearsAndMonths": true,
+  #           "groupByYearsAndMonthsAndWeeks": true
+  # }
+`;
+
 export const ON_SALE_ADD_SUBSCRIPTION = gql`
   subscription ON_SALE_ADD_SUBSCRIPTION {
     saleAddSubscription {

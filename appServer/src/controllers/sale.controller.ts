@@ -9,12 +9,14 @@ import { IResolverContext } from '@server-models/interfaces/IResolverContext';
 import { customerModel } from '@server-models/databases/mongodb/schema_customer';
 import {
   Sale,
+  SaleStats,
   PaginInput,
   SalePayload,
   SaleProduct,
   SalesPayload,
   SaleAddInput,
   SaleAddPayload,
+  SalesStatsTerms,
   SaleEditPayload,
   SearchSaleInput,
   SaleDeletePayload,
@@ -22,6 +24,7 @@ import {
 } from '@server-models/@types/resolver_types';
 import { Pagin } from '@server-models/databases/mongodb/interfaces/IPagin';
 import { ICustomer } from '@server-models/databases/mongodb/interfaces/ICustomer';
+import { PipelineStage } from 'mongoose';
 
 export const SaleController = {
   sale: async (searchTerm: SearchSaleInput) => {
@@ -178,6 +181,80 @@ export const SaleController = {
       }
     }); // end promise
   },
+  salesStats: async ({
+    filterByDate,
+    filterByDateRange,
+    groupByDate,
+    groupByMonths,
+    groupByWeek,
+    groupByYears,
+    groupByYearsAndMonths,
+    groupByYearsAndMonthsAndWeeks,
+  }: SalesStatsTerms) => {
+    return new Promise<SaleStats[]>(async (resolve) => {
+      try {
+        let _pipeLine: PipelineStage[];
+        const groupByCriteria = groupByYearsAndMonthsAndWeeks
+          ? {
+              year: { $year: '$createdAt' },
+              month: { $month: '$createdAt' },
+              week: { $isoWeek: '$createdAt' },
+            }
+          : groupByYearsAndMonths
+          ? { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } }
+          : groupByYears
+          ? { year: { $year: '$createdAt' } }
+          : groupByMonths
+          ? { month: { $month: '$createdAt' } }
+          : groupByWeek
+          ? { week: { $isoWeek: '$createdAt' } }
+          : null;
+
+        //
+        if (!filterByDate && !filterByDateRange) return resolve(null);
+        // if filterByDate and GroupByDate
+        if (filterByDate && !filterByDateRange) {
+          _pipeLine = [
+            { $match: { date: { $eq: filterByDate } } },
+            {
+              $group: {
+                _id: groupByCriteria,
+                counts: { $sum: 1 },
+                sum: { $sum: '$totalPrice' },
+                average: { $avg: '$totalPrice' },
+                sales: { $push: '$$ROOT' },
+              },
+            },
+          ];
+        } else if (!filterByDate && filterByDateRange) {
+          _pipeLine = [
+            {
+              $match: {
+                createdAt: {
+                  $gte: new Date(filterByDateRange.startDate),
+                  $lte: new Date(filterByDateRange.endingDate),
+                },
+              },
+            },
+            {
+              $group: {
+                _id: groupByCriteria,
+                counts: { $sum: 1 },
+                sum: { $sum: '$totalPrice' },
+                average: { $avg: '$totalPrice' },
+                sales: { $push: '$$ROOT' },
+              },
+            },
+          ];
+        }
+
+        resolve(await saleModel.aggregate<SaleStats>(_pipeLine).exec());
+      } catch (error) {
+        resolve(null);
+        console.log(`[EXCEPTION]: ${error.message}`);
+      } // end catch
+    }); // end  promise
+  }, // end salesStats
   addSale: async (
     addSaleInput: SaleAddInput,
     { pubSub, authenticatedStaff }: IResolverContext

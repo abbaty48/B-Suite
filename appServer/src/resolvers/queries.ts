@@ -49,6 +49,8 @@ export const Queries: QueryResolvers = {
   // sales
   sales: async (_, { searchTerm, pagin }) =>
     await SaleController.sales(searchTerm, pagin),
+  // sales stats
+  salesStats: async (_, { terms }) => await SaleController.salesStats(terms),
   // notifications
   notifications: async (_, { searchTerm, pagin }) =>
     await NotificationController.notifications(searchTerm, pagin),

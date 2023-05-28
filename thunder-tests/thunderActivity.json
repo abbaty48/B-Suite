@@ -8,7 +8,7 @@
     "method": "POST",
     "sortNum": 0,
     "created": "2023-05-18T11:12:02.216Z",
-    "modified": "2023-05-18T16:13:52.017Z",
+    "modified": "2023-05-27T09:27:50.606Z",
     "headers": [
       {
         "name": "Content-Type",
@@ -16,7 +16,7 @@
       },
       {
         "name": "Authorization",
-        "value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSUQ2N1lZNiIsImZpcnN0TmFtZSI6Ill1c3VmIiwibGFzdE5hbWUiOiJBYmR1bHJhaG1hbiIsImVtYWlsIjoiYWJiYXR5NDhAZ21haWwuY29tIiwicm9sZSI6Ik1hbmFnZXIiLCJpYXQiOjE2NzkxMTk2NzR9.AWHeUOfxY0-oH0wPJGKcewDJ_Pmj8v_gOV3BX_zxsHqSLR5aMi8J-MmTnqRadg7ajMhVAI0OW6wa1iRF9X1CBQ"
+        "value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdGFmZklEIjoiSUQ2N1lZNiIsImZpcnN0TmFtZSI6Ill1c3VmIiwibGFzdE5hbWUiOiJBYmR1bHJhaG1hbiIsImVtYWlsIjoiYWJiYXR5NDhAZ21haWwuY29tIiwicm9sZSI6Ik1hbmFnZXIiLCJpYXQiOjE2ODQ5NDYxNzd9.ZsUNkmfo8hUSooCaO71lm0KS2EvxCfyDfhb69o2b5KtzvGIyDckgbnxPirobE4BLoRYVUrM-DreFn_e05bgt1Q"
       }
     ],
     "params": [],
@@ -25,8 +25,7 @@
       "raw": "",
       "form": [],
       "graphql": {
-        "query": "mutation Authenticate($id: ID! $secret: String!) {\n    authenticate(credential: {staffID: $id, secret: $secret}) {\n        error,\n        staff {\n            staffID,\n            firstName,\n            lastName,\n            phoneNumber,\n            role,\n            token\n        },\n        message\n    }\n}",
-        "variables": "{\n  \"id\": \"ID4E16K\",\n  \"secret\": \"accounter\"\n}"
+        "query": "query Demos {\n    demos {\n        id,\n        productName,\n        quantity,\n        unitPrice,\n        totalPrice\n    }\n}"
       }
     },
     "tests": []

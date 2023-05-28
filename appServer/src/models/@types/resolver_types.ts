@@ -577,6 +577,7 @@ export type Query = {
   products: ProductsPayload;
   sale: SalePayload;
   sales: SalesPayload;
+  salesStats?: Maybe<Array<Maybe<SaleStats>>>;
   staff: StaffPayload;
   staffs: StaffsPayload;
   store: Store;
@@ -628,6 +629,11 @@ export type QuerySaleArgs = {
 export type QuerySalesArgs = {
   pagin?: InputMaybe<PaginInput>;
   searchTerm?: InputMaybe<SearchSaleInput>;
+};
+
+
+export type QuerySalesStatsArgs = {
+  terms: SalesStatsTerms;
 };
 
 
@@ -807,6 +813,14 @@ export type SaleProfit = {
   status: Scalars['String'];
 };
 
+export type SaleStats = {
+  __typename?: 'SaleStats';
+  average: Scalars['Float'];
+  counts: Scalars['Int'];
+  sales: Array<Sale>;
+  sum: Scalars['Float'];
+};
+
 export type SalesPayload = {
   __typename?: 'SalesPayload';
   error?: Maybe<Scalars['String']>;
@@ -902,6 +916,22 @@ export type StaffsPayload = {
   staffs: Array<Staff>;
 };
 
+export type Stats = {
+  __typename?: 'Stats';
+  /** get the total number of customers in a real time subscription.  */
+  totalCustomers: Scalars['Int'];
+  /** get the total number of products that expired in a real time subscription.  */
+  totalExpiredProducts: Scalars['Int'];
+  /** get the total number of products in a real time subscription.  */
+  totalProducts: Scalars['Int'];
+  /** get the total number of sales in a real time subscription.  */
+  totalSales: Scalars['Int'];
+  /** get the total number of staffs in a real time subscription.  */
+  totalStaffs: Scalars['Int'];
+  /** get the total number of warehouses in a real time subscription.  */
+  totalWarehouses: Scalars['Int'];
+};
+
 export type Store = {
   __typename?: 'Store';
   _enterpriseInitialized: Scalars['Boolean'];
@@ -919,22 +949,6 @@ export type StorePayload = {
   __typename?: 'StorePayload';
   error?: Maybe<Scalars['String']>;
   result: Scalars['Int'];
-};
-
-export type StoreRealTime = {
-  __typename?: 'StoreRealTime';
-  /** get the total number of customers in a real time subscription.  */
-  totalCustomers: Scalars['Int'];
-  /** get the total number of products that expired in a real time subscription.  */
-  totalExpiredProducts: Scalars['Int'];
-  /** get the total number of products in a real time subscription.  */
-  totalProducts: Scalars['Int'];
-  /** get the total number of sales in a real time subscription.  */
-  totalSales: Scalars['Int'];
-  /** get the total number of staffs in a real time subscription.  */
-  totalStaffs: Scalars['Int'];
-  /** get the total number of warehouses in a real time subscription.  */
-  totalWarehouses: Scalars['Int'];
 };
 
 export type Subscription = {
@@ -962,7 +976,7 @@ export type Subscription = {
   /** subscription when a new staff is deleted */
   staffDeleteSubscription: SaleDeleteSubscription;
   /** subscription for a realtime store counts */
-  storeRealTime: StoreRealTime;
+  storeStats: Stats;
   /** subscription when a supply is added */
   supplyAddSubscription: SupplyAddSubscription;
   /** subscription when a supply is deleted */
@@ -1327,6 +1341,22 @@ export type SaleProductMetaInput = {
   quantity: Scalars['Int'];
 };
 
+export type SalesStatsFilterByRangeInputs = {
+  endingDate: Scalars['String'];
+  startDate: Scalars['String'];
+};
+
+export type SalesStatsTerms = {
+  filterByDate?: InputMaybe<Scalars['String']>;
+  filterByDateRange?: InputMaybe<SalesStatsFilterByRangeInputs>;
+  groupByDate?: InputMaybe<Scalars['Boolean']>;
+  groupByMonths?: InputMaybe<Scalars['Boolean']>;
+  groupByWeek?: InputMaybe<Scalars['Boolean']>;
+  groupByYears?: InputMaybe<Scalars['Boolean']>;
+  groupByYearsAndMonths?: InputMaybe<Scalars['Boolean']>;
+  groupByYearsAndMonthsAndWeeks?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type SearchCustomerInput = {
   address?: InputMaybe<Scalars['String']>;
   beneficiaries?: InputMaybe<Scalars['Boolean']>;
@@ -1606,6 +1636,7 @@ export type ResolversTypes = ResolversObject<{
   SalePayload: ResolverTypeWrapper<SalePayload>;
   SaleProduct: ResolverTypeWrapper<SaleProduct>;
   SaleProfit: ResolverTypeWrapper<SaleProfit>;
+  SaleStats: ResolverTypeWrapper<SaleStats>;
   SalesPayload: ResolverTypeWrapper<SalesPayload>;
   Sort: Sort;
   Staff: ResolverTypeWrapper<Staff>;
@@ -1618,9 +1649,9 @@ export type ResolversTypes = ResolversObject<{
   StaffResetPasswordPayload: ResolverTypeWrapper<StaffResetPasswordPayload>;
   StaffRole: StaffRole;
   StaffsPayload: ResolverTypeWrapper<StaffsPayload>;
+  Stats: ResolverTypeWrapper<Stats>;
   Store: ResolverTypeWrapper<Store>;
   StorePayload: ResolverTypeWrapper<StorePayload>;
-  StoreRealTime: ResolverTypeWrapper<StoreRealTime>;
   String: ResolverTypeWrapper<Scalars['String']>;
   Subscription: ResolverTypeWrapper<{}>;
   SubscriptionActionType: SubscriptionActionType;
@@ -1668,6 +1699,8 @@ export type ResolversTypes = ResolversObject<{
   saleAddInput: SaleAddInput;
   saleEditInput: SaleEditInput;
   saleProductMetaInput: SaleProductMetaInput;
+  salesStatsFilterByRangeInputs: SalesStatsFilterByRangeInputs;
+  salesStatsTerms: SalesStatsTerms;
   searchCustomerInput: SearchCustomerInput;
   searchProductInput: SearchProductInput;
   searchSaleInput: SearchSaleInput;
@@ -1749,6 +1782,7 @@ export type ResolversParentTypes = ResolversObject<{
   SalePayload: SalePayload;
   SaleProduct: SaleProduct;
   SaleProfit: SaleProfit;
+  SaleStats: SaleStats;
   SalesPayload: SalesPayload;
   Staff: Staff;
   StaffAddPayload: StaffAddPayload;
@@ -1759,9 +1793,9 @@ export type ResolversParentTypes = ResolversObject<{
   StaffPayload: StaffPayload;
   StaffResetPasswordPayload: StaffResetPasswordPayload;
   StaffsPayload: StaffsPayload;
+  Stats: Stats;
   Store: Store;
   StorePayload: StorePayload;
-  StoreRealTime: StoreRealTime;
   String: Scalars['String'];
   Subscription: {};
   SubscriptionPayload: Omit<SubscriptionPayload, 'actionResult'> & { actionResult: ResolversParentTypes['Type'] };
@@ -1808,6 +1842,8 @@ export type ResolversParentTypes = ResolversObject<{
   saleAddInput: SaleAddInput;
   saleEditInput: SaleEditInput;
   saleProductMetaInput: SaleProductMetaInput;
+  salesStatsFilterByRangeInputs: SalesStatsFilterByRangeInputs;
+  salesStatsTerms: SalesStatsTerms;
   searchCustomerInput: SearchCustomerInput;
   searchProductInput: SearchProductInput;
   searchSaleInput: SearchSaleInput;
@@ -2222,6 +2258,7 @@ export type QueryResolvers<ContextType = IResolverContext, ParentType extends Re
   products?: Resolver<ResolversTypes['ProductsPayload'], ParentType, ContextType, Partial<QueryProductsArgs>>;
   sale?: Resolver<ResolversTypes['SalePayload'], ParentType, ContextType, RequireFields<QuerySaleArgs, 'searchTerm'>>;
   sales?: Resolver<ResolversTypes['SalesPayload'], ParentType, ContextType, Partial<QuerySalesArgs>>;
+  salesStats?: Resolver<Maybe<Array<Maybe<ResolversTypes['SaleStats']>>>, ParentType, ContextType, RequireFields<QuerySalesStatsArgs, 'terms'>>;
   staff?: Resolver<ResolversTypes['StaffPayload'], ParentType, ContextType, RequireFields<QueryStaffArgs, 'searchTerm'>>;
   staffs?: Resolver<ResolversTypes['StaffsPayload'], ParentType, ContextType, Partial<QueryStaffsArgs>>;
   store?: Resolver<ResolversTypes['Store'], ParentType, ContextType>;
@@ -2317,6 +2354,14 @@ export type SaleProfitResolvers<ContextType = IResolverContext, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type SaleStatsResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['SaleStats'] = ResolversParentTypes['SaleStats']> = ResolversObject<{
+  average?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  counts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  sales?: Resolver<Array<ResolversTypes['Sale']>, ParentType, ContextType>;
+  sum?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type SalesPayloadResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['SalesPayload'] = ResolversParentTypes['SalesPayload']> = ResolversObject<{
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   pagins?: Resolver<Maybe<ResolversTypes['Pagins']>, ParentType, ContextType>;
@@ -2392,6 +2437,16 @@ export type StaffsPayloadResolvers<ContextType = IResolverContext, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type StatsResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['Stats'] = ResolversParentTypes['Stats']> = ResolversObject<{
+  totalCustomers?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalExpiredProducts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalProducts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalSales?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalStaffs?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalWarehouses?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type StoreResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['Store'] = ResolversParentTypes['Store']> = ResolversObject<{
   _enterpriseInitialized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   _sysInitialized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -2411,16 +2466,6 @@ export type StorePayloadResolvers<ContextType = IResolverContext, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type StoreRealTimeResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['StoreRealTime'] = ResolversParentTypes['StoreRealTime']> = ResolversObject<{
-  totalCustomers?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalExpiredProducts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalProducts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalSales?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalStaffs?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalWarehouses?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type SubscriptionResolvers<ContextType = IResolverContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
   categoryAddSubscription?: SubscriptionResolver<ResolversTypes['CategoryAddSubscription'], "categoryAddSubscription", ParentType, ContextType>;
   categoryDeleteSubscription?: SubscriptionResolver<ResolversTypes['CategoryDeleteSubscription'], "categoryDeleteSubscription", ParentType, ContextType>;
@@ -2433,7 +2478,7 @@ export type SubscriptionResolvers<ContextType = IResolverContext, ParentType ext
   saleEditSubscription?: SubscriptionResolver<ResolversTypes['SaleEditSubscription'], "saleEditSubscription", ParentType, ContextType>;
   staffAddSubscription?: SubscriptionResolver<ResolversTypes['SaleAddSubscription'], "staffAddSubscription", ParentType, ContextType>;
   staffDeleteSubscription?: SubscriptionResolver<ResolversTypes['SaleDeleteSubscription'], "staffDeleteSubscription", ParentType, ContextType>;
-  storeRealTime?: SubscriptionResolver<ResolversTypes['StoreRealTime'], "storeRealTime", ParentType, ContextType>;
+  storeStats?: SubscriptionResolver<ResolversTypes['Stats'], "storeStats", ParentType, ContextType>;
   supplyAddSubscription?: SubscriptionResolver<ResolversTypes['SupplyAddSubscription'], "supplyAddSubscription", ParentType, ContextType>;
   supplyDeleteSubscription?: SubscriptionResolver<ResolversTypes['SupplyDeleteSubscription'], "supplyDeleteSubscription", ParentType, ContextType>;
   supplyEditSubscription?: SubscriptionResolver<ResolversTypes['SupplyEditSubscription'], "supplyEditSubscription", ParentType, ContextType>;
@@ -2649,6 +2694,7 @@ export type Resolvers<ContextType = IResolverContext> = ResolversObject<{
   SalePayload?: SalePayloadResolvers<ContextType>;
   SaleProduct?: SaleProductResolvers<ContextType>;
   SaleProfit?: SaleProfitResolvers<ContextType>;
+  SaleStats?: SaleStatsResolvers<ContextType>;
   SalesPayload?: SalesPayloadResolvers<ContextType>;
   Staff?: StaffResolvers<ContextType>;
   StaffAddPayload?: StaffAddPayloadResolvers<ContextType>;
@@ -2659,9 +2705,9 @@ export type Resolvers<ContextType = IResolverContext> = ResolversObject<{
   StaffPayload?: StaffPayloadResolvers<ContextType>;
   StaffResetPasswordPayload?: StaffResetPasswordPayloadResolvers<ContextType>;
   StaffsPayload?: StaffsPayloadResolvers<ContextType>;
+  Stats?: StatsResolvers<ContextType>;
   Store?: StoreResolvers<ContextType>;
   StorePayload?: StorePayloadResolvers<ContextType>;
-  StoreRealTime?: StoreRealTimeResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   SubscriptionPayload?: SubscriptionPayloadResolvers<ContextType>;
   Supply?: SupplyResolvers<ContextType>;

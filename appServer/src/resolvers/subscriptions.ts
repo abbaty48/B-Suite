@@ -88,7 +88,7 @@ const SaleSubscriptions: SubscriptionResolvers = {
 };
 
 const StoreSubscriptions: SubscriptionResolvers = {
-  storeRealTime: {
+  storeStats: {
     subscribe: (_, __, { pubSub }: any) =>
       pubSub.asyncIterator('LISTEN_REALTIME_STORE'),
   },
