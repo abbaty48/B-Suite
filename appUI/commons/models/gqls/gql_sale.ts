@@ -1,34 +1,131 @@
 import { gql } from '@apollo/client';
 
+export const GET_SALE = gql`
+  query GETSALE(
+    $searchBySaleID: ID
+    $searchByCustomerID: ID
+    $searchByDate: String
+    $searchByTime: String
+    $searchByProductName: String
+    $searchByProductID: ID
+  ) {
+    sale(
+      searchTerm: {
+        saleID: $searchBySaleID
+        customerID: $searchByCustomerID
+        date: $searchByDate
+        time: $searchByTime
+        productName: $searchByProductName
+        productID: $searchByProductID
+      }
+    ) {
+      error
+      sale {
+        saleID
+        date
+        time
+        balance
+        discount
+        paid
+        totalPrice
+        totalQuantity
+        profit {
+          percentage
+          status
+        }
+        products {
+          productID
+          name
+          kind
+          quantity
+          subTotal
+          retailPrice
+          wholesalePrice
+          features {
+            url
+          }
+        }
+        staff {
+          staffID
+          firstName
+          lastName
+          role
+          picture {
+            url
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SALES = gql`
+  query GETSALES(
+    $searchBySaleID: ID
+    $searchByCustomerID: ID
+    $searchByDate: String
+    $searchByTime: String
+    $searchByProductName: String
+    $searchByProductID: ID
+  ) {
+    sales(
+      searchTerm: {
+        saleID: $searchBySaleID
+        customerID: $searchByCustomerID
+        date: $searchByDate
+        time: $searchByTime
+        productName: $searchByProductName
+        productID: $searchByProductID
+      }
+    ) {
+      error
+      sales {
+        saleID
+        date
+        time
+        balance
+        discount
+        paid
+        totalPrice
+        totalQuantity
+        profit {
+          percentage
+          status
+        }
+        products {
+          productID
+          name
+          kind
+          quantity
+          subTotal
+          retailPrice
+          wholesalePrice
+          features {
+            url
+          }
+        }
+        staff {
+          staffID
+          firstName
+          lastName
+          role
+          picture {
+            url
+          }
+        }
+      }
+      pagins {
+        sort
+        totalPaginated
+        totalDocuments
+        nextPageIndex
+        currentPageIndex
+      }
+    }
+  }
+`;
+
 export const ADD_SALE = gql`
-  input saleProductMetaInput {
-    productID: ID!
-    quantity: Int!
-  }
-
-  input customerSocialMediaInput {
-    facebook: String
-    twitter: String
-    instagram: String
-  }
-
-  input customerMetasInput {
-    avatarURL: String
-    dateOfBirth: String
-    socialMedia: customerSocialMediaInput
-  }
-
-  input addCustomerInput {
-    name: String!
-    email: String
-    address: String
-    phoneNumber: String
-    beneficiary: Boolean
-    saleIDs: [ID!]!
-    metas: customerMetasInput
-    warehouseID: ID
-  }
-
   mutation ADDSALE(
     $warehouseID: ID
     $balance: Float
@@ -38,7 +135,7 @@ export const ADD_SALE = gql`
     $paid: Float!
     $customerID: ID
     $productMetas: [saleProductMetaInput!]!
-    $addCustomer: [addCustomerInput!]
+    $addCustomer: customerAddInput
   ) {
     saleAdd(
       saleAddInput: {
@@ -68,11 +165,19 @@ export const ADD_SALE = gql`
         totalQuantity
         products {
           kind
-          inStock
           quantity
           retailPrice
           wholesalePrice
           subTotal
+        }
+        staff {
+          firstName
+          lastName
+          role
+          phoneNumber
+          picture {
+            url
+          }
         }
         customer {
           name
@@ -93,11 +198,6 @@ export const DELETE_SALE = gql`
 `;
 
 export const EDIT_SALE = gql`
-  input saleProductMetaInput {
-    productID: ID!
-    quantity: Int!
-  }
-
   mutation EDITSALE(
     $saleID: ID!
     $warehouseID: ID
@@ -137,11 +237,19 @@ export const EDIT_SALE = gql`
         totalQuantity
         products {
           kind
-          inStock
           quantity
           retailPrice
           wholesalePrice
           subTotal
+        }
+        staff {
+          firstName
+          lastName
+          role
+          phoneNumber
+          picture {
+            url
+          }
         }
         customer {
           name
@@ -225,19 +333,29 @@ export const ON_SALE_ADD_SUBSCRIPTION = gql`
         }
         actionResult {
           ... on Sale {
+            date
+            discount
+            paid
+            balance
             profit {
               percentage
               status
             }
+            totalPrice
+            totalQuantity
             products {
-              name
-              expired
               kind
               quantity
-              subTotal
               retailPrice
               wholesalePrice
-              features {
+              subTotal
+            }
+            staff {
+              firstName
+              lastName
+              role
+              phoneNumber
+              picture {
                 url
               }
             }
@@ -271,19 +389,29 @@ export const ON_SALE_EDIT_SUBSCRIPTION = gql`
         }
         actionResult {
           ... on Sale {
+            date
+            discount
+            paid
+            balance
             profit {
               percentage
               status
             }
+            totalPrice
+            totalQuantity
             products {
-              name
-              expired
               kind
               quantity
-              subTotal
               retailPrice
               wholesalePrice
-              features {
+              subTotal
+            }
+            staff {
+              firstName
+              lastName
+              role
+              phoneNumber
+              picture {
                 url
               }
             }
@@ -317,21 +445,35 @@ export const ON_SALE_DELETE_SUBSCRIPTION = gql`
         }
         actionResult {
           ... on Sale {
+            date
+            discount
+            paid
+            balance
             profit {
               percentage
               status
             }
+            totalPrice
+            totalQuantity
             products {
-              name
-              expired
               kind
               quantity
-              subTotal
               retailPrice
               wholesalePrice
-              features {
+              subTotal
+            }
+            staff {
+              firstName
+              lastName
+              role
+              phoneNumber
+              picture {
                 url
               }
+            }
+            customer {
+              name
+              address
             }
           }
         }

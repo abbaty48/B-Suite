@@ -79,7 +79,10 @@ export const SaleController = {
               $or: [criteria],
             },
             {},
-            { populate: 'staff customer products' }
+            {
+              sort: { createdAt: -1 },
+              populate: 'staff customer products',
+            }
           );
         }
         resolve({
@@ -155,7 +158,10 @@ export const SaleController = {
                 $or: [criteria],
               },
               {},
-              { populate: 'staff customer products' }
+              {
+                sort: { createdAt: -1 },
+                populate: 'staff customer products',
+              }
             )
             .sort({ time: sort })
             .skip(limit * pageIndex)
@@ -248,7 +254,8 @@ export const SaleController = {
           ];
         }
 
-        resolve(await saleModel.aggregate<SaleStats>(_pipeLine).exec());
+        const result = await saleModel.aggregate<SaleStats>(_pipeLine).exec();
+        resolve(result);
       } catch (error) {
         resolve(null);
         console.log(`[EXCEPTION]: ${error.message}`);

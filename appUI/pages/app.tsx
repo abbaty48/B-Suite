@@ -40,7 +40,7 @@ const Main = () => {
       }, new GraphQLWsLink(createClient({
          url: ws,
          connectionParams: {
-            authToken: `Bearer ${_token?.token || ''}`
+            authorization: `Bearer ${_token?.token || ''}`
          }
       })), new HttpLink({
          uri: domain,
