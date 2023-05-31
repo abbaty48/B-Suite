@@ -226,8 +226,8 @@ export const SaleController = {
               $group: {
                 _id: groupByCriteria,
                 counts: { $sum: 1 },
-                sum: { $sum: '$totalPrice' },
-                average: { $avg: '$totalPrice' },
+                sum: { $sum: '$paid' },
+                average: { $avg: '$paid' },
                 sales: { $push: '$$ROOT' },
               },
             },

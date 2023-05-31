@@ -22,18 +22,21 @@ export const LatestOrLastSale = () => {
   const { token } = theme.useToken()
   const [sale, setSale] = useState<Sale>(null)
   const { loading: loadingSale, data: dataSale, error: errorSale } = useQuery<ISaleResult>(GET_SALE);
-  const { loading: loadingSubscription, data: dataSubscription, error: errorSubscription } = useSubscription<IAddSubscription>(ON_SALE_ADD_SUBSCRIPTION);
+
+  useSubscription<IAddSubscription>(ON_SALE_ADD_SUBSCRIPTION, {
+    onData({ data }) {
+      if (data) {
+        setSale(data.data?.saleAddSubscription.payload.actionResult as Sale)
+      }
+    }
+  });
 
   useEffect(() => {
 
     if (dataSale?.sale.sale) {
       setSale(dataSale?.sale.sale)
     }
-    if (dataSubscription) {
-      setSale(dataSubscription?.saleAddSubscription.payload.actionResult as Sale)
-    }
-
-  }, [dataSale, dataSubscription])
+  }, [dataSale])
 
   const config: GaugeConfig = {
     width: 200,

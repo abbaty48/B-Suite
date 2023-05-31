@@ -288,30 +288,32 @@ export const SALESTATS = gql`
       sum
       sales {
         saleID
+        date
+        time
+        balance
+        discount
+        paid
+        totalPrice
+        totalQuantity
+        profit {
+          percentage
+          status
+        }
         products {
+          productID
           name
           kind
-          subTotal
           quantity
+          subTotal
+          retailPrice
           wholesalePrice
+          features {
+            url
+          }
         }
       }
     }
   }
-
-  #   {
-  #           "filterByDate": "",
-  #           "filterByDateRange": {
-  #   					"startDate": "",
-  #   					"endingDate": ""
-  # 					},
-  #           "groupByDate": true,
-  #           "groupByMonths": true,
-  #           "groupByWeek": true,
-  #           "groupByYears": true,
-  #           "groupByYearsAndMonths": true,
-  #           "groupByYearsAndMonthsAndWeeks": true
-  # }
 `;
 
 export const ON_SALE_ADD_SUBSCRIPTION = gql`

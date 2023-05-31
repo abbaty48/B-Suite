@@ -26,7 +26,7 @@ export const ThemeProvider = (props: { children: React.ReactNode }) => {
             case 'GrayHunt': return GrayHunt.token;
             case 'Viva Dark': return VivaDark.token;
             case 'Viva Light': return VivaLight.token;
-            case 'Auto': return matchMedia('(prefers-color-schema: light)').matches ? VivaLight.token : VivaDark.token;
+            case 'Auto': return matchMedia('(prefers-color-scheme: light)').matches ? VivaLight.token : VivaDark.token;
             default: return VivaLight.token;
          }
       }
