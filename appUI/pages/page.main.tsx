@@ -1,6 +1,7 @@
-import { Col, FloatButton, Layout, Row } from 'antd'
 import { Content } from 'antd/es/layout/layout'
+import { Col, FloatButton, Layout, Row } from 'antd'
 import { TdaySales } from '@ui-components/metrics/tdaySales/tdaySales'
+import { WeekSales } from '@ui-components/metrics/weekSales/weekSales'
 import { LatestOrLastSale } from '@ui-components/metrics/lols/latestOrlastSale'
 
 export const MainPage = () => {
@@ -15,6 +16,9 @@ export const MainPage = () => {
             </Col>
             <Col span={12}>
               <TdaySales />
+            </Col>
+            <Col span={12}>
+              <WeekSales />
             </Col>
           </Row>
         </Content>

@@ -264,6 +264,8 @@ export const SALESTATS = gql`
   query SALESTATS(
     $filterByDate: String
     $filterByDateRange: salesStatsFilterByRangeInputs
+    $sortBy: Object
+    $groupByField: Object
     $groupByDate: Boolean
     $groupByMonths: Boolean
     $groupByWeek: Boolean
@@ -275,6 +277,8 @@ export const SALESTATS = gql`
       terms: {
         filterByDate: $filterByDate
         filterByDateRange: $filterByDateRange
+        sortBy: $sortBy
+        groupByField: $groupByField
         groupByDate: $groupByDate
         groupByMonths: $groupByMonths
         groupByWeek: $groupByWeek

@@ -194,12 +194,15 @@ export const SaleController = {
     groupByMonths,
     groupByWeek,
     groupByYears,
+    groupByField,
     groupByYearsAndMonths,
     groupByYearsAndMonthsAndWeeks,
+    sortBy,
   }: SalesStatsTerms) => {
     return new Promise<SaleStats[]>(async (resolve) => {
       try {
         let _pipeLine: PipelineStage[];
+        // GroupByCriteria
         const groupByCriteria = groupByYearsAndMonthsAndWeeks
           ? {
               year: { $year: '$createdAt' },
@@ -214,11 +217,12 @@ export const SaleController = {
           ? { month: { $month: '$createdAt' } }
           : groupByWeek
           ? { week: { $isoWeek: '$createdAt' } }
+          : groupByField
+          ? groupByField
           : null;
-
+        // SortByCriteria
+        const sortByCriteria = sortBy ?? { _id: -1 };
         //
-        if (!filterByDate && !filterByDateRange) return resolve(null);
-        // if filterByDate and GroupByDate
         if (filterByDate && !filterByDateRange) {
           _pipeLine = [
             { $match: { date: { $eq: filterByDate } } },
@@ -230,6 +234,9 @@ export const SaleController = {
                 average: { $avg: '$paid' },
                 sales: { $push: '$$ROOT' },
               },
+            },
+            {
+              $sort: { ...sortByCriteria },
             },
           ];
         } else if (!filterByDate && filterByDateRange) {
@@ -246,14 +253,31 @@ export const SaleController = {
               $group: {
                 _id: groupByCriteria,
                 counts: { $sum: 1 },
-                sum: { $sum: '$totalPrice' },
-                average: { $avg: '$totalPrice' },
+                sum: { $sum: '$paid' },
+                average: { $avg: '$paid' },
                 sales: { $push: '$$ROOT' },
               },
             },
+            {
+              $sort: { ...sortByCriteria },
+            },
+          ];
+        } else {
+          _pipeLine = [
+            {
+              $group: {
+                _id: groupByCriteria,
+                counts: { $sum: 1 },
+                sum: { $sum: '$paid' },
+                average: { $avg: '$paid' },
+                sales: { $push: '$$ROOT' },
+              },
+            },
+            {
+              $sort: { ...sortByCriteria },
+            },
           ];
         }
-
         const result = await saleModel.aggregate<SaleStats>(_pipeLine).exec();
         resolve(result);
       } catch (error) {

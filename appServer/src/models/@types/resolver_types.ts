@@ -633,7 +633,7 @@ export type QuerySalesArgs = {
 
 
 export type QuerySalesStatsArgs = {
-  terms: SalesStatsTerms;
+  terms?: InputMaybe<SalesStatsTerms>;
 };
 
 
@@ -1350,11 +1350,13 @@ export type SalesStatsTerms = {
   filterByDate?: InputMaybe<Scalars['String']>;
   filterByDateRange?: InputMaybe<SalesStatsFilterByRangeInputs>;
   groupByDate?: InputMaybe<Scalars['Boolean']>;
+  groupByField?: InputMaybe<Scalars['Object']>;
   groupByMonths?: InputMaybe<Scalars['Boolean']>;
   groupByWeek?: InputMaybe<Scalars['Boolean']>;
   groupByYears?: InputMaybe<Scalars['Boolean']>;
   groupByYearsAndMonths?: InputMaybe<Scalars['Boolean']>;
   groupByYearsAndMonthsAndWeeks?: InputMaybe<Scalars['Boolean']>;
+  sortBy?: InputMaybe<Scalars['Object']>;
 };
 
 export type SearchCustomerInput = {
@@ -2258,7 +2260,7 @@ export type QueryResolvers<ContextType = IResolverContext, ParentType extends Re
   products?: Resolver<ResolversTypes['ProductsPayload'], ParentType, ContextType, Partial<QueryProductsArgs>>;
   sale?: Resolver<ResolversTypes['SalePayload'], ParentType, ContextType, RequireFields<QuerySaleArgs, 'searchTerm'>>;
   sales?: Resolver<ResolversTypes['SalesPayload'], ParentType, ContextType, Partial<QuerySalesArgs>>;
-  salesStats?: Resolver<Maybe<Array<Maybe<ResolversTypes['SaleStats']>>>, ParentType, ContextType, RequireFields<QuerySalesStatsArgs, 'terms'>>;
+  salesStats?: Resolver<Maybe<Array<Maybe<ResolversTypes['SaleStats']>>>, ParentType, ContextType, Partial<QuerySalesStatsArgs>>;
   staff?: Resolver<ResolversTypes['StaffPayload'], ParentType, ContextType, RequireFields<QueryStaffArgs, 'searchTerm'>>;
   staffs?: Resolver<ResolversTypes['StaffsPayload'], ParentType, ContextType, Partial<QueryStaffsArgs>>;
   store?: Resolver<ResolversTypes['Store'], ParentType, ContextType>;

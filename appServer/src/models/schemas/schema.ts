@@ -651,12 +651,14 @@ input salesStatsFilterByRangeInputs {
 input salesStatsTerms {
   filterByDate: String,
   filterByDateRange: salesStatsFilterByRangeInputs,
+  groupByField: Object,
   groupByYears: Boolean,
   groupByMonths: Boolean,
   groupByWeek: Boolean,
   groupByDate: Boolean,
   groupByYearsAndMonths: Boolean,
   groupByYearsAndMonthsAndWeeks: Boolean
+  sortBy: Object,
 }
 `;
 
@@ -1037,7 +1039,7 @@ const Query = `#graphql
     ################################## SALE ############################################
     sale(searchTerm: searchSaleInput!): SalePayload! @authorizeRole(previlege: READ_SALE)
     sales(searchTerm: searchSaleInput, pagin: paginInput): SalesPayload! @authorizeRole(previlege: READ_SALE)
-    salesStats(terms: salesStatsTerms!): [SaleStats]
+    salesStats(terms: salesStatsTerms): [SaleStats]
 
     ################################## CUSTOMER ########################################
     customer(searchTerm: searchCustomerInput!): CustomerPayload! @authorizeRole(previlege: READ_CUSTOMER)

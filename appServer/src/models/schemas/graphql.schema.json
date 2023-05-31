@@ -4498,13 +4498,9 @@
                 "name": "terms",
                 "description": null,
                 "type": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "salesStatsTerms",
-                    "ofType": null
-                  }
+                  "kind": "INPUT_OBJECT",
+                  "name": "salesStatsTerms",
+                  "ofType": null
                 },
                 "defaultValue": null,
                 "isDeprecated": false,
@@ -11449,6 +11445,18 @@
             "deprecationReason": null
           },
           {
+            "name": "groupByField",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Object",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "groupByMonths",
             "description": null,
             "type": {
@@ -11502,6 +11510,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "sortBy",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Object",
               "ofType": null
             },
             "defaultValue": null,
